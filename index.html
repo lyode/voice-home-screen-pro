@@ -18,6 +18,7 @@
             --outline-width: 3px;
             --shadow-blur: 6px;
             --shadow-spread: 2;
+            --font-size: 96px;
         }
 
         html, body {
@@ -81,7 +82,7 @@
         }
 
         /* Adaptive text with outlines */
-        .time, .date {
+        .time-display, .date-display {
             font-weight: 600;
             pointer-events: none;
             user-select: none;
@@ -89,8 +90,9 @@
         }
 
         /* Light mode: white text + black outline */
-        body.text-light .time,
-        body.text-light .date {
+        body.text-light .time-display,
+        body.text-light .date-display,
+        body.text-light .styled-text {
             color: white;
             text-shadow: 
                 calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #000,
@@ -101,8 +103,9 @@
         }
 
         /* Dark mode: black text + white outline */
-        body.text-dark .time,
-        body.text-dark .date {
+        body.text-dark .time-display,
+        body.text-dark .date-display,
+        body.text-dark .styled-text {
             color: black;
             text-shadow: 
                 calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #fff,
@@ -112,15 +115,15 @@
                 0 0 var(--shadow-blur) rgba(255, 255, 255, var(--shadow-spread));
         }
 
-        .time {
-            font-size: 96px;
+        .time-display {
+            font-size: var(--font-size);
             font-weight: 200;
             letter-spacing: -4px;
             margin-bottom: 12px;
             line-height: 1;
         }
 
-        .date {
+        .date-display {
             font-size: 28px;
             font-weight: 500;
             opacity: 0.95;
@@ -132,7 +135,6 @@
         /* Settings Button - Small and Subtle */
         .settings-btn {
             position: fixed;
-            top: max(env(safe-area-inset-top), 54px);
             top: calc(max(env(safe-area-inset-top), 54px) + 10px);
             right: 10px;
             width: 36px;
@@ -284,6 +286,10 @@
             line-height: 1.4;
         }
 
+        .styled-text {
+            /* Inherits text-shadow from body classes */
+        }
+
         .mode-selector {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -390,7 +396,7 @@
             font-size: 18px;
         }
 
-        .upload-btn {
+        .upload-btn, .control-btn {
             padding: 16px 24px;
             border-radius: 12px;
             border: 3px solid;
@@ -402,22 +408,24 @@
             transition: all 0.3s ease;
             display: block;
             width: 100%;
-            margin-top: 12px;
         }
 
-        body.text-light .upload-btn {
+        body.text-light .upload-btn,
+        body.text-light .control-btn {
             border-color: rgba(255, 255, 255, 0.4);
         }
 
-        body.text-dark .upload-btn {
+        body.text-dark .upload-btn,
+        body.text-dark .control-btn {
             border-color: rgba(0, 0, 0, 0.4);
         }
 
-        .upload-btn:active {
+        .upload-btn:active,
+        .control-btn:active {
             transform: scale(0.98);
         }
 
-        #imageUpload {
+        .hidden-input {
             display: none;
         }
 
@@ -448,34 +456,15 @@
         }
 
         .control-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 12px;
         }
 
         .control-btn {
-            flex: 1;
             padding: 12px;
-            border-radius: 10px;
-            border: 2px solid;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 600;
             font-size: 14px;
-            background: transparent !important;
-            transition: all 0.3s ease;
-        }
-
-        body.text-light .control-btn {
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        body.text-dark .control-btn {
-            border-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .control-btn:active {
-            transform: scale(0.95);
         }
 
         .settings-overlay {
@@ -500,6 +489,11 @@
             text-align: center;
             font-size: 14px;
             font-weight: 600;
+            display: none;
+        }
+
+        .status-message.active {
+            display: block;
         }
 
         .status-message.success {
@@ -508,13 +502,6 @@
 
         .status-message.error {
             background: rgba(244, 67, 54, 0.3) !important;
-        }
-
-        /* Time Format Selection */
-        .format-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
         }
 
         /* Toggle Switch */
@@ -600,7 +587,6 @@
             background: white !important;
         }
 
-        /* iPhone 15 Pro Max */
         @media only screen 
         and (device-width: 430px) 
         and (device-height: 932px) 
@@ -608,16 +594,6 @@
             body {
                 padding-top: 54px;
                 padding-bottom: 34px;
-            }
-
-            .time {
-                font-size: 104px;
-                letter-spacing: -5px;
-                margin-bottom: 14px;
-            }
-
-            .date {
-                font-size: 30px;
             }
 
             .settings-btn {
@@ -631,13 +607,6 @@
         }
 
         @media (orientation: landscape) {
-            .time {
-                font-size: 72px;
-                letter-spacing: -3px;
-            }
-            .date {
-                font-size: 22px;
-            }
             .clock-container {
                 margin-top: -40px;
             }
@@ -655,7 +624,7 @@
         }
 
         @media (prefers-reduced-motion: no-preference) {
-            .time, .date {
+            .time-display, .date-display {
                 animation: fadeIn 0.5s ease;
             }
         }
@@ -664,28 +633,28 @@
 <body class="text-light">
     <!-- Background Layers -->
     <div id="cameraBg" class="bg-layer">
-        <video id="cameraVideo" autoplay playsinline></video>
+        <video id="cameraVideo" autoplay playsinline muted></video>
     </div>
     <div id="imageBg" class="bg-layer"></div>
     <div id="gradientBg" class="bg-layer"></div>
 
-    <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">
+    <button class="settings-btn" id="settingsBtn">
         <svg viewBox="0 0 24 24">
             <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
         </svg>
     </button>
 
     <div class="clock-container">
-        <div class="time" id="time">00:00</div>
-        <div class="date" id="date">Loading...</div>
+        <div class="time-display" id="timeDisplay">00:00</div>
+        <div class="date-display" id="dateDisplay">Loading...</div>
     </div>
 
-    <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
+    <div class="settings-overlay" id="settingsOverlay"></div>
 
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-header">
-            <h2 class="time">⚙️ Settings</h2>
-            <div class="close-btn" onclick="toggleSettings()">
+            <h2 class="styled-text">⚙️ Settings</h2>
+            <div class="close-btn">
                 <svg viewBox="0 0 24 24">
                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                 </svg>
@@ -694,22 +663,22 @@
 
         <!-- Background Mode Selection -->
         <div class="setting-group">
-            <div class="setting-label time">🖼️ Background Mode</div>
-            <div class="setting-description time">Choose how you want the background to display</div>
+            <div class="setting-label styled-text">🖼️ Background Mode</div>
+            <div class="setting-description styled-text">Choose how you want the background to display</div>
             <div class="mode-selector">
-                <div class="mode-option active time" data-bg="transparent" onclick="changeBackgroundMode('transparent')">
+                <div class="mode-option active styled-text" data-bg="transparent">
                     <span class="icon">🔲</span>
                     <span class="label">Transparent</span>
                 </div>
-                <div class="mode-option time" data-bg="image" onclick="changeBackgroundMode('image')">
+                <div class="mode-option styled-text" data-bg="image">
                     <span class="icon">🖼️</span>
                     <span class="label">Image Upload</span>
                 </div>
-                <div class="mode-option time" data-bg="camera" onclick="changeBackgroundMode('camera')">
+                <div class="mode-option styled-text" data-bg="camera">
                     <span class="icon">📷</span>
                     <span class="label">Camera Feed</span>
                 </div>
-                <div class="mode-option time" data-bg="gradient" onclick="changeBackgroundMode('gradient')">
+                <div class="mode-option styled-text" data-bg="gradient">
                     <span class="icon">🌈</span>
                     <span class="label">Smart Gradient</span>
                 </div>
@@ -718,56 +687,56 @@
 
         <!-- Image Upload Controls -->
         <div id="imageControls" class="bg-controls">
-            <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
-            <button class="upload-btn time" onclick="document.getElementById('imageUpload').click()">
+            <input type="file" id="imageUpload" accept="image/*" class="hidden-input">
+            <button class="upload-btn styled-text" id="uploadImageBtn">
                 📤 Upload Wallpaper Image
             </button>
             <img id="previewImage" class="preview-image" style="display: none;">
             <div class="slider-container" style="margin-top: 16px; display: none;" id="imagePositionControls">
-                <span class="time" style="font-size: 14px; min-width: auto;">Position:</span>
-                <input type="range" min="0" max="100" value="50" class="slider" id="imagePositionSlider" oninput="updateImagePosition(this.value)">
-                <span class="slider-value time" id="imagePositionValue">50%</span>
+                <span class="styled-text" style="font-size: 14px; min-width: auto;">Position:</span>
+                <input type="range" min="0" max="100" value="50" class="slider" id="imagePositionSlider">
+                <span class="slider-value styled-text" id="imagePositionValue">50%</span>
             </div>
             <div class="control-row" style="display: none;" id="imageActionControls">
-                <button class="control-btn time" onclick="generateGradientFromImage()">🌈 Generate Gradient</button>
-                <button class="control-btn time" onclick="clearImage()">🗑️ Clear</button>
+                <button class="control-btn styled-text" id="generateGradientBtn">🌈 Gradient</button>
+                <button class="control-btn styled-text" id="clearImageBtn">🗑️ Clear</button>
             </div>
         </div>
 
         <!-- Camera Controls -->
         <div id="cameraControls" class="bg-controls">
-            <div class="status-message time" id="cameraStatus" style="display: none;"></div>
+            <div class="status-message styled-text" id="cameraStatus"></div>
             <div class="control-row">
-                <button class="control-btn time" onclick="startCamera()">▶️ Start Camera</button>
-                <button class="control-btn time" onclick="stopCamera()">⏸️ Stop Camera</button>
+                <button class="control-btn styled-text" id="startCameraBtn">▶️ Start</button>
+                <button class="control-btn styled-text" id="stopCameraBtn">⏸️ Stop</button>
             </div>
         </div>
 
         <!-- Gradient Controls -->
         <div id="gradientControls" class="bg-controls">
-            <div class="setting-description time">Upload an image to generate a matching gradient, or manually select colors</div>
-            <input type="file" id="gradientImageUpload" accept="image/*" onchange="handleGradientImageUpload(event)">
-            <button class="upload-btn time" onclick="document.getElementById('gradientImageUpload').click()">
+            <div class="setting-description styled-text">Upload an image to generate a matching gradient, or manually select colors</div>
+            <input type="file" id="gradientImageUpload" accept="image/*" class="hidden-input">
+            <button class="upload-btn styled-text" id="uploadGradientBtn">
                 📤 Upload Image for Color Extraction
             </button>
             <div style="margin-top: 16px;">
-                <div class="setting-label time" style="font-size: 14px; margin-bottom: 8px;">Gradient Angle</div>
+                <div class="setting-label styled-text" style="font-size: 14px; margin-bottom: 8px;">Gradient Angle</div>
                 <div class="slider-container">
-                    <input type="range" min="0" max="360" value="135" class="slider" id="gradientAngleSlider" oninput="updateGradientAngle(this.value)">
-                    <span class="slider-value time" id="gradientAngleValue">135°</span>
+                    <input type="range" min="0" max="360" value="135" class="slider" id="gradientAngleSlider">
+                    <span class="slider-value styled-text" id="gradientAngleValue">135°</span>
                 </div>
             </div>
         </div>
 
         <!-- Text Style -->
         <div class="setting-group">
-            <div class="setting-label time">🎨 Text Style</div>
+            <div class="setting-label styled-text">🎨 Text Style</div>
             <div class="mode-selector">
-                <div class="mode-option active time" data-mode="light" onclick="changeTextMode('light')">
+                <div class="mode-option active styled-text" data-mode="light">
                     <span class="icon">☀️</span>
                     <span class="label">Light</span>
                 </div>
-                <div class="mode-option time" data-mode="dark" onclick="changeTextMode('dark')">
+                <div class="mode-option styled-text" data-mode="dark">
                     <span class="icon">🌙</span>
                     <span class="label">Dark</span>
                 </div>
@@ -776,13 +745,13 @@
 
         <!-- Time Format -->
         <div class="setting-group">
-            <div class="setting-label time">🕐 Time Format</div>
-            <div class="format-selector">
-                <div class="mode-option active time" data-format="24" onclick="changeTimeFormat('24')">
+            <div class="setting-label styled-text">🕐 Time Format</div>
+            <div class="mode-selector">
+                <div class="mode-option active styled-text" data-format="24">
                     <span class="icon">24</span>
                     <span class="label">24 Hour</span>
                 </div>
-                <div class="mode-option time" data-format="12" onclick="changeTimeFormat('12')">
+                <div class="mode-option styled-text" data-format="12">
                     <span class="icon">12</span>
                     <span class="label">12 Hour</span>
                 </div>
@@ -791,63 +760,64 @@
 
         <!-- Display Options -->
         <div class="setting-group">
-            <div class="setting-label time">👁️ Display Options</div>
+            <div class="setting-label styled-text">👁️ Display Options</div>
             
             <div class="toggle-row">
                 <div class="toggle-info">
-                    <div class="toggle-title time">Show Seconds</div>
-                    <div class="toggle-desc time">Display seconds in time</div>
+                    <div class="toggle-title styled-text">Show Seconds</div>
+                    <div class="toggle-desc styled-text">Display seconds in time</div>
                 </div>
-                <div class="toggle-switch" id="secondsToggle" onclick="toggleSeconds()"></div>
+                <div class="toggle-switch" id="secondsToggle"></div>
             </div>
 
             <div class="toggle-row">
                 <div class="toggle-info">
-                    <div class="toggle-title time">Show Date</div>
-                    <div class="toggle-desc time">Display full date below time</div>
+                    <div class="toggle-title styled-text">Show Date</div>
+                    <div class="toggle-desc styled-text">Display full date below time</div>
                 </div>
-                <div class="toggle-switch active" id="dateToggle" onclick="toggleDate()"></div>
+                <div class="toggle-switch active" id="dateToggle"></div>
             </div>
         </div>
 
         <!-- Outline Width -->
         <div class="setting-group">
-            <div class="setting-label time">📐 Outline Width</div>
+            <div class="setting-label styled-text">📐 Outline Width</div>
             <div class="slider-container">
-                <input type="range" min="0" max="6" step="0.5" value="3" class="slider" id="outlineSlider" oninput="updateOutline(this.value)">
-                <span class="slider-value time" id="outlineValue">3px</span>
+                <input type="range" min="0" max="6" step="0.5" value="3" class="slider" id="outlineSlider">
+                <span class="slider-value styled-text" id="outlineValue">3px</span>
             </div>
         </div>
 
         <!-- Shadow Blur -->
         <div class="setting-group">
-            <div class="setting-label time">💫 Shadow Blur</div>
+            <div class="setting-label styled-text">💫 Shadow Blur</div>
             <div class="slider-container">
-                <input type="range" min="0" max="20" value="6" class="slider" id="shadowBlurSlider" oninput="updateShadowBlur(this.value)">
-                <span class="slider-value time" id="shadowBlurValue">6px</span>
+                <input type="range" min="0" max="20" value="6" class="slider" id="shadowBlurSlider">
+                <span class="slider-value styled-text" id="shadowBlurValue">6px</span>
             </div>
         </div>
 
         <!-- Shadow Intensity -->
         <div class="setting-group">
-            <div class="setting-label time">🌟 Shadow Intensity</div>
+            <div class="setting-label styled-text">🌟 Shadow Intensity</div>
             <div class="slider-container">
-                <input type="range" min="0" max="5" step="0.1" value="2" class="slider" id="shadowSpreadSlider" oninput="updateShadowSpread(this.value)">
-                <span class="slider-value time" id="shadowSpreadValue">2.0</span>
+                <input type="range" min="0" max="5" step="0.1" value="2" class="slider" id="shadowSpreadSlider">
+                <span class="slider-value styled-text" id="shadowSpreadValue">2.0</span>
             </div>
         </div>
 
         <!-- Font Size -->
         <div class="setting-group">
-            <div class="setting-label time">📏 Font Size</div>
+            <div class="setting-label styled-text">📏 Font Size</div>
             <div class="slider-container">
-                <input type="range" min="60" max="140" value="96" class="slider" id="fontSizeSlider" oninput="updateFontSize(this.value)">
-                <span class="slider-value time" id="fontSizeValue">96px</span>
+                <input type="range" min="60" max="140" value="96" class="slider" id="fontSizeSlider">
+                <span class="slider-value styled-text" id="fontSizeValue">96px</span>
             </div>
         </div>
     </div>
 
     <script>
+        // State object
         const state = {
             backgroundMode: 'transparent',
             textMode: 'light',
@@ -865,6 +835,57 @@
             cameraStream: null
         };
 
+        // DOM Elements
+        const elements = {
+            timeDisplay: document.getElementById('timeDisplay'),
+            dateDisplay: document.getElementById('dateDisplay'),
+            settingsBtn: document.getElementById('settingsBtn'),
+            settingsPanel: document.getElementById('settingsPanel'),
+            settingsOverlay: document.getElementById('settingsOverlay'),
+            closeBtn: document.querySelector('.close-btn'),
+            
+            // Backgrounds
+            cameraBg: document.getElementById('cameraBg'),
+            imageBg: document.getElementById('imageBg'),
+            gradientBg: document.getElementById('gradientBg'),
+            cameraVideo: document.getElementById('cameraVideo'),
+            
+            // Controls
+            imageUpload: document.getElementById('imageUpload'),
+            uploadImageBtn: document.getElementById('uploadImageBtn'),
+            previewImage: document.getElementById('previewImage'),
+            imagePositionSlider: document.getElementById('imagePositionSlider'),
+            imagePositionValue: document.getElementById('imagePositionValue'),
+            imagePositionControls: document.getElementById('imagePositionControls'),
+            imageActionControls: document.getElementById('imageActionControls'),
+            generateGradientBtn: document.getElementById('generateGradientBtn'),
+            clearImageBtn: document.getElementById('clearImageBtn'),
+            
+            startCameraBtn: document.getElementById('startCameraBtn'),
+            stopCameraBtn: document.getElementById('stopCameraBtn'),
+            cameraStatus: document.getElementById('cameraStatus'),
+            
+            gradientImageUpload: document.getElementById('gradientImageUpload'),
+            uploadGradientBtn: document.getElementById('uploadGradientBtn'),
+            gradientAngleSlider: document.getElementById('gradientAngleSlider'),
+            gradientAngleValue: document.getElementById('gradientAngleValue'),
+            
+            // Toggles
+            secondsToggle: document.getElementById('secondsToggle'),
+            dateToggle: document.getElementById('dateToggle'),
+            
+            // Sliders
+            outlineSlider: document.getElementById('outlineSlider'),
+            outlineValue: document.getElementById('outlineValue'),
+            shadowBlurSlider: document.getElementById('shadowBlurSlider'),
+            shadowBlurValue: document.getElementById('shadowBlurValue'),
+            shadowSpreadSlider: document.getElementById('shadowSpreadSlider'),
+            shadowSpreadValue: document.getElementById('shadowSpreadValue'),
+            fontSizeSlider: document.getElementById('fontSizeSlider'),
+            fontSizeValue: document.getElementById('fontSizeValue')
+        };
+
+        // Update Time
         function updateTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -883,7 +904,7 @@
                 if (state.showSeconds) timeStr += `:${seconds}`;
             }
             
-            document.getElementById('time').textContent = timeStr;
+            elements.timeDisplay.textContent = timeStr;
             
             if (state.showDate) {
                 const options = { 
@@ -893,30 +914,28 @@
                     day: 'numeric' 
                 };
                 const dateStr = now.toLocaleDateString('en-US', options);
-                document.getElementById('date').textContent = dateStr;
-                document.getElementById('date').style.display = 'block';
+                elements.dateDisplay.textContent = dateStr;
+                elements.dateDisplay.style.display = 'block';
             } else {
-                document.getElementById('date').style.display = 'none';
+                elements.dateDisplay.style.display = 'none';
             }
         }
 
+        // Toggle Settings
         function toggleSettings() {
-            const panel = document.getElementById('settingsPanel');
-            const overlay = document.getElementById('settingsOverlay');
-            const btn = document.getElementById('settingsBtn');
-            
-            panel.classList.toggle('active');
-            overlay.classList.toggle('active');
-            btn.classList.toggle('rotate');
+            elements.settingsPanel.classList.toggle('active');
+            elements.settingsOverlay.classList.toggle('active');
+            elements.settingsBtn.classList.toggle('rotate');
         }
 
+        // Background Mode
         function changeBackgroundMode(mode) {
             state.backgroundMode = mode;
             
-            // Hide all background layers
-            document.getElementById('cameraBg').style.display = 'none';
-            document.getElementById('imageBg').style.display = 'none';
-            document.getElementById('gradientBg').style.display = 'none';
+            // Hide all backgrounds
+            elements.cameraBg.style.display = 'none';
+            elements.imageBg.style.display = 'none';
+            elements.gradientBg.style.display = 'none';
             
             // Hide all controls
             document.querySelectorAll('.bg-controls').forEach(el => el.classList.remove('active'));
@@ -930,7 +949,7 @@
                 case 'image':
                     document.getElementById('imageControls').classList.add('active');
                     if (state.uploadedImage) {
-                        document.getElementById('imageBg').style.display = 'block';
+                        elements.imageBg.style.display = 'block';
                     }
                     break;
                 case 'camera':
@@ -938,7 +957,7 @@
                     break;
                 case 'gradient':
                     document.getElementById('gradientControls').classList.add('active');
-                    document.getElementById('gradientBg').style.display = 'block';
+                    elements.gradientBg.style.display = 'block';
                     updateGradient();
                     break;
             }
@@ -946,21 +965,22 @@
             saveState();
         }
 
+        // Image Upload
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     state.uploadedImage = e.target.result;
-                    document.getElementById('imageBg').style.backgroundImage = `url(${e.target.result})`;
-                    document.getElementById('imageBg').style.display = 'block';
+                    elements.imageBg.style.backgroundImage = `url(${e.target.result})`;
+                    elements.imageBg.style.backgroundPosition = `center ${state.imagePosition}%`;
+                    elements.imageBg.style.display = 'block';
                     
-                    const preview = document.getElementById('previewImage');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
+                    elements.previewImage.src = e.target.result;
+                    elements.previewImage.style.display = 'block';
                     
-                    document.getElementById('imagePositionControls').style.display = 'flex';
-                    document.getElementById('imageActionControls').style.display = 'flex';
+                    elements.imagePositionControls.style.display = 'flex';
+                    elements.imageActionControls.style.display = 'grid';
                     
                     saveState();
                 };
@@ -970,40 +990,36 @@
 
         function updateImagePosition(value) {
             state.imagePosition = parseInt(value);
-            document.getElementById('imagePositionValue').textContent = value + '%';
-            document.getElementById('imageBg').style.backgroundPosition = `center ${value}%`;
+            elements.imagePositionValue.textContent = value + '%';
+            elements.imageBg.style.backgroundPosition = `center ${value}%`;
             saveState();
         }
 
         function clearImage() {
             state.uploadedImage = null;
-            document.getElementById('imageBg').style.backgroundImage = '';
-            document.getElementById('imageBg').style.display = 'none';
-            document.getElementById('previewImage').style.display = 'none';
-            document.getElementById('imagePositionControls').style.display = 'none';
-            document.getElementById('imageActionControls').style.display = 'none';
-            document.getElementById('imageUpload').value = '';
+            elements.imageBg.style.backgroundImage = '';
+            elements.imageBg.style.display = 'none';
+            elements.previewImage.style.display = 'none';
+            elements.imagePositionControls.style.display = 'none';
+            elements.imageActionControls.style.display = 'none';
+            elements.imageUpload.value = '';
             saveState();
         }
 
+        // Camera
         async function startCamera() {
-            const status = document.getElementById('cameraStatus');
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { facingMode: 'environment' } 
                 });
                 state.cameraStream = stream;
-                const video = document.getElementById('cameraVideo');
-                video.srcObject = stream;
-                document.getElementById('cameraBg').style.display = 'block';
+                elements.cameraVideo.srcObject = stream;
+                elements.cameraBg.style.display = 'block';
                 
-                status.textContent = '✅ Camera active';
-                status.className = 'status-message success time';
-                status.style.display = 'block';
+                showStatus('cameraStatus', '✅ Camera active', 'success');
             } catch (error) {
-                status.textContent = '❌ Camera access denied or unavailable';
-                status.className = 'status-message error time';
-                status.style.display = 'block';
+                console.error('Camera error:', error);
+                showStatus('cameraStatus', '❌ Camera access denied or unavailable', 'error');
             }
         }
 
@@ -1011,15 +1027,23 @@
             if (state.cameraStream) {
                 state.cameraStream.getTracks().forEach(track => track.stop());
                 state.cameraStream = null;
-                document.getElementById('cameraBg').style.display = 'none';
+                elements.cameraBg.style.display = 'none';
                 
-                const status = document.getElementById('cameraStatus');
-                status.textContent = '⏸️ Camera stopped';
-                status.className = 'status-message time';
-                status.style.display = 'block';
+                showStatus('cameraStatus', '⏸️ Camera stopped', '');
             }
         }
 
+        function showStatus(elementId, message, type) {
+            const statusEl = document.getElementById(elementId);
+            statusEl.textContent = message;
+            statusEl.className = `status-message styled-text active ${type}`;
+            
+            setTimeout(() => {
+                statusEl.classList.remove('active');
+            }, 3000);
+        }
+
+        // Gradient
         function handleGradientImageUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -1043,7 +1067,7 @@
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const pixels = imageData.data;
                 
-                // Sample colors from different parts of the image
+                // Sample colors from different parts
                 const colors = [];
                 const samplePoints = [
                     [0.25, 0.25], [0.75, 0.25], [0.5, 0.5], [0.25, 0.75], [0.75, 0.75]
@@ -1056,14 +1080,21 @@
                     const r = pixels[index];
                     const g = pixels[index + 1];
                     const b = pixels[index + 2];
-                    colors.push(`rgb(${r}, ${g}, ${b})`);
+                    colors.push(rgbToHex(r, g, b));
                 });
                 
-                // Use first and middle color for gradient
                 state.gradientColors = [colors[0], colors[2]];
                 updateGradient();
+                saveState();
             };
             img.src = imageSrc;
+        }
+
+        function rgbToHex(r, g, b) {
+            return '#' + [r, g, b].map(x => {
+                const hex = x.toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('');
         }
 
         function generateGradientFromImage() {
@@ -1075,18 +1106,20 @@
 
         function updateGradient() {
             const gradient = `linear-gradient(${state.gradientAngle}deg, ${state.gradientColors[0]}, ${state.gradientColors[1]})`;
-            document.getElementById('gradientBg').style.background = gradient;
+            elements.gradientBg.style.background = gradient;
         }
 
         function updateGradientAngle(value) {
             state.gradientAngle = parseInt(value);
-            document.getElementById('gradientAngleValue').textContent = value + '°';
+            elements.gradientAngleValue.textContent = value + '°';
             updateGradient();
             saveState();
         }
 
+        // Text Mode
         function changeTextMode(mode) {
-            document.body.className = document.body.className.replace(/text-(light|dark)/, `text-${mode}`);
+            document.body.classList.remove('text-light', 'text-dark');
+            document.body.classList.add(`text-${mode}`);
             state.textMode = mode;
             
             document.querySelectorAll('[data-mode]').forEach(opt => opt.classList.remove('active'));
@@ -1095,6 +1128,7 @@
             saveState();
         }
 
+        // Time Format
         function changeTimeFormat(format) {
             state.timeFormat = format;
             
@@ -1105,52 +1139,55 @@
             saveState();
         }
 
+        // Toggles
         function toggleSeconds() {
             state.showSeconds = !state.showSeconds;
-            document.getElementById('secondsToggle').classList.toggle('active');
+            elements.secondsToggle.classList.toggle('active');
             updateTime();
             saveState();
         }
 
         function toggleDate() {
             state.showDate = !state.showDate;
-            document.getElementById('dateToggle').classList.toggle('active');
+            elements.dateToggle.classList.toggle('active');
             updateTime();
             saveState();
         }
 
+        // Sliders
         function updateOutline(value) {
             state.outlineWidth = parseFloat(value);
-            document.getElementById('outlineValue').textContent = value + 'px';
+            elements.outlineValue.textContent = value + 'px';
             document.documentElement.style.setProperty('--outline-width', value + 'px');
             saveState();
         }
 
         function updateShadowBlur(value) {
             state.shadowBlur = parseInt(value);
-            document.getElementById('shadowBlurValue').textContent = value + 'px';
+            elements.shadowBlurValue.textContent = value + 'px';
             document.documentElement.style.setProperty('--shadow-blur', value + 'px');
             saveState();
         }
 
         function updateShadowSpread(value) {
             state.shadowSpread = parseFloat(value);
-            document.getElementById('shadowSpreadValue').textContent = parseFloat(value).toFixed(1);
+            elements.shadowSpreadValue.textContent = parseFloat(value).toFixed(1);
             document.documentElement.style.setProperty('--shadow-spread', value);
             saveState();
         }
 
         function updateFontSize(value) {
             state.fontSize = parseInt(value);
-            document.getElementById('fontSizeValue').textContent = value + 'px';
-            document.querySelector('.time').style.fontSize = value + 'px';
+            elements.fontSizeValue.textContent = value + 'px';
+            document.documentElement.style.setProperty('--font-size', value + 'px');
             saveState();
         }
 
+        // Save & Load State
         function saveState() {
             const saveData = {
                 ...state,
-                cameraStream: null // Don't save camera stream
+                cameraStream: null
             };
             localStorage.setItem('clockSettings', JSON.stringify(saveData));
         }
@@ -1160,44 +1197,92 @@
             if (saved) {
                 const savedState = JSON.parse(saved);
                 Object.assign(state, savedState);
-                state.cameraStream = null; // Reset camera stream
+                state.cameraStream = null;
                 
                 // Apply all settings
                 changeTextMode(state.textMode);
                 changeTimeFormat(state.timeFormat);
                 changeBackgroundMode(state.backgroundMode);
                 
-                document.getElementById('secondsToggle').classList.toggle('active', state.showSeconds);
-                document.getElementById('dateToggle').classList.toggle('active', state.showDate);
+                elements.secondsToggle.classList.toggle('active', state.showSeconds);
+                elements.dateToggle.classList.toggle('active', state.showDate);
                 
-                document.getElementById('outlineSlider').value = state.outlineWidth;
+                elements.outlineSlider.value = state.outlineWidth;
                 updateOutline(state.outlineWidth);
                 
-                document.getElementById('shadowBlurSlider').value = state.shadowBlur;
+                elements.shadowBlurSlider.value = state.shadowBlur;
                 updateShadowBlur(state.shadowBlur);
                 
-                document.getElementById('shadowSpreadSlider').value = state.shadowSpread;
+                elements.shadowSpreadSlider.value = state.shadowSpread;
                 updateShadowSpread(state.shadowSpread);
                 
-                document.getElementById('fontSizeSlider').value = state.fontSize;
+                elements.fontSizeSlider.value = state.fontSize;
                 updateFontSize(state.fontSize);
                 
-                document.getElementById('gradientAngleSlider').value = state.gradientAngle;
-                updateGradientAngle(state.gradientAngle);
+                elements.gradientAngleSlider.value = state.gradientAngle;
+                elements.gradientAngleValue.textContent = state.gradientAngle + '°';
                 
                 // Restore uploaded image
                 if (state.uploadedImage) {
-                    document.getElementById('imageBg').style.backgroundImage = `url(${state.uploadedImage})`;
-                    document.getElementById('imageBg').style.backgroundPosition = `center ${state.imagePosition}%`;
-                    document.getElementById('previewImage').src = state.uploadedImage;
-                    document.getElementById('previewImage').style.display = 'block';
-                    document.getElementById('imagePositionControls').style.display = 'flex';
-                    document.getElementById('imageActionControls').style.display = 'flex';
-                    document.getElementById('imagePositionSlider').value = state.imagePosition;
-                    document.getElementById('imagePositionValue').textContent = state.imagePosition + '%';
+                    elements.imageBg.style.backgroundImage = `url(${state.uploadedImage})`;
+                    elements.imageBg.style.backgroundPosition = `center ${state.imagePosition}%`;
+                    elements.previewImage.src = state.uploadedImage;
+                    elements.previewImage.style.display = 'block';
+                    elements.imagePositionControls.style.display = 'flex';
+                    elements.imageActionControls.style.display = 'grid';
+                    elements.imagePositionSlider.value = state.imagePosition;
+                    elements.imagePositionValue.textContent = state.imagePosition + '%';
                 }
+                
+                updateGradient();
             }
         }
+
+        // Event Listeners
+        elements.settingsBtn.addEventListener('click', toggleSettings);
+        elements.closeBtn.addEventListener('click', toggleSettings);
+        elements.settingsOverlay.addEventListener('click', toggleSettings);
+
+        // Background mode buttons
+        document.querySelectorAll('[data-bg]').forEach(btn => {
+            btn.addEventListener('click', () => changeBackgroundMode(btn.dataset.bg));
+        });
+
+        // Text mode buttons
+        document.querySelectorAll('[data-mode]').forEach(btn => {
+            btn.addEventListener('click', () => changeTextMode(btn.dataset.mode));
+        });
+
+        // Time format buttons
+        document.querySelectorAll('[data-format]').forEach(btn => {
+            btn.addEventListener('click', () => changeTimeFormat(btn.dataset.format));
+        });
+
+        // Image controls
+        elements.uploadImageBtn.addEventListener('click', () => elements.imageUpload.click());
+        elements.imageUpload.addEventListener('change', handleImageUpload);
+        elements.imagePositionSlider.addEventListener('input', (e) => updateImagePosition(e.target.value));
+        elements.generateGradientBtn.addEventListener('click', generateGradientFromImage);
+        elements.clearImageBtn.addEventListener('click', clearImage);
+
+        // Camera controls
+        elements.startCameraBtn.addEventListener('click', startCamera);
+        elements.stopCameraBtn.addEventListener('click', stopCamera);
+
+        // Gradient controls
+        elements.uploadGradientBtn.addEventListener('click', () => elements.gradientImageUpload.click());
+        elements.gradientImageUpload.addEventListener('change', handleGradientImageUpload);
+        elements.gradientAngleSlider.addEventListener('input', (e) => updateGradientAngle(e.target.value));
+
+        // Toggles
+        elements.secondsToggle.addEventListener('click', toggleSeconds);
+        elements.dateToggle.addEventListener('click', toggleDate);
+
+        // Sliders
+        elements.outlineSlider.addEventListener('input', (e) => updateOutline(e.target.value));
+        elements.shadowBlurSlider.addEventListener('input', (e) => updateShadowBlur(e.target.value));
+        elements.shadowSpreadSlider.addEventListener('input', (e) => updateShadowSpread(e.target.value));
+        elements.fontSizeSlider.addEventListener('input', (e) => updateFontSize(e.target.value));
 
         // Initialize
         updateTime();
@@ -1205,20 +1290,11 @@
         loadState();
 
         // Prevent gestures
-        document.addEventListener('gesturestart', function(e) {
-            e.preventDefault();
-        });
+        document.addEventListener('gesturestart', (e) => e.preventDefault());
 
         // Prevent scrolling on main page
-        let touchStartY = 0;
-        document.body.addEventListener('touchstart', function(e) {
-            if (!document.getElementById('settingsPanel').classList.contains('active')) {
-                touchStartY = e.touches[0].clientY;
-            }
-        }, { passive: true });
-
         document.body.addEventListener('touchmove', function(e) {
-            if (!document.getElementById('settingsPanel').classList.contains('active')) {
+            if (!elements.settingsPanel.classList.contains('active')) {
                 e.preventDefault();
             }
         }, { passive: false });
