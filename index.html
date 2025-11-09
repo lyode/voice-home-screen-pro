@@ -8,10 +8,11 @@
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512x512.png">
     <link rel="manifest" href="manifest.json">
     
-    <!-- PWA & Mobile Full Screen Meta Tags -->
+    <!-- PWA & Mobile Full Screen Meta Tags - iPhone 15 Pro Max Optimized -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#667eea">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#667eea" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#2d3748" media="(prefers-color-scheme: dark)">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Voice Home">
@@ -19,6 +20,7 @@
     <meta name="application-name" content="Voice Home Pro">
     <meta name="msapplication-TileColor" content="#667eea">
     <meta name="msapplication-tap-highlight" content="no">
+    <meta name="format-detection" content="telephone=no">
     <title>Voice Home Screen Pro - Enhanced</title>
     <style>
         * {
@@ -32,21 +34,93 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             min-height: -webkit-fill-available;
+            min-height: 100dvh; /* Dynamic viewport height */
             overflow-x: hidden;
             position: relative;
             transition: all 0.5s ease;
-            /* Safe area for notches (iPhone X, etc.) */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
+            /* Safe area for notches (iPhone 15 Pro Max Dynamic Island) */
+            padding-top: max(env(safe-area-inset-top), 20px);
+            padding-bottom: max(env(safe-area-inset-bottom), 20px);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
             overscroll-behavior: none;
             -webkit-overflow-scrolling: touch;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         html {
             height: -webkit-fill-available;
+            height: 100dvh;
             overscroll-behavior: none;
+        }
+
+        /* iPhone 15 Pro Max Specific Optimizations */
+        @media only screen 
+        and (device-width: 430px) 
+        and (device-height: 932px) 
+        and (-webkit-device-pixel-ratio: 3) {
+            body {
+                /* Extra top padding for Dynamic Island */
+                padding-top: max(env(safe-area-inset-top), 54px);
+            }
+
+            .time {
+                font-size: 72px !important;
+                font-weight: 200;
+            }
+
+            .date {
+                font-size: 20px !important;
+            }
+
+            .card {
+                border-radius: 28px;
+                padding: 24px;
+                margin-bottom: 18px;
+            }
+
+            .card-title {
+                font-size: 19px;
+            }
+
+            .item-name {
+                font-size: 17px;
+            }
+
+            .action-btn {
+                padding: 24px 12px;
+                font-size: 15px;
+            }
+
+            .action-btn svg {
+                width: 32px;
+                height: 32px;
+            }
+
+            .voice-button {
+                width: 90px;
+                height: 90px;
+            }
+
+            .voice-button svg {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* Landscape mode for iPhone 15 Pro Max */
+        @media only screen 
+        and (device-width: 430px) 
+        and (device-height: 932px) 
+        and (orientation: landscape) {
+            .container {
+                max-width: 800px;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(6, 1fr);
+            }
         }
 
         /* Theme Variables */
@@ -183,8 +257,16 @@
             z-index: 1;
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px 20px 20px;
             transition: all 0.3s ease;
+        }
+
+        /* iPhone 15 Pro Max: Use full width */
+        @media (max-width: 430px) {
+            .container {
+                max-width: 100%;
+                padding: 0 16px 16px 16px;
+            }
         }
 
         .container.page-transition {
@@ -219,8 +301,17 @@
         /* Header with Time */
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+        }
+
+        /* iPhone 15 Pro Max: Larger time, positioned below Dynamic Island */
+        @media (max-width: 430px) {
+            .header {
+                margin-bottom: 20px;
+                padding: 10px 20px 20px 20px;
+                margin-top: 10px;
+            }
         }
 
         .time {
@@ -229,22 +320,34 @@
             margin-bottom: 5px;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
             color: var(--text-color, white);
+            letter-spacing: -2px;
         }
 
         .date {
             font-size: 18px;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
             color: var(--text-color, white);
+            opacity: 0.95;
         }
 
         /* Top Action Buttons */
         .top-actions {
             position: fixed;
-            top: 20px;
+            top: max(env(safe-area-inset-top), 20px);
             right: 20px;
             display: flex;
             gap: 10px;
             z-index: 1000;
+        }
+
+        /* iPhone 15 Pro Max: Position below Dynamic Island */
+        @media only screen 
+        and (device-width: 430px) 
+        and (device-height: 932px) 
+        and (-webkit-device-pixel-ratio: 3) {
+            .top-actions {
+                top: max(env(safe-area-inset-top, 54px), 64px);
+            }
         }
 
         .action-icon-btn {
@@ -259,6 +362,20 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* iPhone 15 Pro Max: Larger touch targets */
+        @media (max-width: 430px) {
+            .action-icon-btn {
+                width: 54px;
+                height: 54px;
+            }
+
+            .action-icon-btn svg {
+                width: 26px;
+                height: 26px;
+            }
         }
 
         .action-icon-btn:active {
@@ -285,6 +402,16 @@
             margin: 20px auto;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* iPhone 15 Pro Max: Larger voice button */
+        @media (max-width: 430px) {
+            .voice-button {
+                width: 88px;
+                height: 88px;
+                margin: 24px auto;
+            }
         }
 
         .voice-button:active {
@@ -293,11 +420,18 @@
 
         .voice-button.listening {
             animation: pulse 1.5s infinite;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-            50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            50% { 
+                transform: scale(1.1); 
+                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+            }
         }
 
         .voice-button svg {
@@ -313,6 +447,14 @@
             min-height: 20px;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
             color: var(--text-color, white);
+        }
+
+        /* iPhone 15 Pro Max: Better voice status */
+        @media (max-width: 430px) {
+            .voice-status {
+                font-size: 15px;
+                margin-bottom: 32px;
+            }
         }
 
         /* Floating Info Cards */
@@ -447,6 +589,16 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-top: 20px;
+            padding-bottom: max(env(safe-area-inset-bottom), 20px);
+        }
+
+        /* iPhone 15 Pro Max: Larger touch targets and spacing */
+        @media (max-width: 430px) {
+            .quick-actions {
+                gap: 14px;
+                margin-top: 24px;
+                padding-bottom: max(env(safe-area-inset-bottom), 24px);
+            }
         }
 
         .action-btn {
@@ -461,6 +613,11 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             color: var(--text-color, white);
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .action-btn:active {
@@ -494,13 +651,23 @@
             width: 100%;
             max-width: 450px;
             height: 100vh;
+            height: 100dvh;
             backdrop-filter: blur(30px);
             background: var(--card-bg, rgba(255, 255, 255, 0.15));
             border-left: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 2000;
             transition: right 0.3s ease;
             overflow-y: auto;
-            padding: 20px;
+            padding: max(env(safe-area-inset-top), 20px) 20px max(env(safe-area-inset-bottom), 20px) 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* iPhone 15 Pro Max: Full width panel */
+        @media (max-width: 430px) {
+            .settings-panel {
+                max-width: 100%;
+                padding-top: max(env(safe-area-inset-top), 64px);
+            }
         }
 
         .settings-panel.active {
@@ -675,17 +842,28 @@
         /* Effect Controls Panel */
         .effects-panel {
             position: fixed;
-            bottom: -300px;
+            bottom: -400px;
             left: 0;
             right: 0;
-            height: 300px;
+            height: auto;
+            max-height: 400px;
             background: var(--card-bg, rgba(255, 255, 255, 0.15));
             backdrop-filter: blur(30px);
             z-index: 1500;
             transition: bottom 0.3s ease;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
+            padding: 20px 20px max(env(safe-area-inset-bottom, 20px), 20px) 20px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* iPhone 15 Pro Max: Better bottom panel */
+        @media (max-width: 430px) {
+            .effects-panel {
+                padding-bottom: max(env(safe-area-inset-bottom), 34px);
+                border-radius: 28px 28px 0 0;
+            }
         }
 
         .effects-panel.active {
@@ -699,6 +877,14 @@
             margin-top: 20px;
         }
 
+        /* iPhone 15 Pro Max: Larger effect buttons */
+        @media (max-width: 430px) {
+            .effect-grid {
+                gap: 16px;
+                margin-top: 24px;
+            }
+        }
+
         .effect-btn {
             padding: 20px;
             background: var(--card-bg, rgba(255, 255, 255, 0.1));
@@ -708,6 +894,21 @@
             transition: all 0.3s ease;
             text-align: center;
             color: var(--text-color, white);
+            font-size: 14px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* iPhone 15 Pro Max: Larger touch targets */
+        @media (max-width: 430px) {
+            .effect-btn {
+                padding: 24px 16px;
+                border-radius: 18px;
+                font-size: 15px;
+                min-height: 100px;
+            }
         }
 
         .effect-btn:active {
@@ -722,7 +923,7 @@
         /* Install Prompt */
         .install-prompt {
             position: fixed;
-            bottom: 20px;
+            bottom: max(env(safe-area-inset-bottom), 20px);
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -736,6 +937,16 @@
             z-index: 3000;
             animation: slideUp 0.3s ease;
             cursor: pointer;
+            max-width: 90%;
+        }
+
+        /* iPhone 15 Pro Max: Position above home indicator */
+        @media (max-width: 430px) {
+            .install-prompt {
+                bottom: max(env(safe-area-inset-bottom, 34px), 44px);
+                padding: 16px 32px;
+                font-size: 15px;
+            }
         }
 
         .install-prompt.show {
@@ -751,6 +962,7 @@
             width: 24px;
             height: 24px;
             fill: white;
+            flex-shrink: 0;
         }
 
         .install-close {
@@ -759,6 +971,7 @@
             height: 20px;
             cursor: pointer;
             opacity: 0.8;
+            flex-shrink: 0;
         }
 
         .install-close:hover {
