@@ -8,10 +8,9 @@
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512x512.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Voice Home Screen Ultimate</title>
+    <title>Voice Home Screen Pro - Enhanced</title>
     <style>
         * {
             margin: 0;
@@ -25,6 +24,112 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            transition: all 0.5s ease;
+        }
+
+        /* Theme Variables */
+        body.theme-dark {
+            --bg-color: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --text-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body.theme-light {
+            --bg-color: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
+            --text-color: #1a202c;
+            --card-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        body.theme-neon {
+            --bg-color: linear-gradient(135deg, #000000 0%, #1a0033 100%);
+            --text-color: #00ff9f;
+            --card-bg: rgba(0, 255, 159, 0.1);
+        }
+
+        body.theme-minimal {
+            --bg-color: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+            --text-color: #333333;
+            --card-bg: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Particle Canvas for Effects */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        /* Incoming Call Glow Effect */
+        body.incoming-call-glow {
+            animation: glowPulse 1s infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { 
+                box-shadow: inset 0 0 100px rgba(0, 255, 159, 0.3);
+                border: 3px solid rgba(0, 255, 159, 0.5);
+            }
+            50% { 
+                box-shadow: inset 0 0 150px rgba(0, 255, 159, 0.6);
+                border: 3px solid rgba(0, 255, 159, 1);
+            }
+        }
+
+        /* Running Light Border */
+        .running-lights {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 998;
+        }
+
+        .running-lights::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #ff0000 25%, 
+                #00ff00 50%, 
+                #0000ff 75%, 
+                transparent 100%);
+            animation: runningLightH 2s linear infinite;
+        }
+
+        .running-lights::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                #ff00ff 25%, 
+                #ffff00 50%, 
+                #00ffff 75%, 
+                transparent 100%);
+            animation: runningLightV 2s linear infinite;
+        }
+
+        @keyframes runningLightH {
+            from { background-position: 0 0; }
+            to { background-position: 100vw 0; }
+        }
+
+        @keyframes runningLightV {
+            from { background-position: 0 0; }
+            to { background-position: 0 100vh; }
         }
 
         /* Background Media Layer */
@@ -46,51 +151,8 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-        }
-
-        /* Fun Animations Container */
-        #animationLayer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            pointer-events: none;
-            display: none;
-        }
-
-        #animationLayer.active {
-            display: block;
-        }
-
-        /* Glowing Border Animation */
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.8), inset 0 0 20px rgba(255, 0, 255, 0.4); }
-            50% { box-shadow: 0 0 40px rgba(0, 255, 255, 1), inset 0 0 40px rgba(0, 255, 255, 0.6); }
-        }
-
-        .glow-border {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border: 5px solid transparent;
-            animation: glowPulse 2s infinite;
-            pointer-events: none;
-        }
-
-        /* Particle Effects */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            animation: floatUp 3s linear;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+            background: var(--bg-color, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            transition: all 0.5s ease;
         }
 
         /* Main Container */
@@ -100,36 +162,42 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-        }
-
-        /* Settings Button */
-        .settings-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
             transition: all 0.3s ease;
         }
 
-        .settings-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
+        .container.page-transition {
+            animation: pageSlide 0.5s ease;
+        }
+
+        @keyframes pageSlide {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Logo Branding */
+        .logo-branding {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-branding img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        .logo-branding .brand-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            color: var(--text-color, white);
         }
 
         /* Header with Time */
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             padding: 20px;
         }
 
@@ -138,13 +206,47 @@
             font-weight: 300;
             margin-bottom: 5px;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-            color: white;
+            color: var(--text-color, white);
         }
 
         .date {
             font-size: 18px;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
-            color: white;
+            color: var(--text-color, white);
+        }
+
+        /* Top Action Buttons */
+        .top-actions {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .action-icon-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            backdrop-filter: blur(20px);
+            background: var(--card-bg, rgba(255, 255, 255, 0.15));
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-icon-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-color, white);
         }
 
         /* Voice Button */
@@ -153,6 +255,7 @@
             height: 80px;
             border-radius: 50%;
             backdrop-filter: blur(20px);
+            background: var(--card-bg, rgba(255, 255, 255, 0.15));
             border: 3px solid rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
@@ -160,7 +263,10 @@
             margin: 20px auto;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .voice-button:active {
+            transform: scale(0.95);
         }
 
         .voice-button.listening {
@@ -175,32 +281,43 @@
         .voice-button svg {
             width: 40px;
             height: 40px;
-            fill: white;
+            fill: var(--text-color, white);
         }
 
         .voice-status {
             text-align: center;
-            color: white;
             font-size: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             min-height: 20px;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            color: var(--text-color, white);
         }
 
-        /* Cards */
+        /* Floating Info Cards */
         .card {
             backdrop-filter: blur(20px);
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--card-bg, rgba(255, 255, 255, 0.15));
             border-radius: 25px;
             padding: 20px;
             margin-bottom: 15px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: cardFadeIn 0.5s ease;
         }
 
-        .card.hidden {
-            display: none;
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:active {
+            transform: translateY(-2px);
+        }
+
+        .card.disabled {
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         .card-header {
@@ -220,7 +337,6 @@
             height: 45px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -231,62 +347,49 @@
         .card-icon svg {
             width: 24px;
             height: 24px;
-            fill: white;
+            fill: var(--text-color, white);
         }
 
         .card-title {
             font-size: 17px;
             font-weight: 600;
-            color: white;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            color: var(--text-color, white);
         }
 
-        .toggle-switch {
+        /* Feature Toggle Switch */
+        .feature-toggle {
             position: relative;
             width: 50px;
             height: 26px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 13px;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.2);
-            transition: .4s;
-            border-radius: 26px;
+            transition: all 0.3s ease;
         }
 
-        .toggle-slider:before {
+        .feature-toggle.active {
+            background: #4CAF50;
+        }
+
+        .feature-toggle::after {
+            content: '';
             position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
+            background: white;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s ease;
         }
 
-        input:checked + .toggle-slider {
-            background-color: #4caf50;
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(24px);
+        .feature-toggle.active::after {
+            left: 27px;
         }
 
         .card-content {
-            color: white;
+            color: var(--text-color, white);
         }
 
         .item {
@@ -309,119 +412,11 @@
             opacity: 0.9;
         }
 
-        /* Weather Widget */
-        .weather-display {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .weather-temp {
-            font-size: 48px;
-            font-weight: 300;
-        }
-
-        .weather-icon {
-            font-size: 64px;
-        }
-
-        .weather-details {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-
-        /* Task List */
-        .task-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .task-item:last-child {
-            border-bottom: none;
-        }
-
-        .task-checkbox {
-            width: 20px;
-            height: 20px;
-            margin-right: 12px;
-            cursor: pointer;
-        }
-
-        .task-text {
-            flex: 1;
-        }
-
-        .task-text.completed {
-            text-decoration: line-through;
-            opacity: 0.5;
-        }
-
-        /* Timer Display */
-        .timer-display {
+        .no-data {
             text-align: center;
-            font-size: 48px;
-            font-weight: 300;
-            margin: 20px 0;
-        }
-
-        .timer-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .timer-btn {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            color: white;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Battery Indicator */
-        .battery-display {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .battery-icon {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            border: 3px solid white;
-            border-radius: 4px;
-        }
-
-        .battery-icon:after {
-            content: '';
-            position: absolute;
-            right: -8px;
-            top: 8px;
-            width: 5px;
-            height: 8px;
-            background: white;
-            border-radius: 0 2px 2px 0;
-        }
-
-        .battery-level {
-            position: absolute;
-            left: 2px;
-            top: 2px;
-            bottom: 2px;
-            background: #4caf50;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .battery-percent {
-            font-size: 32px;
-            font-weight: 600;
+            opacity: 0.6;
+            padding: 20px;
+            font-size: 14px;
         }
 
         /* Quick Actions */
@@ -434,22 +429,39 @@
 
         .action-btn {
             backdrop-filter: blur(20px);
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--card-bg, rgba(255, 255, 255, 0.15));
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             padding: 20px 10px;
-            color: white;
             font-size: 14px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            color: var(--text-color, white);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
         }
 
         .action-btn svg {
             width: 28px;
             height: 28px;
-            fill: white;
+            fill: var(--text-color, white);
             margin-bottom: 8px;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: rgba(255, 59, 48, 0.9);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
         }
 
         /* Settings Panel */
@@ -458,10 +470,10 @@
             top: 0;
             right: -100%;
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             height: 100vh;
             backdrop-filter: blur(30px);
-            background: rgba(0, 0, 0, 0.8);
+            background: var(--card-bg, rgba(255, 255, 255, 0.15));
             border-left: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 2000;
             transition: right 0.3s ease;
@@ -485,7 +497,7 @@
         .settings-header h2 {
             font-size: 24px;
             font-weight: 600;
-            color: white;
+            color: var(--text-color, white);
         }
 
         .close-btn {
@@ -493,18 +505,18 @@
             height: 40px;
             border-radius: 50%;
             backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            background: var(--card-bg, rgba(255, 255, 255, 0.1));
         }
 
         .close-btn svg {
             width: 20px;
             height: 20px;
-            fill: white;
+            fill: var(--text-color, white);
         }
 
         .setting-group {
@@ -515,35 +527,114 @@
             font-size: 14px;
             font-weight: 500;
             margin-bottom: 8px;
-            color: white;
-            opacity: 0.9;
+            opacity: 0.8;
+            color: var(--text-color, white);
         }
 
-        .feature-toggle {
+        .setting-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--text-color, white);
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .setting-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .slider-container {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 10px;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--text-color, white);
+        }
+
+        .theme-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .theme-option {
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-color, white);
+        }
+
+        .theme-option.active {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            width: 100%;
             padding: 15px;
             background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color, white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
         }
 
-        .feature-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .feature-icon {
-            font-size: 24px;
-        }
-
-        .feature-name {
-            color: white;
-            font-weight: 500;
-        }
-
+        /* Settings Overlay */
         .settings-overlay {
             position: fixed;
             top: 0;
@@ -559,38 +650,77 @@
             display: block;
         }
 
-        .no-data {
-            text-align: center;
-            opacity: 0.6;
+        /* Effect Controls Panel */
+        .effects-panel {
+            position: fixed;
+            bottom: -300px;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: var(--card-bg, rgba(255, 255, 255, 0.15));
+            backdrop-filter: blur(30px);
+            z-index: 1500;
+            transition: bottom 0.3s ease;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
             padding: 20px;
-            font-size: 14px;
+            overflow-y: auto;
         }
 
-        .badge {
-            display: inline-block;
-            background: rgba(255, 59, 48, 0.9);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
+        .effects-panel.active {
+            bottom: 0;
+        }
+
+        .effect-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .effect-btn {
+            padding: 20px;
+            background: var(--card-bg, rgba(255, 255, 255, 0.1));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: var(--text-color, white);
+        }
+
+        .effect-btn:active {
+            transform: scale(0.95);
+        }
+
+        .effect-btn.active {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.2);
         }
     </style>
 </head>
-<body>
-    <!-- Background -->
+<body class="theme-dark">
+    <!-- Particle Canvas for Effects -->
+    <canvas id="particleCanvas"></canvas>
+    
+    <!-- Running Lights (hidden by default) -->
+    <div class="running-lights" id="runningLights" style="display: none;"></div>
+
+    <!-- Background Media -->
     <div id="bgMedia"></div>
     <div id="bgOverlay"></div>
 
-    <!-- Animation Layer for Call Effects -->
-    <div id="animationLayer"></div>
-
-    <!-- Settings Button -->
-    <div class="settings-btn" onclick="toggleSettings()">
-        <svg viewBox="0 0 24 24">
-            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-        </svg>
+    <!-- Top Action Buttons -->
+    <div class="top-actions">
+        <div class="action-icon-btn" onclick="toggleEffects()" title="Effects">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+            </svg>
+        </div>
+        <div class="action-icon-btn" onclick="toggleSettings()" title="Settings">
+            <svg viewBox="0 0 24 24">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+            </svg>
+        </div>
     </div>
 
     <!-- Settings Overlay -->
@@ -607,176 +737,93 @@
             </div>
         </div>
 
+        <!-- Theme Selection -->
         <div class="setting-group">
-            <div class="setting-label">📱 Features</div>
-            
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">🌤️</span>
-                    <span class="feature-name">Weather</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleWeather" onchange="toggleFeature('weather', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">📰</span>
-                    <span class="feature-name">News</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleNews" onchange="toggleFeature('news', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">📊</span>
-                    <span class="feature-name">Tasks</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleTasks" onchange="toggleFeature('tasks', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">⏱️</span>
-                    <span class="feature-name">Timer</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleTimer" onchange="toggleFeature('timer', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">🔋</span>
-                    <span class="feature-name">Battery</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleBattery" onchange="toggleFeature('battery', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">💰</span>
-                    <span class="feature-name">Crypto</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleCrypto" onchange="toggleFeature('crypto', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">📞</span>
-                    <span class="feature-name">Recent Calls</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleCalls" onchange="toggleFeature('calls', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">💬</span>
-                    <span class="feature-name">Messages</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleMessages" onchange="toggleFeature('messages', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">📅</span>
-                    <span class="feature-name">Calendar</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleCalendar" onchange="toggleFeature('calendar', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+            <div class="setting-label">🎨 Theme</div>
+            <div class="theme-selector">
+                <div class="theme-option active" data-theme="dark" onclick="changeTheme('dark')">🌙 Dark</div>
+                <div class="theme-option" data-theme="light" onclick="changeTheme('light')">☀️ Light</div>
+                <div class="theme-option" data-theme="neon" onclick="changeTheme('neon')">💫 Neon</div>
+                <div class="theme-option" data-theme="minimal" onclick="changeTheme('minimal')">⚪ Minimal</div>
             </div>
         </div>
 
+        <!-- Save/Load Presets -->
         <div class="setting-group">
-            <div class="setting-label">✨ Call Animation Effects</div>
-            
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">💫</span>
-                    <span class="feature-name">Glowing Border</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleGlow" onchange="toggleAnimation('glow', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
+            <div class="setting-label">💾 Theme Presets</div>
+            <button class="btn-primary" onclick="savePreset()">Save Current Settings</button>
+            <button class="btn-secondary" onclick="loadPreset()">Load Saved Settings</button>
+        </div>
 
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">⭐</span>
-                    <span class="feature-name">Stars</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleStars" onchange="toggleAnimation('stars', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
+        <!-- Export/Import Settings -->
+        <div class="setting-group">
+            <div class="setting-label">📤 Backup Settings</div>
+            <button class="btn-primary" onclick="exportSettings()">Export Settings (JSON)</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importSettings(event)">
+            <button class="btn-secondary" onclick="document.getElementById('importFile').click()">Import Settings</button>
+        </div>
 
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">❤️</span>
-                    <span class="feature-name">Hearts</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleHearts" onchange="toggleAnimation('hearts', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+        <!-- Transparency -->
+        <div class="setting-group">
+            <div class="setting-label">💎 Transparency %</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="100" value="20" class="slider" id="transparencySlider" oninput="updateTransparency(this.value)">
+                <span class="slider-value" id="transparencyValue">20%</span>
             </div>
+        </div>
 
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">🐻</span>
-                    <span class="feature-name">Bears</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleBears" onchange="toggleAnimation('bears', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+        <!-- Blur Intensity -->
+        <div class="setting-group">
+            <div class="setting-label">🌫️ Blur Intensity</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="50" value="20" class="slider" id="blurSlider" oninput="updateBlur(this.value)">
+                <span class="slider-value" id="blurValue">20px</span>
             </div>
+        </div>
+    </div>
 
-            <div class="feature-toggle">
-                <div class="feature-info">
-                    <span class="feature-icon">🎀</span>
-                    <span class="feature-name">Dolls</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="toggleDolls" onchange="toggleAnimation('dolls', this.checked)" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+    <!-- Effects Control Panel -->
+    <div class="effects-panel" id="effectsPanel">
+        <div class="settings-header">
+            <h2>✨ Fun Effects</h2>
+            <div class="close-btn" onclick="toggleEffects()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
             </div>
-
-            <button class="timer-btn" style="width: 100%; margin-top: 15px;" onclick="testCallAnimation()">
-                🎬 Test Call Animation
-            </button>
+        </div>
+        
+        <div class="effect-grid">
+            <div class="effect-btn" onclick="toggleEffect('incomingCall')">
+                📞 Call Glow
+            </div>
+            <div class="effect-btn" onclick="toggleEffect('stars')">
+                ⭐ Stars
+            </div>
+            <div class="effect-btn" onclick="toggleEffect('hearts')">
+                ❤️ Hearts
+            </div>
+            <div class="effect-btn" onclick="toggleEffect('bears')">
+                🐻 Bears
+            </div>
+            <div class="effect-btn" onclick="toggleEffect('dolly')">
+                🎀 Dolly
+            </div>
+            <div class="effect-btn" onclick="toggleEffect('snow')">
+                ❄️ Snow
+            </div>
         </div>
     </div>
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Header -->
+        <!-- Logo Branding -->
+        <div class="logo-branding" id="logoBranding" style="display: none;">
+            <img id="logoImage" src="" alt="Logo">
+            <div class="brand-text" id="brandText">Voice Assistant</div>
+        </div>
+
+        <!-- Header with Time -->
         <div class="header">
             <div class="time" id="timeDisplay">00:00</div>
             <div class="date" id="dateDisplay">Loading...</div>
@@ -789,159 +836,9 @@
                 <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
         </div>
-        <div class="voice-status" id="voiceStatus">Tap microphone for voice commands</div>
+        <div class="voice-status" id="voiceStatus">Tap microphone to start</div>
 
-        <!-- Weather Widget -->
-        <div class="card" id="weatherCard">
-            <div class="card-header">
-                <div class="card-header-left">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/>
-                        </svg>
-                    </div>
-                    <div class="card-title">Weather</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="document.getElementById('weatherCard').classList.toggle('hidden')">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            <div class="card-content">
-                <div class="weather-display">
-                    <div>
-                        <div class="weather-temp" id="weatherTemp">24°C</div>
-                        <div class="weather-details" id="weatherDesc">Partly Cloudy</div>
-                        <div class="weather-details" id="weatherLocation">Kuala Lumpur</div>
-                    </div>
-                    <div class="weather-icon" id="weatherIcon">🌤️</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- News Widget -->
-        <div class="card" id="newsCard">
-            <div class="card-header">
-                <div class="card-header-left">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
-                        </svg>
-                    </div>
-                    <div class="card-title">Latest News</div>
-                </div>
-            </div>
-            <div class="card-content" id="newsContent">
-                <div class="item">
-                    <div class="item-name">Tech Giants Announce AI Partnership</div>
-                    <div class="item-detail">2 hours ago</div>
-                </div>
-                <div class="item">
-                    <div class="item-name">Climate Summit Reaches Agreement</div>
-                    <div class="item-detail">5 hours ago</div>
-                </div>
-                <div class="item">
-                    <div class="item-name">New Space Mission Launches Today</div>
-                    <div class="item-detail">8 hours ago</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Task List -->
-        <div class="card" id="tasksCard">
-            <div class="card-header">
-                <div class="card-header-left">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                        </svg>
-                    </div>
-                    <div class="card-title">Tasks</div>
-                </div>
-            </div>
-            <div class="card-content" id="tasksContent">
-                <div class="task-item">
-                    <input type="checkbox" class="task-checkbox">
-                    <span class="task-text">Review project proposal</span>
-                </div>
-                <div class="task-item">
-                    <input type="checkbox" class="task-checkbox">
-                    <span class="task-text">Call supplier about materials</span>
-                </div>
-                <div class="task-item">
-                    <input type="checkbox" class="task-checkbox">
-                    <span class="task-text">Submit timesheet</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Timer -->
-        <div class="card" id="timerCard">
-            <div class="card-header">
-                <div class="card-header-left">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                        </svg>
-                    </div>
-                    <div class="card-title">Timer</div>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="timer-display" id="timerDisplay">00:00</div>
-                <div class="timer-controls">
-                    <button class="timer-btn" onclick="startTimer()">Start</button>
-                    <button class="timer-btn" onclick="pauseTimer()">Pause</button>
-                    <button class="timer-btn" onclick="resetTimer()">Reset</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Battery -->
-        <div class="card" id="batteryCard">
-            <div class="card-header">
-                <div class="card-header-left">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/>
-                        </svg>
-                    </div>
-                    <div class="card-title">Battery</div>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="battery-display">
-                    <div class="battery-icon">
-                        <div class="battery-level" id="batteryLevel" style="width: 75%;"></div>
-                    </div>
-                    <div class="battery-percent" id="batteryPercent">75%</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Crypto Ticker -->
-        <div class="card" id="cryptoCard">
-            <div class="card-header">
-                <div class="card-header-left">
-                    <div class="card-icon">
-                        <span style="font-size: 24px;">₿</span>
-                    </div>
-                    <div class="card-title">Crypto</div>
-                </div>
-            </div>
-            <div class="card-content" id="cryptoContent">
-                <div class="item">
-                    <div class="item-name">Bitcoin (BTC) <span style="color: #4caf50;">+2.5%</span></div>
-                    <div class="item-detail">$45,234.12</div>
-                </div>
-                <div class="item">
-                    <div class="item-name">Ethereum (ETH) <span style="color: #f44336;">-1.2%</span></div>
-                    <div class="item-detail">$3,021.45</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Calls -->
+        <!-- Recent Calls Card -->
         <div class="card" id="callsCard">
             <div class="card-header">
                 <div class="card-header-left">
@@ -952,21 +849,15 @@
                     </div>
                     <div class="card-title">Recent Calls</div>
                 </div>
+                <div class="feature-toggle active" data-feature="calls" onclick="toggleFeature(this, 'calls')"></div>
             </div>
             <div class="card-content" id="recentCalls">
-                <div class="item">
-                    <div class="item-name">John Smith</div>
-                    <div class="item-detail">Incoming • 10 mins ago</div>
-                </div>
-                <div class="item">
-                    <div class="item-name">Sarah Wilson</div>
-                    <div class="item-detail">Outgoing • 1 hour ago</div>
-                </div>
+                <div class="no-data">No recent calls</div>
             </div>
         </div>
 
-        <!-- Messages -->
-        <div class="card" id="messagesCard">
+        <!-- WhatsApp Activity Card -->
+        <div class="card" id="whatsappCard">
             <div class="card-header">
                 <div class="card-header-left">
                     <div class="card-icon">
@@ -974,23 +865,17 @@
                             <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
                         </svg>
                     </div>
-                    <div class="card-title">Messages</div>
+                    <div class="card-title">WhatsApp</div>
                 </div>
+                <div class="feature-toggle active" data-feature="whatsapp" onclick="toggleFeature(this, 'whatsapp')"></div>
             </div>
             <div class="card-content" id="whatsappMessages">
-                <div class="item">
-                    <div class="item-name">Construction Team <span class="badge">2</span></div>
-                    <div class="item-detail">Meeting confirmed • 5 mins ago</div>
-                </div>
-                <div class="item">
-                    <div class="item-name">David Lee</div>
-                    <div class="item-detail">Materials delivered • 1 hour ago</div>
-                </div>
+                <div class="no-data">No recent messages</div>
             </div>
         </div>
 
-        <!-- Calendar -->
-        <div class="card" id="calendarCard">
+        <!-- Latest Appointment Card -->
+        <div class="card" id="latestAptCard">
             <div class="card-header">
                 <div class="card-header-left">
                     <div class="card-icon">
@@ -998,15 +883,30 @@
                             <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/>
                         </svg>
                     </div>
-                    <div class="card-title">Appointments</div>
+                    <div class="card-title">Latest Appointment</div>
                 </div>
+                <div class="feature-toggle active" data-feature="latestApt" onclick="toggleFeature(this, 'latestApt')"></div>
             </div>
             <div class="card-content" id="latestAppointment">
-                <div class="item">
-                    <div class="item-name">Site Inspection - Lot 15</div>
-                    <div class="item-detail">📅 Today, 2:00 PM</div>
-                    <div class="item-detail">📍 Bukit Jalil Site</div>
+                <div class="no-data">No appointments</div>
+            </div>
+        </div>
+
+        <!-- Next Appointment Card -->
+        <div class="card" id="nextAptCard">
+            <div class="card-header">
+                <div class="card-header-left">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <div class="card-title">Next Appointment</div>
                 </div>
+                <div class="feature-toggle active" data-feature="nextApt" onclick="toggleFeature(this, 'nextApt')"></div>
+            </div>
+            <div class="card-content" id="nextAppointment">
+                <div class="no-data">No upcoming appointments</div>
             </div>
         </div>
 
@@ -1034,157 +934,320 @@
     </div>
 
     <script>
-        // Feature toggles state
-        const features = {
-            weather: true,
-            news: true,
-            tasks: true,
-            timer: true,
-            battery: true,
-            crypto: true,
-            calls: true,
-            messages: true,
-            calendar: true
+        // Global state
+        const state = {
+            features: {
+                calls: true,
+                whatsapp: true,
+                latestApt: true,
+                nextApt: true
+            },
+            effects: {
+                incomingCall: false,
+                stars: false,
+                hearts: false,
+                bears: false,
+                dolly: false,
+                snow: false
+            },
+            theme: 'dark',
+            settings: {
+                transparency: 20,
+                blur: 20
+            }
         };
 
-        // Animation toggles state
-        const animations = {
-            glow: true,
-            stars: true,
-            hearts: true,
-            bears: true,
-            dolls: true
-        };
+        // Particle system
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId = null;
 
-        // Timer state
-        let timerSeconds = 0;
-        let timerInterval = null;
-        let timerRunning = false;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
 
-        // Toggle feature visibility
-        function toggleFeature(feature, enabled) {
-            features[feature] = enabled;
+        class Particle {
+            constructor(emoji, speed = 1) {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.speed = speed + Math.random() * 2;
+                this.emoji = emoji;
+                this.size = 20 + Math.random() * 20;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 5;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.rotation += this.rotationSpeed;
+                if (this.y > canvas.height) {
+                    this.y = -50;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.font = `${this.size}px Arial`;
+                ctx.fillText(this.emoji, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Toggle Effects
+        function toggleEffect(effectName) {
+            const btn = event.target;
+            const isActive = state.effects[effectName];
+            
+            // Stop current effect
+            if (isActive) {
+                state.effects[effectName] = false;
+                btn.classList.remove('active');
+                particles = [];
+                if (effectName === 'incomingCall') {
+                    document.body.classList.remove('incoming-call-glow');
+                    document.getElementById('runningLights').style.display = 'none';
+                }
+            } else {
+                // Stop all other effects
+                Object.keys(state.effects).forEach(key => {
+                    state.effects[key] = false;
+                    document.body.classList.remove('incoming-call-glow');
+                    document.getElementById('runningLights').style.display = 'none';
+                });
+                
+                // Reset effect buttons
+                document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
+                
+                // Start new effect
+                state.effects[effectName] = true;
+                btn.classList.add('active');
+                particles = [];
+                
+                if (effectName === 'incomingCall') {
+                    document.body.classList.add('incoming-call-glow');
+                    document.getElementById('runningLights').style.display = 'block';
+                } else if (effectName === 'stars') {
+                    for (let i = 0; i < 50; i++) {
+                        particles.push(new Particle('⭐', 1));
+                    }
+                } else if (effectName === 'hearts') {
+                    for (let i = 0; i < 30; i++) {
+                        particles.push(new Particle('❤️', 1.5));
+                    }
+                } else if (effectName === 'bears') {
+                    for (let i = 0; i < 20; i++) {
+                        particles.push(new Particle('🐻', 1));
+                    }
+                } else if (effectName === 'dolly') {
+                    const dollyEmojis = ['🎀', '🎪', '🎭', '🎨'];
+                    for (let i = 0; i < 40; i++) {
+                        particles.push(new Particle(dollyEmojis[Math.floor(Math.random() * dollyEmojis.length)], 2));
+                    }
+                } else if (effectName === 'snow') {
+                    for (let i = 0; i < 100; i++) {
+                        particles.push(new Particle('❄️', 0.5));
+                    }
+                }
+            }
+            
+            if (particles.length > 0) {
+                if (animationId) cancelAnimationFrame(animationId);
+                animate();
+            } else {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Toggle Settings
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('active');
+            document.getElementById('settingsOverlay').classList.toggle('active');
+        }
+
+        // Toggle Effects Panel
+        function toggleEffects() {
+            document.getElementById('effectsPanel').classList.toggle('active');
+        }
+
+        // Toggle Feature
+        function toggleFeature(toggle, feature) {
+            toggle.classList.toggle('active');
+            state.features[feature] = toggle.classList.contains('active');
+            
             const cardMap = {
-                weather: 'weatherCard',
-                news: 'newsCard',
-                tasks: 'tasksCard',
-                timer: 'timerCard',
-                battery: 'batteryCard',
-                crypto: 'cryptoCard',
                 calls: 'callsCard',
-                messages: 'messagesCard',
-                calendar: 'calendarCard'
+                whatsapp: 'whatsappCard',
+                latestApt: 'latestAptCard',
+                nextApt: 'nextAptCard'
             };
             
             const card = document.getElementById(cardMap[feature]);
-            if (card) {
-                if (enabled) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
+            if (state.features[feature]) {
+                card.classList.remove('disabled');
+            } else {
+                card.classList.add('disabled');
+            }
+            
+            saveState();
+        }
+
+        // Change Theme
+        function changeTheme(theme) {
+            document.body.className = `theme-${theme}`;
+            state.theme = theme;
+            
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+            
+            saveState();
+        }
+
+        // Save Preset
+        function savePreset() {
+            localStorage.setItem('voiceHomePreset', JSON.stringify(state));
+            alert('✅ Settings saved successfully!');
+        }
+
+        // Load Preset
+        function loadPreset() {
+            const saved = localStorage.getItem('voiceHomePreset');
+            if (saved) {
+                Object.assign(state, JSON.parse(saved));
+                applyState();
+                alert('✅ Settings loaded successfully!');
+            } else {
+                alert('❌ No saved settings found!');
+            }
+        }
+
+        // Export Settings
+        function exportSettings() {
+            const dataStr = JSON.stringify(state, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'voice-home-settings.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Import Settings
+        function importSettings(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        Object.assign(state, imported);
+                        applyState();
+                        alert('✅ Settings imported successfully!');
+                    } catch (err) {
+                        alert('❌ Invalid settings file!');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Update Transparency
+        function updateTransparency(value) {
+            state.settings.transparency = parseInt(value);
+            document.getElementById('transparencyValue').textContent = value + '%';
+            saveState();
+        }
+
+        // Update Blur
+        function updateBlur(value) {
+            state.settings.blur = parseInt(value);
+            document.getElementById('blurValue').textContent = value + 'px';
+            document.querySelectorAll('.card, .voice-button, .action-btn').forEach(el => {
+                el.style.backdropFilter = `blur(${value}px)`;
+            });
+            saveState();
+        }
+
+        // Save State
+        function saveState() {
+            localStorage.setItem('voiceHomeState', JSON.stringify(state));
+        }
+
+        // Apply State
+        function applyState() {
+            changeTheme(state.theme);
+            
+            Object.keys(state.features).forEach(feature => {
+                const toggle = document.querySelector(`[data-feature="${feature}"]`);
+                if (toggle) {
+                    if (state.features[feature]) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
                 }
+            });
+            
+            document.getElementById('transparencySlider').value = state.settings.transparency;
+            document.getElementById('transparencyValue').textContent = state.settings.transparency + '%';
+            document.getElementById('blurSlider').value = state.settings.blur;
+            document.getElementById('blurValue').textContent = state.settings.blur + 'px';
+        }
+
+        // Load State on start
+        const saved = localStorage.getItem('voiceHomeState');
+        if (saved) {
+            Object.assign(state, JSON.parse(saved));
+            applyState();
+        }
+
+        // Sample data
+        const sampleData = {
+            recentCalls: [
+                { name: "John Smith", time: "10 mins ago", type: "Incoming" },
+                { name: "Sarah Wilson", time: "1 hour ago", type: "Outgoing" },
+                { name: "Mike Johnson", time: "3 hours ago", type: "Missed" }
+            ],
+            whatsappMessages: [
+                { name: "Construction Team", message: "Meeting confirmed for 2 PM", time: "5 mins ago", unread: 2 },
+                { name: "David Lee", message: "Materials delivered", time: "1 hour ago", unread: 0 },
+                { name: "Project Group", message: "Budget approved!", time: "2 hours ago", unread: 1 }
+            ],
+            latestAppointment: {
+                title: "Site Inspection - Lot 15",
+                time: "Today, 2:00 PM",
+                location: "Bukit Jalil Site",
+                with: "Engineer Ahmad"
+            },
+            nextAppointment: {
+                title: "Client Meeting - Villa Project",
+                time: "Tomorrow, 10:00 AM",
+                location: "Office Conference Room",
+                with: "Mr. Tan"
             }
-        }
-
-        // Toggle animation effects
-        function toggleAnimation(animation, enabled) {
-            animations[animation] = enabled;
-        }
-
-        // Settings panel toggle
-        function toggleSettings() {
-            const panel = document.getElementById('settingsPanel');
-            const overlay = document.getElementById('settingsOverlay');
-            panel.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-
-        // Call animation test
-        function testCallAnimation() {
-            startCallAnimation();
-            speak('Incoming call animation activated!');
-            setTimeout(stopCallAnimation, 5000);
-        }
-
-        // Start call animation
-        function startCallAnimation() {
-            const layer = document.getElementById('animationLayer');
-            layer.classList.add('active');
-            layer.innerHTML = '';
-
-            // Add glowing border
-            if (animations.glow) {
-                const glow = document.createElement('div');
-                glow.className = 'glow-border';
-                layer.appendChild(glow);
-            }
-
-            // Start particle animations
-            const particles = [];
-            if (animations.stars) particles.push('⭐');
-            if (animations.hearts) particles.push('❤️', '💕', '💖');
-            if (animations.bears) particles.push('🐻', '🧸');
-            if (animations.dolls) particles.push('👧', '🎀', '👶');
-
-            if (particles.length > 0) {
-                const particleInterval = setInterval(() => {
-                    if (!layer.classList.contains('active')) {
-                        clearInterval(particleInterval);
-                        return;
-                    }
-                    
-                    for (let i = 0; i < 3; i++) {
-                        const particle = document.createElement('div');
-                        particle.className = 'particle';
-                        particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-                        particle.style.left = Math.random() * 100 + '%';
-                        particle.style.fontSize = (20 + Math.random() * 30) + 'px';
-                        layer.appendChild(particle);
-
-                        setTimeout(() => particle.remove(), 3000);
-                    }
-                }, 200);
-            }
-        }
-
-        // Stop call animation
-        function stopCallAnimation() {
-            const layer = document.getElementById('animationLayer');
-            layer.classList.remove('active');
-            layer.innerHTML = '';
-        }
-
-        // Timer functions
-        function startTimer() {
-            if (!timerRunning) {
-                timerRunning = true;
-                timerInterval = setInterval(() => {
-                    timerSeconds++;
-                    updateTimerDisplay();
-                }, 1000);
-            }
-        }
-
-        function pauseTimer() {
-            timerRunning = false;
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-        }
-
-        function resetTimer() {
-            pauseTimer();
-            timerSeconds = 0;
-            updateTimerDisplay();
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timerSeconds / 60);
-            const seconds = timerSeconds % 60;
-            document.getElementById('timerDisplay').textContent = 
-                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
+        };
 
         // Update time display
         function updateTime() {
@@ -1205,22 +1268,53 @@
             document.getElementById('dateDisplay').textContent = dateStr;
         }
 
-        // Update battery
-        function updateBattery() {
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(battery => {
-                    const level = Math.round(battery.level * 100);
-                    document.getElementById('batteryPercent').textContent = level + '%';
-                    document.getElementById('batteryLevel').style.width = level + '%';
-                    
-                    if (level > 50) {
-                        document.getElementById('batteryLevel').style.background = '#4caf50';
-                    } else if (level > 20) {
-                        document.getElementById('batteryLevel').style.background = '#ff9800';
-                    } else {
-                        document.getElementById('batteryLevel').style.background = '#f44336';
-                    }
-                });
+        // Update displays
+        function updateDisplays() {
+            // Recent Calls
+            const callsHtml = sampleData.recentCalls.map(call => `
+                <div class="item">
+                    <div class="item-name">${call.name}</div>
+                    <div class="item-detail">${call.type} • ${call.time}</div>
+                </div>
+            `).join('');
+            document.getElementById('recentCalls').innerHTML = callsHtml;
+
+            // WhatsApp Messages
+            const messagesHtml = sampleData.whatsappMessages.map(msg => `
+                <div class="item">
+                    <div class="item-name">
+                        ${msg.name}
+                        ${msg.unread > 0 ? `<span class="badge">${msg.unread}</span>` : ''}
+                    </div>
+                    <div class="item-detail">${msg.message} • ${msg.time}</div>
+                </div>
+            `).join('');
+            document.getElementById('whatsappMessages').innerHTML = messagesHtml;
+
+            // Latest Appointment
+            if (sampleData.latestAppointment) {
+                const apt = sampleData.latestAppointment;
+                document.getElementById('latestAppointment').innerHTML = `
+                    <div class="item">
+                        <div class="item-name">${apt.title}</div>
+                        <div class="item-detail">📅 ${apt.time}</div>
+                        <div class="item-detail">📍 ${apt.location}</div>
+                        <div class="item-detail">👤 ${apt.with}</div>
+                    </div>
+                `;
+            }
+
+            // Next Appointment
+            if (sampleData.nextAppointment) {
+                const apt = sampleData.nextAppointment;
+                document.getElementById('nextAppointment').innerHTML = `
+                    <div class="item">
+                        <div class="item-name">${apt.title}</div>
+                        <div class="item-detail">📅 ${apt.time}</div>
+                        <div class="item-detail">📍 ${apt.location}</div>
+                        <div class="item-detail">👤 ${apt.with}</div>
+                    </div>
+                `;
             }
         }
 
@@ -1232,8 +1326,8 @@
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 recognition = new SpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
+                recognition.continuous = true;
+                recognition.interimResults = true;
                 recognition.lang = 'en-US';
 
                 recognition.onstart = () => {
@@ -1245,18 +1339,23 @@
                 recognition.onend = () => {
                     isListening = false;
                     document.getElementById('voiceBtn').classList.remove('listening');
-                    document.getElementById('voiceStatus').textContent = 'Tap microphone for voice commands';
+                    document.getElementById('voiceStatus').textContent = 'Tap microphone to start';
                 };
 
                 recognition.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript.toLowerCase();
-                    handleVoiceCommand(transcript);
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0].transcript)
+                        .join('');
+                    
+                    handleVoiceCommand(transcript.toLowerCase());
                 };
 
                 recognition.onerror = (event) => {
                     console.error('Speech recognition error:', event.error);
                     document.getElementById('voiceStatus').textContent = 'Error: ' + event.error;
                 };
+            } else {
+                document.getElementById('voiceStatus').textContent = 'Voice recognition not supported';
             }
         }
 
@@ -1273,33 +1372,35 @@
         function handleVoiceCommand(command) {
             document.getElementById('voiceStatus').textContent = `"${command}"`;
 
-            if (command.includes('settings') || command.includes('setting')) {
-                speak('Opening settings');
-                toggleSettings();
-            } else if (command.includes('call animation') || command.includes('test animation')) {
-                testCallAnimation();
-            } else if (command.includes('start timer')) {
-                startTimer();
-                speak('Timer started');
-            } else if (command.includes('stop timer') || command.includes('pause timer')) {
-                pauseTimer();
-                speak('Timer paused');
-            } else if (command.includes('reset timer')) {
-                resetTimer();
-                speak('Timer reset');
-            } else if (command.includes('weather')) {
-                speak('The current temperature in Kuala Lumpur is 24 degrees celsius and partly cloudy');
-            } else if (command.includes('battery')) {
-                const percent = document.getElementById('batteryPercent').textContent;
-                speak(`Battery is at ${percent}`);
+            if (command.includes('dark mode') || command.includes('dark theme')) {
+                changeTheme('dark');
+                speak('Switched to dark mode');
+            } else if (command.includes('light mode') || command.includes('light theme')) {
+                changeTheme('light');
+                speak('Switched to light mode');
+            } else if (command.includes('neon')) {
+                changeTheme('neon');
+                speak('Switched to neon theme');
+            } else if (command.includes('stars')) {
+                toggleEffect('stars');
+                speak('Stars effect activated');
+            } else if (command.includes('hearts') || command.includes('love')) {
+                toggleEffect('hearts');
+                speak('Hearts effect activated');
+            } else if (command.includes('bear')) {
+                toggleEffect('bears');
+                speak('Bears effect activated');
+            } else if (command.includes('snow')) {
+                toggleEffect('snow');
+                speak('Snow effect activated');
+            } else if (command.includes('stop effect')) {
+                particles = [];
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                speak('Effects stopped');
             } else if (command.includes('time')) {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
                 speak(`The time is ${timeStr}`);
-            } else if (command.includes('hello') || command.includes('hey') || command.includes('hi')) {
-                speak('Hello! How can I help you today?');
-            } else {
-                speak('Command not recognized. Try saying settings, time, weather, or battery.');
             }
         }
 
@@ -1317,11 +1418,7 @@
             switch(action) {
                 case 'call':
                     speak('Opening phone app');
-                    startCallAnimation();
-                    setTimeout(() => {
-                        stopCallAnimation();
-                        alert('Opening phone app...');
-                    }, 3000);
+                    alert('Opening phone app...');
                     break;
                 case 'message':
                     speak('Opening messages');
@@ -1337,21 +1434,8 @@
         // Initialize
         updateTime();
         setInterval(updateTime, 1000);
-        updateBattery();
-        setInterval(updateBattery, 60000);
+        updateDisplays();
         initVoiceRecognition();
-
-        // Task checkboxes
-        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const text = this.nextElementSibling;
-                if (this.checked) {
-                    text.classList.add('completed');
-                } else {
-                    text.classList.remove('completed');
-                }
-            });
-        });
     </script>
 </body>
 </html>
