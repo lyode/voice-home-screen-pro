@@ -6,7 +6,7 @@
     <meta name="theme-color" content="transparent">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Clock - Test Background</title>
+    <title>Clock - iPhone 15 Pro Max</title>
     <style>
         * {
             margin: 0;
@@ -15,8 +15,8 @@
         }
 
         :root {
-            --outline-width: 2px;
-            --shadow-blur: 4px;
+            --outline-width: 3px;
+            --shadow-blur: 6px;
         }
 
         html, body {
@@ -26,19 +26,33 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Default gradient background */
+            /* Default gradient */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             background-size: cover;
             background-position: center;
             transition: background 0.5s ease;
+            /* iPhone 15 Pro Max safe areas - Dynamic Island */
+            padding-top: max(env(safe-area-inset-top), 54px);
+            padding-bottom: max(env(safe-area-inset-bottom), 34px);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
-        /* White text with black outline */
+        /* Clock container */
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: -20px; /* Slightly above center for better visual balance */
+        }
+
+        /* White text with black outline - optimized for iPhone 15 Pro Max */
         .time, .date {
             color: white;
             text-shadow: 
@@ -46,58 +60,68 @@
                 var(--outline-width) calc(var(--outline-width) * -1) 0 #000,
                 calc(var(--outline-width) * -1) var(--outline-width) 0 #000,
                 var(--outline-width) var(--outline-width) 0 #000,
-                0 0 var(--shadow-blur) rgba(0, 0, 0, 2);
+                0 0 var(--shadow-blur) rgba(0, 0, 0, 2.5);
             pointer-events: none;
+            user-select: none;
         }
 
+        /* iPhone 15 Pro Max optimized sizes */
         .time {
-            font-size: 80px;
+            font-size: 96px;
             font-weight: 200;
-            letter-spacing: -3px;
-            margin-bottom: 10px;
+            letter-spacing: -4px;
+            margin-bottom: 12px;
+            line-height: 1;
         }
 
         .date {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 500;
             opacity: 0.95;
+            line-height: 1.2;
+            text-align: center;
+            padding: 0 20px;
         }
 
-        /* Control Panel */
+        /* Control Panel - optimized for iPhone 15 Pro Max bottom */
         .controls {
             position: fixed;
-            bottom: 20px;
+            bottom: max(env(safe-area-inset-bottom), 34px);
+            bottom: calc(max(env(safe-area-inset-bottom), 34px) + 20px);
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            border-radius: 50px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px);
+            border-radius: 30px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 90%;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 14px 24px;
             background: rgba(255, 255, 255, 0.9);
             border: none;
             border-radius: 25px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             color: #333;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            background: white;
+            min-height: 48px; /* iPhone touch target */
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn:active {
             transform: scale(0.95);
+            background: rgba(255, 255, 255, 1);
         }
 
         #imageUpload {
@@ -105,19 +129,24 @@
         }
 
         .text-mode-toggle {
-            padding: 10px 20px;
+            padding: 14px 24px;
             background: rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 25px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             color: white;
             transition: all 0.3s ease;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .text-mode-toggle:hover {
+        .text-mode-toggle:active {
             background: rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
         }
 
         /* Dark text mode */
@@ -129,84 +158,152 @@
                 var(--outline-width) calc(var(--outline-width) * -1) 0 #fff,
                 calc(var(--outline-width) * -1) var(--outline-width) 0 #fff,
                 var(--outline-width) var(--outline-width) 0 #fff,
-                0 0 var(--shadow-blur) rgba(255, 255, 255, 2);
+                0 0 var(--shadow-blur) rgba(255, 255, 255, 2.5);
         }
 
-        /* Info text */
+        /* Info text - positioned below Dynamic Island */
         .info {
             position: fixed;
-            top: 20px;
+            top: max(env(safe-area-inset-top), 54px);
+            top: calc(max(env(safe-area-inset-top), 54px) + 20px);
             left: 50%;
             transform: translateX(-50%);
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px);
             border-radius: 25px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             text-align: center;
-            max-width: 90%;
+            max-width: 85%;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        /* iPhone 15 Pro Max */
+        .info.show {
+            opacity: 1;
+        }
+
+        /* Specific iPhone 15 Pro Max media query */
         @media only screen 
         and (device-width: 430px) 
-        and (device-height: 932px) {
-            .time {
-                font-size: 90px;
+        and (device-height: 932px) 
+        and (-webkit-device-pixel-ratio: 3) {
+            
+            body {
+                padding-top: 54px; /* Exact Dynamic Island clearance */
+                padding-bottom: 34px; /* Home indicator area */
             }
+
+            .time {
+                font-size: 104px;
+                letter-spacing: -5px;
+                margin-bottom: 14px;
+            }
+
             .date {
-                font-size: 26px;
+                font-size: 30px;
+            }
+
+            .controls {
+                bottom: 54px; /* Above home indicator */
+                padding: 20px 26px;
+                gap: 14px;
+            }
+
+            .btn, .text-mode-toggle {
+                padding: 16px 26px;
+                font-size: 17px;
+                min-height: 52px;
+            }
+
+            .info {
+                top: 74px; /* Below Dynamic Island */
+                font-size: 16px;
+                padding: 14px 26px;
             }
         }
 
-        /* Smaller screens */
-        @media (max-width: 375px) {
+        /* Portrait orientation */
+        @media (orientation: portrait) {
+            .clock-container {
+                margin-top: 0;
+            }
+        }
+
+        /* Landscape mode */
+        @media (orientation: landscape) {
             .time {
-                font-size: 70px;
+                font-size: 72px;
             }
             .date {
                 font-size: 22px;
             }
             .controls {
-                flex-direction: column;
-                gap: 8px;
+                flex-direction: row;
+                max-width: 95%;
             }
+            .clock-container {
+                margin-top: -40px;
+            }
+        }
+
+        /* Prevent text selection and long-press */
+        * {
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Smooth animations */
+        @media (prefers-reduced-motion: no-preference) {
+            .time, .date {
+                animation: fadeIn 0.5s ease;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <div class="info" id="info">
-        📱 Test different wallpapers below
+        📱 iPhone 15 Pro Max Optimized
     </div>
 
-    <div class="time" id="time">00:00</div>
-    <div class="date" id="date">Loading...</div>
+    <div class="clock-container">
+        <div class="time" id="time">00:00</div>
+        <div class="date" id="date">Loading...</div>
+    </div>
 
     <div class="controls">
         <button class="btn" onclick="document.getElementById('imageUpload').click()">
-            📸 Upload Image
+            <span>📸</span>
+            <span>Upload</span>
         </button>
         <input type="file" id="imageUpload" accept="image/*" onchange="loadImage(event)">
         
         <button class="btn" onclick="setGradient('purple')">
-            🟣 Purple
+            <span>🟣</span>
         </button>
         <button class="btn" onclick="setGradient('blue')">
-            🔵 Blue
+            <span>🔵</span>
         </button>
-        <button class="btn" onclick="setGradient('pink')">
-            🟡 Sunset
+        <button class="btn" onclick="setGradient('sunset')">
+            <span>🌅</span>
         </button>
         <button class="btn" onclick="setGradient('dark')">
-            ⚫ Dark
+            <span>🌙</span>
         </button>
         
         <button class="text-mode-toggle" onclick="toggleTextMode()">
-            ⚪️ Text Mode
+            <span id="modeIcon">☀️</span>
+            <span id="modeText">Light</span>
         </button>
     </div>
 
@@ -240,7 +337,7 @@
                     document.body.style.background = `url('${e.target.result}')`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
-                    updateInfo('Custom wallpaper loaded');
+                    showInfo('Custom wallpaper loaded ✅');
                 };
                 reader.readAsDataURL(file);
             }
@@ -250,7 +347,7 @@
             const gradients = {
                 purple: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 blue: 'linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)',
-                pink: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                sunset: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ee5a6f 100%)',
                 dark: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)'
             };
             
@@ -260,30 +357,37 @@
             const names = {
                 purple: 'Purple gradient',
                 blue: 'Blue gradient', 
-                pink: 'Sunset gradient',
+                sunset: 'Sunset gradient',
                 dark: 'Dark gradient'
             };
-            updateInfo(names[type]);
+            showInfo(names[type] + ' applied');
         }
 
         function toggleTextMode() {
             isLightText = !isLightText;
             document.body.classList.toggle('dark-text');
-            const toggle = document.querySelector('.text-mode-toggle');
+            
+            const modeIcon = document.getElementById('modeIcon');
+            const modeText = document.getElementById('modeText');
+            
             if (isLightText) {
-                toggle.textContent = '⚪️ Text Mode';
-                updateInfo('White text + black outline');
+                modeIcon.textContent = '☀️';
+                modeText.textContent = 'Light';
+                showInfo('White text mode');
             } else {
-                toggle.textContent = '⚫ Text Mode';
-                updateInfo('Black text + white outline');
+                modeIcon.textContent = '🌙';
+                modeText.textContent = 'Dark';
+                showInfo('Black text mode');
             }
         }
 
-        function updateInfo(text) {
+        function showInfo(text) {
             const info = document.getElementById('info');
             info.textContent = text;
+            info.classList.add('show');
+            
             setTimeout(() => {
-                info.textContent = '📱 Test different wallpapers below';
+                info.classList.remove('show');
             }, 2000);
         }
 
@@ -293,10 +397,36 @@
         // Update every second
         setInterval(updateTime, 1000);
 
-        // Show instruction
+        // Show welcome message
         setTimeout(() => {
-            updateInfo('💡 This simulates how it looks on your phone wallpaper!');
-        }, 1000);
+            showInfo('📱 Optimized for iPhone 15 Pro Max');
+        }, 500);
+
+        // Detect if running on iPhone 15 Pro Max
+        function detectDevice() {
+            const isIPhone15ProMax = 
+                window.screen.width === 430 && 
+                window.screen.height === 932 &&
+                window.devicePixelRatio === 3;
+            
+            if (isIPhone15ProMax) {
+                setTimeout(() => {
+                    showInfo('✅ iPhone 15 Pro Max detected!');
+                }, 2500);
+            }
+        }
+
+        detectDevice();
+
+        // Prevent accidental zoom
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+
+        // Prevent bounce scrolling
+        document.body.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
     </script>
 </body>
 </html>
