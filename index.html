@@ -6,7 +6,7 @@
     <meta name="theme-color" content="transparent">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Clock</title>
+    <title>Clock - Test Background</title>
     <style>
         * {
             margin: 0;
@@ -22,7 +22,6 @@
         html, body {
             height: 100%;
             width: 100%;
-            background: transparent !important;
             overflow: hidden;
         }
 
@@ -32,7 +31,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            /* Default gradient background */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+            transition: background 0.5s ease;
         }
 
         /* White text with black outline */
@@ -44,6 +47,7 @@
                 calc(var(--outline-width) * -1) var(--outline-width) 0 #000,
                 var(--outline-width) var(--outline-width) 0 #000,
                 0 0 var(--shadow-blur) rgba(0, 0, 0, 2);
+            pointer-events: none;
         }
 
         .time {
@@ -57,6 +61,94 @@
             font-size: 24px;
             font-weight: 500;
             opacity: 0.95;
+        }
+
+        /* Control Panel */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        #imageUpload {
+            display: none;
+        }
+
+        .text-mode-toggle {
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .text-mode-toggle:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Dark text mode */
+        body.dark-text .time,
+        body.dark-text .date {
+            color: black;
+            text-shadow: 
+                calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #fff,
+                var(--outline-width) calc(var(--outline-width) * -1) 0 #fff,
+                calc(var(--outline-width) * -1) var(--outline-width) 0 #fff,
+                var(--outline-width) var(--outline-width) 0 #fff,
+                0 0 var(--shadow-blur) rgba(255, 255, 255, 2);
+        }
+
+        /* Info text */
+        .info {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            max-width: 90%;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         /* iPhone 15 Pro Max */
@@ -79,14 +171,48 @@
             .date {
                 font-size: 22px;
             }
+            .controls {
+                flex-direction: column;
+                gap: 8px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="info" id="info">
+        📱 Test different wallpapers below
+    </div>
+
     <div class="time" id="time">00:00</div>
     <div class="date" id="date">Loading...</div>
 
+    <div class="controls">
+        <button class="btn" onclick="document.getElementById('imageUpload').click()">
+            📸 Upload Image
+        </button>
+        <input type="file" id="imageUpload" accept="image/*" onchange="loadImage(event)">
+        
+        <button class="btn" onclick="setGradient('purple')">
+            🟣 Purple
+        </button>
+        <button class="btn" onclick="setGradient('blue')">
+            🔵 Blue
+        </button>
+        <button class="btn" onclick="setGradient('pink')">
+            🟡 Sunset
+        </button>
+        <button class="btn" onclick="setGradient('dark')">
+            ⚫ Dark
+        </button>
+        
+        <button class="text-mode-toggle" onclick="toggleTextMode()">
+            ⚪️ Text Mode
+        </button>
+    </div>
+
     <script>
+        let isLightText = true;
+
         function updateTime() {
             const now = new Date();
             
@@ -95,7 +221,7 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('time').textContent = `${hours}:${minutes}`;
             
-            // Date (Day, Month Date, Year)
+            // Date
             const options = { 
                 weekday: 'long', 
                 year: 'numeric', 
@@ -106,11 +232,71 @@
             document.getElementById('date').textContent = dateStr;
         }
 
+        function loadImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.body.style.background = `url('${e.target.result}')`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    updateInfo('Custom wallpaper loaded');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function setGradient(type) {
+            const gradients = {
+                purple: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                blue: 'linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)',
+                pink: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                dark: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)'
+            };
+            
+            document.body.style.background = gradients[type];
+            document.body.style.backgroundSize = 'cover';
+            
+            const names = {
+                purple: 'Purple gradient',
+                blue: 'Blue gradient', 
+                pink: 'Sunset gradient',
+                dark: 'Dark gradient'
+            };
+            updateInfo(names[type]);
+        }
+
+        function toggleTextMode() {
+            isLightText = !isLightText;
+            document.body.classList.toggle('dark-text');
+            const toggle = document.querySelector('.text-mode-toggle');
+            if (isLightText) {
+                toggle.textContent = '⚪️ Text Mode';
+                updateInfo('White text + black outline');
+            } else {
+                toggle.textContent = '⚫ Text Mode';
+                updateInfo('Black text + white outline');
+            }
+        }
+
+        function updateInfo(text) {
+            const info = document.getElementById('info');
+            info.textContent = text;
+            setTimeout(() => {
+                info.textContent = '📱 Test different wallpapers below';
+            }, 2000);
+        }
+
         // Update immediately
         updateTime();
         
         // Update every second
         setInterval(updateTime, 1000);
+
+        // Show instruction
+        setTimeout(() => {
+            updateInfo('💡 This simulates how it looks on your phone wallpaper!');
+        }, 1000);
     </script>
 </body>
 </html>
