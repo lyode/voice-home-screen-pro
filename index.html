@@ -11,14 +11,14 @@
     <!-- PWA & Mobile Full Screen Meta Tags - iPhone 15 Pro Max Optimized -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
-    <meta name="theme-color" content="#667eea" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#2d3748" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#4a3948" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#2d2433" media="(prefers-color-scheme: dark)">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Voice Home">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Voice Home Pro">
-    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-TileColor" content="#4a3948">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="format-detection" content="telephone=no">
     <title>Voice Home Screen Pro - Enhanced</title>
@@ -30,15 +30,23 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        :root {
+            --font-size-base: 16px;
+            --card-radius: 25px;
+            --animation-speed: 0.3s;
+            --spacing: 15px;
+            --card-padding: 20px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: var(--font-size-base);
             min-height: 100vh;
             min-height: -webkit-fill-available;
-            min-height: 100dvh; /* Dynamic viewport height */
+            min-height: 100dvh;
             overflow-x: hidden;
             position: relative;
             transition: all 0.5s ease;
-            /* Safe area for notches (iPhone 15 Pro Max Dynamic Island) */
             padding-top: max(env(safe-area-inset-top), 20px);
             padding-bottom: max(env(safe-area-inset-bottom), 20px);
             padding-left: env(safe-area-inset-left);
@@ -61,7 +69,6 @@
         and (device-height: 932px) 
         and (-webkit-device-pixel-ratio: 3) {
             body {
-                /* Extra top padding for Dynamic Island */
                 padding-top: max(env(safe-area-inset-top), 54px);
             }
 
@@ -125,27 +132,38 @@
 
         /* Theme Variables */
         body.theme-dark {
-            --bg-color: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            --text-color: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.1);
+            --bg-color: linear-gradient(135deg, #2d2433 0%, #1a1520 100%);
+            --text-color: #f0e6ef;
+            --card-bg: rgba(74, 57, 72, 0.3);
+            --accent-color: #8b6e89;
         }
 
         body.theme-light {
-            --bg-color: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
-            --text-color: #1a202c;
-            --card-bg: rgba(255, 255, 255, 0.8);
+            --bg-color: linear-gradient(135deg, #f7e8f5 0%, #e8d4e6 100%);
+            --text-color: #2d2433;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --accent-color: #a87fa5;
         }
 
         body.theme-neon {
-            --bg-color: linear-gradient(135deg, #000000 0%, #1a0033 100%);
-            --text-color: #00ff9f;
-            --card-bg: rgba(0, 255, 159, 0.1);
+            --bg-color: linear-gradient(135deg, #1a0033 0%, #2d0052 100%);
+            --text-color: #ff6ec7;
+            --card-bg: rgba(255, 110, 199, 0.15);
+            --accent-color: #ff6ec7;
         }
 
         body.theme-minimal {
-            --bg-color: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
-            --text-color: #333333;
-            --card-bg: rgba(0, 0, 0, 0.05);
+            --bg-color: linear-gradient(135deg, #f5f0f4 0%, #e6dce5 100%);
+            --text-color: #4a3948;
+            --card-bg: rgba(74, 57, 72, 0.08);
+            --accent-color: #8b6e89;
+        }
+
+        body.theme-pinkgray {
+            --bg-color: linear-gradient(135deg, #4a3948 0%, #635361 100%);
+            --text-color: #f0e6ef;
+            --card-bg: rgba(99, 83, 97, 0.4);
+            --accent-color: #b89cb6;
         }
 
         /* Particle Canvas for Effects */
@@ -166,12 +184,12 @@
 
         @keyframes glowPulse {
             0%, 100% { 
-                box-shadow: inset 0 0 100px rgba(0, 255, 159, 0.3);
-                border: 3px solid rgba(0, 255, 159, 0.5);
+                box-shadow: inset 0 0 100px rgba(184, 156, 182, 0.3);
+                border: 3px solid rgba(184, 156, 182, 0.5);
             }
             50% { 
-                box-shadow: inset 0 0 150px rgba(0, 255, 159, 0.6);
-                border: 3px solid rgba(0, 255, 159, 1);
+                box-shadow: inset 0 0 150px rgba(184, 156, 182, 0.6);
+                border: 3px solid rgba(184, 156, 182, 1);
             }
         }
 
@@ -195,9 +213,9 @@
             height: 4px;
             background: linear-gradient(90deg, 
                 transparent 0%, 
-                #ff0000 25%, 
-                #00ff00 50%, 
-                #0000ff 75%, 
+                #ff69b4 25%, 
+                #dda0dd 50%, 
+                #ba55d3 75%, 
                 transparent 100%);
             animation: runningLightH 2s linear infinite;
         }
@@ -211,9 +229,9 @@
             width: 4px;
             background: linear-gradient(180deg, 
                 transparent 0%, 
-                #ff00ff 25%, 
-                #ffff00 50%, 
-                #00ffff 75%, 
+                #ff1493 25%, 
+                #c71585 50%, 
+                #db7093 75%, 
                 transparent 100%);
             animation: runningLightV 2s linear infinite;
         }
@@ -247,7 +265,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            background: var(--bg-color, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            background: var(--bg-color, linear-gradient(135deg, #4a3948 0%, #635361 100%));
             transition: all 0.5s ease;
         }
 
@@ -258,10 +276,9 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 0 20px 20px 20px;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
         }
 
-        /* iPhone 15 Pro Max: Use full width */
         @media (max-width: 430px) {
             .container {
                 max-width: 100%;
@@ -305,7 +322,6 @@
             padding: 15px 20px;
         }
 
-        /* iPhone 15 Pro Max: Larger time, positioned below Dynamic Island */
         @media (max-width: 430px) {
             .header {
                 margin-bottom: 20px;
@@ -340,7 +356,6 @@
             z-index: 1000;
         }
 
-        /* iPhone 15 Pro Max: Position below Dynamic Island */
         @media only screen 
         and (device-width: 430px) 
         and (device-height: 932px) 
@@ -355,17 +370,16 @@
             height: 50px;
             border-radius: 50%;
             backdrop-filter: blur(20px);
-            background: var(--card-bg, rgba(255, 255, 255, 0.15));
+            background: var(--card-bg, rgba(99, 83, 97, 0.4));
             border: 2px solid rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* iPhone 15 Pro Max: Larger touch targets */
         @media (max-width: 430px) {
             .action-icon-btn {
                 width: 54px;
@@ -394,18 +408,18 @@
             height: 80px;
             border-radius: 50%;
             backdrop-filter: blur(20px);
-            background: var(--card-bg, rgba(255, 255, 255, 0.15));
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            background: var(--card-bg, rgba(99, 83, 97, 0.4));
+            border: 3px solid var(--accent-color, rgba(184, 156, 182, 0.5));
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 20px auto;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            position: relative;
         }
 
-        /* iPhone 15 Pro Max: Larger voice button */
         @media (max-width: 430px) {
             .voice-button {
                 width: 88px;
@@ -420,17 +434,17 @@
 
         .voice-button.listening {
             animation: pulse 1.5s infinite;
-            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 0 0 var(--accent-color, rgba(184, 156, 182, 0.7));
         }
 
         @keyframes pulse {
             0%, 100% { 
                 transform: scale(1); 
-                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+                box-shadow: 0 0 0 0 var(--accent-color, rgba(184, 156, 182, 0.7));
             }
             50% { 
                 transform: scale(1.1); 
-                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+                box-shadow: 0 0 0 15px transparent;
             }
         }
 
@@ -438,6 +452,24 @@
             width: 40px;
             height: 40px;
             fill: var(--text-color, white);
+        }
+
+        .voice-help-icon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .voice-status {
@@ -449,7 +481,6 @@
             color: var(--text-color, white);
         }
 
-        /* iPhone 15 Pro Max: Better voice status */
         @media (max-width: 430px) {
             .voice-status {
                 font-size: 15px;
@@ -460,14 +491,16 @@
         /* Floating Info Cards */
         .card {
             backdrop-filter: blur(20px);
-            background: var(--card-bg, rgba(255, 255, 255, 0.15));
-            border-radius: 25px;
-            padding: 20px;
-            margin-bottom: 15px;
+            background: var(--card-bg, rgba(99, 83, 97, 0.4));
+            border-radius: var(--card-radius);
+            padding: var(--card-padding);
+            margin-bottom: var(--spacing);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             animation: cardFadeIn 0.5s ease;
+            overflow: hidden;
+            max-height: 500px;
         }
 
         @keyframes cardFadeIn {
@@ -479,9 +512,13 @@
             transform: translateY(-2px);
         }
 
-        .card.disabled {
-            opacity: 0.5;
-            pointer-events: none;
+        .card.minimized {
+            max-height: 60px;
+            padding: 15px var(--card-padding);
+        }
+
+        .card.minimized .card-content {
+            display: none;
         }
 
         .card-header {
@@ -489,6 +526,10 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 15px;
+        }
+
+        .card.minimized .card-header {
+            margin-bottom: 0;
         }
 
         .card-header-left {
@@ -529,11 +570,11 @@
             background: rgba(0, 0, 0, 0.3);
             border-radius: 13px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
         }
 
         .feature-toggle.active {
-            background: #4CAF50;
+            background: var(--accent-color, #8b6e89);
         }
 
         .feature-toggle::after {
@@ -545,7 +586,7 @@
             background: white;
             top: 3px;
             left: 3px;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
         }
 
         .feature-toggle.active::after {
@@ -592,7 +633,6 @@
             padding-bottom: max(env(safe-area-inset-bottom), 20px);
         }
 
-        /* iPhone 15 Pro Max: Larger touch targets and spacing */
         @media (max-width: 430px) {
             .quick-actions {
                 gap: 14px;
@@ -603,14 +643,14 @@
 
         .action-btn {
             backdrop-filter: blur(20px);
-            background: var(--card-bg, rgba(255, 255, 255, 0.15));
+            background: var(--card-bg, rgba(99, 83, 97, 0.4));
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             padding: 20px 10px;
             font-size: 14px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             color: var(--text-color, white);
             min-height: 100px;
@@ -653,16 +693,15 @@
             height: 100vh;
             height: 100dvh;
             backdrop-filter: blur(30px);
-            background: var(--card-bg, rgba(255, 255, 255, 0.15));
+            background: var(--card-bg, rgba(99, 83, 97, 0.4));
             border-left: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 2000;
-            transition: right 0.3s ease;
+            transition: right var(--animation-speed) ease;
             overflow-y: auto;
             padding: max(env(safe-area-inset-top), 20px) 20px max(env(safe-area-inset-bottom), 20px) 20px;
             -webkit-overflow-scrolling: touch;
         }
 
-        /* iPhone 15 Pro Max: Full width panel */
         @media (max-width: 430px) {
             .settings-panel {
                 max-width: 100%;
@@ -699,7 +738,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            background: var(--card-bg, rgba(255, 255, 255, 0.1));
+            background: var(--card-bg, rgba(99, 83, 97, 0.3));
         }
 
         .close-btn svg {
@@ -758,7 +797,7 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: white;
+            background: var(--accent-color, #b89cb6);
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
@@ -781,32 +820,32 @@
             border-radius: 12px;
             border: 2px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             text-align: center;
             font-weight: 600;
             color: var(--text-color, white);
         }
 
         .theme-option.active {
-            border-color: #4CAF50;
-            background: rgba(76, 175, 80, 0.2);
+            border-color: var(--accent-color, #b89cb6);
+            background: var(--accent-color, rgba(184, 156, 182, 0.2));
         }
 
         .btn-primary {
             width: 100%;
             padding: 15px;
-            background: #667eea;
+            background: var(--accent-color, #8b6e89);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
         }
 
         .btn-primary:hover {
-            background: #764ba2;
+            opacity: 0.9;
         }
 
         .btn-secondary {
@@ -820,7 +859,7 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 10px;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
         }
 
         /* Settings Overlay */
@@ -839,7 +878,7 @@
             display: block;
         }
 
-        /* Effect Controls Panel */
+        /* Effects Control Panel */
         .effects-panel {
             position: fixed;
             bottom: -400px;
@@ -847,10 +886,10 @@
             right: 0;
             height: auto;
             max-height: 400px;
-            background: var(--card-bg, rgba(255, 255, 255, 0.15));
+            background: var(--card-bg, rgba(99, 83, 97, 0.4));
             backdrop-filter: blur(30px);
             z-index: 1500;
-            transition: bottom 0.3s ease;
+            transition: bottom var(--animation-speed) ease;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             padding: 20px 20px max(env(safe-area-inset-bottom, 20px), 20px) 20px;
             overflow-y: auto;
@@ -858,7 +897,6 @@
             border-radius: 24px 24px 0 0;
         }
 
-        /* iPhone 15 Pro Max: Better bottom panel */
         @media (max-width: 430px) {
             .effects-panel {
                 padding-bottom: max(env(safe-area-inset-bottom), 34px);
@@ -877,7 +915,6 @@
             margin-top: 20px;
         }
 
-        /* iPhone 15 Pro Max: Larger effect buttons */
         @media (max-width: 430px) {
             .effect-grid {
                 gap: 16px;
@@ -887,11 +924,11 @@
 
         .effect-btn {
             padding: 20px;
-            background: var(--card-bg, rgba(255, 255, 255, 0.1));
+            background: var(--card-bg, rgba(99, 83, 97, 0.3));
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             text-align: center;
             color: var(--text-color, white);
             font-size: 14px;
@@ -901,7 +938,6 @@
             justify-content: center;
         }
 
-        /* iPhone 15 Pro Max: Larger touch targets */
         @media (max-width: 430px) {
             .effect-btn {
                 padding: 24px 16px;
@@ -916,8 +952,56 @@
         }
 
         .effect-btn.active {
-            border-color: #4CAF50;
-            background: rgba(76, 175, 80, 0.2);
+            border-color: var(--accent-color, #b89cb6);
+            background: var(--accent-color, rgba(184, 156, 182, 0.2));
+        }
+
+        /* Voice Help Modal */
+        .voice-help-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90%;
+            max-width: 500px;
+            background: var(--card-bg, rgba(99, 83, 97, 0.95));
+            backdrop-filter: blur(30px);
+            border-radius: 24px;
+            padding: 30px;
+            z-index: 3000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: transform var(--animation-speed) ease;
+            color: var(--text-color);
+        }
+
+        .voice-help-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .voice-help-modal h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--accent-color);
+        }
+
+        .voice-help-modal .command-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .voice-help-modal .command-list li {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .voice-help-modal .command-list li strong {
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 4px;
         }
 
         /* Install Prompt */
@@ -926,7 +1010,7 @@
             bottom: max(env(safe-area-inset-bottom), 20px);
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--accent-color, #8b6e89) 0%, #6d5669 100%);
             color: white;
             padding: 15px 30px;
             border-radius: 50px;
@@ -940,7 +1024,6 @@
             max-width: 90%;
         }
 
-        /* iPhone 15 Pro Max: Position above home indicator */
         @media (max-width: 430px) {
             .install-prompt {
                 bottom: max(env(safe-area-inset-bottom, 34px), 44px);
@@ -992,7 +1075,7 @@
         }
     </style>
 </head>
-<body class="theme-dark">
+<body class="theme-pinkgray">
     <!-- Particle Canvas for Effects -->
     <canvas id="particleCanvas"></canvas>
     
@@ -1031,6 +1114,21 @@
     <!-- Settings Overlay -->
     <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
 
+    <!-- Voice Help Modal -->
+    <div class="voice-help-modal" id="voiceHelpModal">
+        <h3>🎤 Voice Assistant Commands</h3>
+        <ul class="command-list">
+            <li><strong>"Dark mode" / "Light mode"</strong> - Switch themes</li>
+            <li><strong>"Neon theme" / "Pink gray theme"</strong> - Change themes</li>
+            <li><strong>"Stars" / "Hearts" / "Snow"</strong> - Activate effects</li>
+            <li><strong>"Stop effects"</strong> - Clear all effects</li>
+            <li><strong>"What time is it?"</strong> - Get current time</li>
+            <li><strong>"Show calls" / "Hide messages"</strong> - Toggle cards</li>
+            <li><strong>"Open settings"</strong> - Access settings panel</li>
+        </ul>
+        <button class="btn-primary" onclick="closeVoiceHelp()" style="margin-top: 20px;">Got it!</button>
+    </div>
+
     <!-- Settings Panel -->
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-header">
@@ -1046,10 +1144,74 @@
         <div class="setting-group">
             <div class="setting-label">🎨 Theme</div>
             <div class="theme-selector">
-                <div class="theme-option active" data-theme="dark" onclick="changeTheme('dark')">🌙 Dark</div>
+                <div class="theme-option" data-theme="dark" onclick="changeTheme('dark')">🌙 Dark</div>
                 <div class="theme-option" data-theme="light" onclick="changeTheme('light')">☀️ Light</div>
                 <div class="theme-option" data-theme="neon" onclick="changeTheme('neon')">💫 Neon</div>
                 <div class="theme-option" data-theme="minimal" onclick="changeTheme('minimal')">⚪ Minimal</div>
+                <div class="theme-option active" data-theme="pinkgray" onclick="changeTheme('pinkgray')">🌸 Pink Gray</div>
+            </div>
+        </div>
+
+        <!-- Font Size -->
+        <div class="setting-group">
+            <div class="setting-label">📝 Font Size</div>
+            <div class="slider-container">
+                <input type="range" min="12" max="20" value="16" class="slider" id="fontSizeSlider" oninput="updateFontSize(this.value)">
+                <span class="slider-value" id="fontSizeValue">16px</span>
+            </div>
+        </div>
+
+        <!-- Card Border Radius -->
+        <div class="setting-group">
+            <div class="setting-label">🔲 Card Roundness</div>
+            <div class="slider-container">
+                <input type="range" min="10" max="40" value="25" class="slider" id="cardRadiusSlider" oninput="updateCardRadius(this.value)">
+                <span class="slider-value" id="cardRadiusValue">25px</span>
+            </div>
+        </div>
+
+        <!-- Animation Speed -->
+        <div class="setting-group">
+            <div class="setting-label">⚡ Animation Speed</div>
+            <div class="slider-container">
+                <input type="range" min="0.1" max="1" step="0.1" value="0.3" class="slider" id="animSpeedSlider" oninput="updateAnimSpeed(this.value)">
+                <span class="slider-value" id="animSpeedValue">0.3s</span>
+            </div>
+        </div>
+
+        <!-- Card Spacing -->
+        <div class="setting-group">
+            <div class="setting-label">📏 Card Spacing</div>
+            <div class="slider-container">
+                <input type="range" min="5" max="30" value="15" class="slider" id="spacingSlider" oninput="updateSpacing(this.value)">
+                <span class="slider-value" id="spacingValue">15px</span>
+            </div>
+        </div>
+
+        <!-- Card Padding -->
+        <div class="setting-group">
+            <div class="setting-label">📦 Card Padding</div>
+            <div class="slider-container">
+                <input type="range" min="10" max="35" value="20" class="slider" id="paddingSlider" oninput="updatePadding(this.value)">
+                <span class="slider-value" id="paddingValue">20px</span>
+            </div>
+        </div>
+
+        <!-- Transparency -->
+        <div class="setting-group">
+            <div class="setting-label">💎 Transparency %</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="100" value="40" class="slider" id="transparencySlider" oninput="updateTransparency(this.value)">
+                <span class="slider-value" id="transparencyValue">40%</span>
+            </div>
+        </div>
+
+        <!-- Blur Intensity -->
+        <div class="setting-group">
+            <div class="setting-label">🌫️ Blur Intensity</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="50" value="20" class="slider" id="blurSlider" oninput="updateBlur(this.value)">
+                <span class="slider-value" id="blurValue">20px</span>
             </div>
         </div>
 
@@ -1068,22 +1230,9 @@
             <button class="btn-secondary" onclick="document.getElementById('importFile').click()">Import Settings</button>
         </div>
 
-        <!-- Transparency -->
+        <!-- Reset Settings -->
         <div class="setting-group">
-            <div class="setting-label">💎 Transparency %</div>
-            <div class="slider-container">
-                <input type="range" min="0" max="100" value="20" class="slider" id="transparencySlider" oninput="updateTransparency(this.value)">
-                <span class="slider-value" id="transparencyValue">20%</span>
-            </div>
-        </div>
-
-        <!-- Blur Intensity -->
-        <div class="setting-group">
-            <div class="setting-label">🌫️ Blur Intensity</div>
-            <div class="slider-container">
-                <input type="range" min="0" max="50" value="20" class="slider" id="blurSlider" oninput="updateBlur(this.value)">
-                <span class="slider-value" id="blurValue">20px</span>
-            </div>
+            <button class="btn-secondary" onclick="resetSettings()">🔄 Reset to Default</button>
         </div>
     </div>
 
@@ -1140,8 +1289,9 @@
                 <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                 <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
+            <div class="voice-help-icon" onclick="showVoiceHelp(event)">?</div>
         </div>
-        <div class="voice-status" id="voiceStatus">Tap microphone to start</div>
+        <div class="voice-status" id="voiceStatus">Tap microphone for voice commands</div>
 
         <!-- Recent Calls Card -->
         <div class="card" id="callsCard">
@@ -1239,7 +1389,7 @@
     </div>
 
     <script>
-        // Global state
+        // Global state with default values
         const state = {
             features: {
                 calls: true,
@@ -1255,12 +1405,68 @@
                 dolly: false,
                 snow: false
             },
-            theme: 'dark',
+            theme: 'pinkgray',
             settings: {
-                transparency: 20,
-                blur: 20
+                transparency: 40,
+                blur: 20,
+                fontSize: 16,
+                cardRadius: 25,
+                animationSpeed: 0.3,
+                spacing: 15,
+                padding: 20
             }
         };
+
+        // Apply all settings
+        function applyAllSettings() {
+            document.documentElement.style.setProperty('--font-size-base', state.settings.fontSize + 'px');
+            document.documentElement.style.setProperty('--card-radius', state.settings.cardRadius + 'px');
+            document.documentElement.style.setProperty('--animation-speed', state.settings.animationSpeed + 's');
+            document.documentElement.style.setProperty('--spacing', state.settings.spacing + 'px');
+            document.documentElement.style.setProperty('--card-padding', state.settings.padding + 'px');
+            
+            updateBlur(state.settings.blur);
+        }
+
+        // Update Font Size
+        function updateFontSize(value) {
+            state.settings.fontSize = parseInt(value);
+            document.getElementById('fontSizeValue').textContent = value + 'px';
+            document.documentElement.style.setProperty('--font-size-base', value + 'px');
+            saveState();
+        }
+
+        // Update Card Radius
+        function updateCardRadius(value) {
+            state.settings.cardRadius = parseInt(value);
+            document.getElementById('cardRadiusValue').textContent = value + 'px';
+            document.documentElement.style.setProperty('--card-radius', value + 'px');
+            saveState();
+        }
+
+        // Update Animation Speed
+        function updateAnimSpeed(value) {
+            state.settings.animationSpeed = parseFloat(value);
+            document.getElementById('animSpeedValue').textContent = value + 's';
+            document.documentElement.style.setProperty('--animation-speed', value + 's');
+            saveState();
+        }
+
+        // Update Spacing
+        function updateSpacing(value) {
+            state.settings.spacing = parseInt(value);
+            document.getElementById('spacingValue').textContent = value + 'px';
+            document.documentElement.style.setProperty('--spacing', value + 'px');
+            saveState();
+        }
+
+        // Update Padding
+        function updatePadding(value) {
+            state.settings.padding = parseInt(value);
+            document.getElementById('paddingValue').textContent = value + 'px';
+            document.documentElement.style.setProperty('--card-padding', value + 'px');
+            saveState();
+        }
 
         // Particle system
         const canvas = document.getElementById('particleCanvas');
@@ -1319,7 +1525,6 @@
             const btn = event.target;
             const isActive = state.effects[effectName];
             
-            // Stop current effect
             if (isActive) {
                 state.effects[effectName] = false;
                 btn.classList.remove('active');
@@ -1329,17 +1534,14 @@
                     document.getElementById('runningLights').style.display = 'none';
                 }
             } else {
-                // Stop all other effects
                 Object.keys(state.effects).forEach(key => {
                     state.effects[key] = false;
                     document.body.classList.remove('incoming-call-glow');
                     document.getElementById('runningLights').style.display = 'none';
                 });
                 
-                // Reset effect buttons
                 document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
                 
-                // Start new effect
                 state.effects[effectName] = true;
                 btn.classList.add('active');
                 particles = [];
@@ -1383,10 +1585,25 @@
             }
         }
 
+        // Show Voice Help
+        function showVoiceHelp(event) {
+            event.stopPropagation();
+            document.getElementById('voiceHelpModal').classList.add('active');
+            document.getElementById('settingsOverlay').classList.add('active');
+        }
+
+        function closeVoiceHelp() {
+            document.getElementById('voiceHelpModal').classList.remove('active');
+            document.getElementById('settingsOverlay').classList.remove('active');
+        }
+
         // Toggle Settings
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('active');
             document.getElementById('settingsOverlay').classList.toggle('active');
+            if (document.getElementById('voiceHelpModal').classList.contains('active')) {
+                closeVoiceHelp();
+            }
         }
 
         // Toggle Effects Panel
@@ -1394,7 +1611,7 @@
             document.getElementById('effectsPanel').classList.toggle('active');
         }
 
-        // Toggle Feature
+        // Toggle Feature - Now minimizes instead of disabling
         function toggleFeature(toggle, feature) {
             toggle.classList.toggle('active');
             state.features[feature] = toggle.classList.contains('active');
@@ -1408,9 +1625,9 @@
             
             const card = document.getElementById(cardMap[feature]);
             if (state.features[feature]) {
-                card.classList.remove('disabled');
+                card.classList.remove('minimized');
             } else {
-                card.classList.add('disabled');
+                card.classList.add('minimized');
             }
             
             saveState();
@@ -1478,6 +1695,24 @@
             }
         }
 
+        // Reset Settings
+        function resetSettings() {
+            if (confirm('Reset all settings to default?')) {
+                state.settings = {
+                    transparency: 40,
+                    blur: 20,
+                    fontSize: 16,
+                    cardRadius: 25,
+                    animationSpeed: 0.3,
+                    spacing: 15,
+                    padding: 20
+                };
+                state.theme = 'pinkgray';
+                applyState();
+                alert('✅ Settings reset to default!');
+            }
+        }
+
         // Update Transparency
         function updateTransparency(value) {
             state.settings.transparency = parseInt(value);
@@ -1489,7 +1724,7 @@
         function updateBlur(value) {
             state.settings.blur = parseInt(value);
             document.getElementById('blurValue').textContent = value + 'px';
-            document.querySelectorAll('.card, .voice-button, .action-btn').forEach(el => {
+            document.querySelectorAll('.card, .voice-button, .action-btn, .settings-panel, .effects-panel').forEach(el => {
                 el.style.backdropFilter = `blur(${value}px)`;
             });
             saveState();
@@ -1506,19 +1741,48 @@
             
             Object.keys(state.features).forEach(feature => {
                 const toggle = document.querySelector(`[data-feature="${feature}"]`);
+                const cardMap = {
+                    calls: 'callsCard',
+                    whatsapp: 'whatsappCard',
+                    latestApt: 'latestAptCard',
+                    nextApt: 'nextAptCard'
+                };
+                const card = document.getElementById(cardMap[feature]);
+                
                 if (toggle) {
                     if (state.features[feature]) {
                         toggle.classList.add('active');
+                        card.classList.remove('minimized');
                     } else {
                         toggle.classList.remove('active');
+                        card.classList.add('minimized');
                     }
                 }
             });
             
+            // Apply all sliders
+            document.getElementById('fontSizeSlider').value = state.settings.fontSize;
+            document.getElementById('fontSizeValue').textContent = state.settings.fontSize + 'px';
+            
+            document.getElementById('cardRadiusSlider').value = state.settings.cardRadius;
+            document.getElementById('cardRadiusValue').textContent = state.settings.cardRadius + 'px';
+            
+            document.getElementById('animSpeedSlider').value = state.settings.animationSpeed;
+            document.getElementById('animSpeedValue').textContent = state.settings.animationSpeed + 's';
+            
+            document.getElementById('spacingSlider').value = state.settings.spacing;
+            document.getElementById('spacingValue').textContent = state.settings.spacing + 'px';
+            
+            document.getElementById('paddingSlider').value = state.settings.padding;
+            document.getElementById('paddingValue').textContent = state.settings.padding + 'px';
+            
             document.getElementById('transparencySlider').value = state.settings.transparency;
             document.getElementById('transparencyValue').textContent = state.settings.transparency + '%';
+            
             document.getElementById('blurSlider').value = state.settings.blur;
             document.getElementById('blurValue').textContent = state.settings.blur + 'px';
+            
+            applyAllSettings();
         }
 
         // Load State on start
@@ -1526,6 +1790,8 @@
         if (saved) {
             Object.assign(state, JSON.parse(saved));
             applyState();
+        } else {
+            applyAllSettings();
         }
 
         // Sample data
@@ -1575,7 +1841,6 @@
 
         // Update displays
         function updateDisplays() {
-            // Recent Calls
             const callsHtml = sampleData.recentCalls.map(call => `
                 <div class="item">
                     <div class="item-name">${call.name}</div>
@@ -1584,7 +1849,6 @@
             `).join('');
             document.getElementById('recentCalls').innerHTML = callsHtml;
 
-            // WhatsApp Messages
             const messagesHtml = sampleData.whatsappMessages.map(msg => `
                 <div class="item">
                     <div class="item-name">
@@ -1596,7 +1860,6 @@
             `).join('');
             document.getElementById('whatsappMessages').innerHTML = messagesHtml;
 
-            // Latest Appointment
             if (sampleData.latestAppointment) {
                 const apt = sampleData.latestAppointment;
                 document.getElementById('latestAppointment').innerHTML = `
@@ -1609,7 +1872,6 @@
                 `;
             }
 
-            // Next Appointment
             if (sampleData.nextAppointment) {
                 const apt = sampleData.nextAppointment;
                 document.getElementById('nextAppointment').innerHTML = `
@@ -1638,13 +1900,13 @@
                 recognition.onstart = () => {
                     isListening = true;
                     document.getElementById('voiceBtn').classList.add('listening');
-                    document.getElementById('voiceStatus').textContent = 'Listening...';
+                    document.getElementById('voiceStatus').textContent = 'Listening... (Speak your command)';
                 };
 
                 recognition.onend = () => {
                     isListening = false;
                     document.getElementById('voiceBtn').classList.remove('listening');
-                    document.getElementById('voiceStatus').textContent = 'Tap microphone to start';
+                    document.getElementById('voiceStatus').textContent = 'Tap microphone for voice commands';
                 };
 
                 recognition.onresult = (event) => {
@@ -1677,6 +1939,7 @@
         function handleVoiceCommand(command) {
             document.getElementById('voiceStatus').textContent = `"${command}"`;
 
+            // Theme commands
             if (command.includes('dark mode') || command.includes('dark theme')) {
                 changeTheme('dark');
                 speak('Switched to dark mode');
@@ -1686,26 +1949,60 @@
             } else if (command.includes('neon')) {
                 changeTheme('neon');
                 speak('Switched to neon theme');
-            } else if (command.includes('stars')) {
-                toggleEffect('stars');
+            } else if (command.includes('pink') || command.includes('gray')) {
+                changeTheme('pinkgray');
+                speak('Switched to pink gray theme');
+            } else if (command.includes('minimal')) {
+                changeTheme('minimal');
+                speak('Switched to minimal theme');
+            }
+            // Effect commands
+            else if (command.includes('stars')) {
+                document.querySelectorAll('.effect-btn')[1].click();
                 speak('Stars effect activated');
             } else if (command.includes('hearts') || command.includes('love')) {
-                toggleEffect('hearts');
+                document.querySelectorAll('.effect-btn')[2].click();
                 speak('Hearts effect activated');
             } else if (command.includes('bear')) {
-                toggleEffect('bears');
+                document.querySelectorAll('.effect-btn')[3].click();
                 speak('Bears effect activated');
             } else if (command.includes('snow')) {
-                toggleEffect('snow');
+                document.querySelectorAll('.effect-btn')[5].click();
                 speak('Snow effect activated');
-            } else if (command.includes('stop effect')) {
+            } else if (command.includes('stop effect') || command.includes('clear effect')) {
                 particles = [];
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
                 speak('Effects stopped');
-            } else if (command.includes('time')) {
+            }
+            // Feature toggle commands
+            else if (command.includes('show calls') || command.includes('enable calls')) {
+                const toggle = document.querySelector('[data-feature="calls"]');
+                if (!state.features.calls) toggle.click();
+                speak('Calls shown');
+            } else if (command.includes('hide calls') || command.includes('disable calls')) {
+                const toggle = document.querySelector('[data-feature="calls"]');
+                if (state.features.calls) toggle.click();
+                speak('Calls hidden');
+            } else if (command.includes('show messages') || command.includes('show whatsapp')) {
+                const toggle = document.querySelector('[data-feature="whatsapp"]');
+                if (!state.features.whatsapp) toggle.click();
+                speak('Messages shown');
+            } else if (command.includes('hide messages') || command.includes('hide whatsapp')) {
+                const toggle = document.querySelector('[data-feature="whatsapp"]');
+                if (state.features.whatsapp) toggle.click();
+                speak('Messages hidden');
+            }
+            // Time command
+            else if (command.includes('time') || command.includes('what time')) {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
                 speak(`The time is ${timeStr}`);
+            }
+            // Settings command
+            else if (command.includes('open settings') || command.includes('show settings')) {
+                toggleSettings();
+                speak('Opening settings');
             }
         }
 
@@ -1742,7 +2039,7 @@
         updateDisplays();
         initVoiceRecognition();
 
-        // Register Service Worker for offline support
+        // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
@@ -1760,11 +2057,8 @@
         const installPrompt = document.getElementById('installPrompt');
 
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
-            // Stash the event so it can be triggered later
             deferredPrompt = e;
-            // Show the install prompt after 5 seconds
             setTimeout(() => {
                 if (!window.matchMedia('(display-mode: standalone)').matches) {
                     installPrompt.classList.add('show');
@@ -1772,19 +2066,14 @@
             }, 5000);
         });
 
-        // Handle install prompt click
         installPrompt.addEventListener('click', async (e) => {
             if (e.target.classList.contains('install-close')) return;
             
             if (deferredPrompt) {
-                // Show the install prompt
                 deferredPrompt.prompt();
-                // Wait for the user to respond to the prompt
                 const { outcome } = await deferredPrompt.userChoice;
                 console.log(`User response to the install prompt: ${outcome}`);
-                // Clear the deferredPrompt
                 deferredPrompt = null;
-                // Hide the prompt
                 installPrompt.classList.remove('show');
             }
         });
@@ -1792,11 +2081,9 @@
         function closeInstallPrompt(e) {
             e.stopPropagation();
             installPrompt.classList.remove('show');
-            // Don't show again for 7 days
             localStorage.setItem('installPromptDismissed', Date.now());
         }
 
-        // Check if previously dismissed
         const dismissed = localStorage.getItem('installPromptDismissed');
         if (dismissed && Date.now() - dismissed < 7 * 24 * 60 * 60 * 1000) {
             installPrompt.remove();
@@ -1808,25 +2095,9 @@
         });
 
         // Request full screen on mobile
-        function requestFullScreen() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            } else if (elem.mozRequestFullScreen) {
-                elem.mozRequestFullScreen();
-            } else if (elem.msRequestFullscreen) {
-                elem.msRequestFullscreen();
-            }
-        }
-
-        // Auto-request fullscreen when standalone app is opened
         if (window.matchMedia('(display-mode: standalone)').matches) {
             console.log('Running in standalone mode');
-            // App is installed and running as standalone
             setTimeout(() => {
-                // Request orientation lock for mobile
                 if (screen.orientation && screen.orientation.lock) {
                     screen.orientation.lock('portrait').catch(err => {
                         console.log('Orientation lock failed:', err);
@@ -1835,17 +2106,15 @@
             }, 100);
         }
 
-        // Handle visibility change to maintain fullscreen
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible' && window.matchMedia('(display-mode: standalone)').matches) {
-                // Ensure we're still in the right orientation
                 if (screen.orientation && screen.orientation.lock) {
                     screen.orientation.lock('portrait').catch(() => {});
                 }
             }
         });
 
-        // Prevent pull-to-refresh on mobile
+        // Prevent pull-to-refresh
         let touchStartY = 0;
         document.addEventListener('touchstart', (e) => {
             touchStartY = e.touches[0].clientY;
@@ -1860,7 +2129,7 @@
             }
         }, { passive: false });
 
-        // Add to home screen instruction for iOS
+        // iOS Add to Home Screen
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
