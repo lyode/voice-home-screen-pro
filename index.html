@@ -2,243 +2,1123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Repository Package - Voice Home Screen Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Voice Home Screen Pro</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
         }
 
+        /* Background Media Layer */
+        #bgMedia {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        #bgMedia.image {
+            filter: blur(0px);
+        }
+
+        #bgMedia.video {
+            filter: blur(0px);
+        }
+
+        /* Background Overlay */
+        #bgOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Main Container */
         .container {
-            max-width: 800px;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
             margin: 0 auto;
-            background: white;
+            padding: 20px;
+        }
+
+        /* Logo Branding */
+        .logo-branding {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-branding img {
+            max-width: 120px;
+            height: auto;
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
+        .logo-branding .brand-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .subtitle {
-            color: #666;
+        /* Header with Time */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .time {
+            font-size: 64px;
+            font-weight: 300;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .date {
             font-size: 18px;
-            margin-bottom: 30px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .alert {
-            background: #f0f9ff;
-            border-left: 4px solid #3b82f6;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-
-        .alert h3 {
-            color: #1e40af;
-            margin-bottom: 10px;
-        }
-
-        .alert p {
-            color: #1e3a8a;
-            line-height: 1.6;
-        }
-
-        .files {
-            margin-top: 30px;
-        }
-
-        .file-item {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
+        /* Settings Button */
+        .settings-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
             transition: all 0.3s ease;
         }
 
-        .file-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: #667eea;
+        .settings-btn:active {
+            transform: scale(0.95);
         }
 
-        .file-header {
+        .settings-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* Voice Button */
+        .voice-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            justify-content: center;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .file-icon {
-            font-size: 24px;
-            margin-right: 12px;
+        .voice-button:active {
+            transform: scale(0.95);
         }
 
-        .file-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
+        .voice-button.listening {
+            animation: pulse 1.5s infinite;
         }
 
-        .file-desc {
-            color: #666;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+        }
+
+        .voice-button svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .voice-status {
+            text-align: center;
             font-size: 14px;
-            margin-left: 36px;
+            margin-bottom: 30px;
+            min-height: 20px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .steps {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+        /* Floating Info Cards */
+        .card {
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
             padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
-        .steps h3 {
-            color: #856404;
+        .card:active {
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
             margin-bottom: 15px;
         }
 
-        .steps ol {
-            margin-left: 20px;
-            color: #856404;
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .steps li {
-            margin-bottom: 10px;
-            line-height: 1.6;
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
         }
 
-        .steps a {
-            color: #0066cc;
-            text-decoration: none;
+        .card-title {
+            font-size: 17px;
             font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
 
-        .steps a:hover {
-            text-decoration: underline;
+        .card-content {
+            color: white;
         }
 
-        .success {
-            background: #d1f2eb;
-            border-left: 4px solid #28a745;
+        .item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .item-detail {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .no-data {
+            text-align: center;
+            opacity: 0.6;
             padding: 20px;
-            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
             margin-top: 20px;
         }
 
-        .success h3 {
-            color: #155724;
-            margin-bottom: 10px;
+        .action-btn {
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px 10px;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
 
-        .btn {
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+            margin-bottom: 8px;
+        }
+
+        /* Badge */
+        .badge {
             display: inline-block;
-            background: #667eea;
+            background: rgba(255, 59, 48, 0.9);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 600;
-            margin-top: 10px;
+            margin-left: 8px;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .settings-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .close-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .setting-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .setting-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-option.active {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .media-upload {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .btn:hover {
-            background: #764ba2;
-            transform: translateY(-2px);
+        .media-upload:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .media-upload input {
+            display: none;
+        }
+
+        .font-select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .font-select option {
+            background: #333;
+            color: white;
+        }
+
+        /* Settings Overlay */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            display: none;
+        }
+
+        .settings-overlay.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎤 GitHub Repository Package</h1>
-        <p class="subtitle">Voice Home Screen Pro - Ready to Upload!</p>
+    <!-- Background Media -->
+    <div id="bgMedia"></div>
+    <div id="bgOverlay"></div>
 
-        <div class="alert">
-            <h3>📦 Complete Package Ready!</h3>
-            <p>All files have been prepared for your GitHub repository. You have everything needed to create a professional open-source project!</p>
-        </div>
+    <!-- Settings Button -->
+    <div class="settings-btn" onclick="toggleSettings()">
+        <svg viewBox="0 0 24 24">
+            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+    </div>
 
-        <div class="files">
-            <h2>📄 Repository Files</h2>
-            
-            <div class="file-item">
-                <div class="file-header">
-                    <span class="file-icon">🚀</span>
-                    <span class="file-name">voice-home-screen-pro.html</span>
-                </div>
-                <div class="file-desc">Main application file - The complete voice-activated home screen app</div>
-            </div>
+    <!-- Settings Overlay -->
+    <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
 
-            <div class="file-item">
-                <div class="file-header">
-                    <span class="file-icon">📖</span>
-                    <span class="file-name">README.md</span>
-                </div>
-                <div class="file-desc">Complete documentation with features, installation, and usage instructions</div>
-            </div>
-
-            <div class="file-item">
-                <div class="file-header">
-                    <span class="file-icon">📜</span>
-                    <span class="file-name">LICENSE</span>
-                </div>
-                <div class="file-desc">MIT License - Allows others to use and modify your code</div>
-            </div>
-
-            <div class="file-item">
-                <div class="file-header">
-                    <span class="file-icon">🚫</span>
-                    <span class="file-name">.gitignore</span>
-                </div>
-                <div class="file-desc">Git ignore file - Excludes unnecessary files from version control</div>
-            </div>
-
-            <div class="file-item">
-                <div class="file-header">
-                    <span class="file-icon">📝</span>
-                    <span class="file-name">GITHUB_UPLOAD_GUIDE.md</span>
-                </div>
-                <div class="file-desc">Step-by-step instructions for uploading to GitHub (3 methods included)</div>
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2>⚙️ Settings</h2>
+            <div class="close-btn" onclick="toggleSettings()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
             </div>
         </div>
 
-        <div class="steps">
-            <h3>🚀 Quick Upload Steps</h3>
-            <ol>
-                <li>Go to <a href="https://github.com/new" target="_blank">https://github.com/new</a></li>
-                <li>Repository name: <code>voice-home-screen-pro</code></li>
-                <li>Add description: "Voice-activated transparent home screen with full customization"</li>
-                <li>Create repository (don't add README - we have one!)</li>
-                <li>Click "uploading an existing file"</li>
-                <li>Upload all 4 files from this package</li>
-                <li>Commit changes ✅</li>
-            </ol>
+        <!-- Background Media -->
+        <div class="setting-group">
+            <div class="setting-label">📷 Background Media</div>
+            <div class="media-upload" onclick="document.getElementById('mediaInput').click()">
+                <input type="file" id="mediaInput" accept="image/*,video/*" onchange="handleMediaUpload(event)">
+                <div>📁 Tap to upload image or video</div>
+                <div style="font-size: 12px; opacity: 0.7; margin-top: 5px;">Supports: JPG, PNG, MP4, WebM</div>
+            </div>
         </div>
 
-        <div class="success">
-            <h3>✨ What You'll Have:</h3>
-            <ul style="margin-left: 20px; color: #155724;">
-                <li>Professional GitHub repository</li>
-                <li>Complete documentation</li>
-                <li>Open source project ready to share</li>
-                <li>Optional: Host on GitHub Pages for free!</li>
-            </ul>
-            <a href="https://github.com/new" target="_blank" class="btn">Create GitHub Repo Now →</a>
+        <!-- Logo Upload -->
+        <div class="setting-group">
+            <div class="setting-label">🎨 Logo / Brand</div>
+            <div class="media-upload" onclick="document.getElementById('logoInput').click()">
+                <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
+                <div>📁 Tap to upload logo</div>
+            </div>
+        </div>
+
+        <!-- Interface Color -->
+        <div class="setting-group">
+            <div class="setting-label">🎨 Interface Color</div>
+            <div class="color-picker-wrapper">
+                <div class="color-option active" style="background: rgba(52, 52, 52, 0.8);" onclick="setInterfaceColor('rgba(52, 52, 52, 0.8)')"></div>
+                <div class="color-option" style="background: rgba(30, 30, 30, 0.8);" onclick="setInterfaceColor('rgba(30, 30, 30, 0.8)')"></div>
+                <div class="color-option" style="background: rgba(103, 126, 234, 0.6);" onclick="setInterfaceColor('rgba(103, 126, 234, 0.6)')"></div>
+                <div class="color-option" style="background: rgba(118, 75, 162, 0.6);" onclick="setInterfaceColor('rgba(118, 75, 162, 0.6)')"></div>
+                <div class="color-option" style="background: rgba(52, 168, 83, 0.6);" onclick="setInterfaceColor('rgba(52, 168, 83, 0.6)')"></div>
+                <div class="color-option" style="background: rgba(251, 140, 0, 0.6);" onclick="setInterfaceColor('rgba(251, 140, 0, 0.6)')"></div>
+            </div>
+        </div>
+
+        <!-- Transparency -->
+        <div class="setting-group">
+            <div class="setting-label">💎 Transparency %</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="100" value="20" class="slider" id="transparencySlider" oninput="updateTransparency(this.value)">
+                <span class="slider-value" id="transparencyValue">20%</span>
+            </div>
+        </div>
+
+        <!-- Blur Intensity -->
+        <div class="setting-group">
+            <div class="setting-label">🌫️ Blur Intensity</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="50" value="20" class="slider" id="blurSlider" oninput="updateBlur(this.value)">
+                <span class="slider-value" id="blurValue">20px</span>
+            </div>
+        </div>
+
+        <!-- Card Spacing -->
+        <div class="setting-group">
+            <div class="setting-label">📏 Card Spacing</div>
+            <div class="slider-container">
+                <input type="range" min="5" max="40" value="15" class="slider" id="spacingSlider" oninput="updateSpacing(this.value)">
+                <span class="slider-value" id="spacingValue">15px</span>
+            </div>
+        </div>
+
+        <!-- Font Selection -->
+        <div class="setting-group">
+            <div class="setting-label">🔤 Font Family</div>
+            <select class="font-select" id="fontSelect" onchange="updateFont(this.value)">
+                <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">System Default</option>
+                <option value="'Arial', sans-serif">Arial</option>
+                <option value="'Helvetica', sans-serif">Helvetica</option>
+                <option value="'Georgia', serif">Georgia</option>
+                <option value="'Times New Roman', serif">Times New Roman</option>
+                <option value="'Courier New', monospace">Courier New</option>
+                <option value="'Verdana', sans-serif">Verdana</option>
+                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+            </select>
+        </div>
+
+        <!-- Screen Brightness -->
+        <div class="setting-group">
+            <div class="setting-label">☀️ Screen Brightness</div>
+            <div class="slider-container">
+                <input type="range" min="20" max="100" value="100" class="slider" id="brightnessSlider" oninput="updateBrightness(this.value)">
+                <span class="slider-value" id="brightnessValue">100%</span>
+            </div>
+        </div>
+
+        <!-- Text Color -->
+        <div class="setting-group">
+            <div class="setting-label">✏️ Text Color</div>
+            <input type="color" value="#ffffff" class="setting-input" id="textColorPicker" onchange="updateTextColor(this.value)">
         </div>
     </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Logo Branding -->
+        <div class="logo-branding" id="logoBranding" style="display: none;">
+            <img id="logoImage" src="" alt="Logo">
+            <div class="brand-text" id="brandText">Voice Assistant</div>
+        </div>
+
+        <!-- Header with Time -->
+        <div class="header">
+            <div class="time" id="timeDisplay">00:00</div>
+            <div class="date" id="dateDisplay">Loading...</div>
+        </div>
+
+        <!-- Voice Button -->
+        <div class="voice-button" id="voiceBtn">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+        </div>
+        <div class="voice-status" id="voiceStatus">Tap microphone or say "Hey Assistant"</div>
+
+        <!-- Recent Calls Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                    </svg>
+                </div>
+                <div class="card-title">Recent Calls</div>
+            </div>
+            <div class="card-content" id="recentCalls">
+                <div class="no-data">No recent calls</div>
+            </div>
+        </div>
+
+        <!-- WhatsApp Activity Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                    </svg>
+                </div>
+                <div class="card-title">WhatsApp Messages</div>
+            </div>
+            <div class="card-content" id="whatsappMessages">
+                <div class="no-data">No recent messages</div>
+            </div>
+        </div>
+
+        <!-- Latest Appointment Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/>
+                    </svg>
+                </div>
+                <div class="card-title">Latest Appointment</div>
+            </div>
+            <div class="card-content" id="latestAppointment">
+                <div class="no-data">No appointments</div>
+            </div>
+        </div>
+
+        <!-- Next Appointment Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                    </svg>
+                </div>
+                <div class="card-title">Next Appointment</div>
+            </div>
+            <div class="card-content" id="nextAppointment">
+                <div class="no-data">No upcoming appointments</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="action-btn" onclick="handleAction('call')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                </svg>
+                Call
+            </div>
+            <div class="action-btn" onclick="handleAction('message')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                </svg>
+                Message
+            </div>
+            <div class="action-btn" onclick="handleAction('calendar')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/>
+                </svg>
+                Calendar
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Settings state
+        const settings = {
+            interfaceColor: 'rgba(52, 52, 52, 0.8)',
+            transparency: 20,
+            blur: 20,
+            spacing: 15,
+            font: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            brightness: 100,
+            textColor: '#ffffff',
+            backgroundMedia: null,
+            logo: null
+        };
+
+        // Load saved settings
+        function loadSettings() {
+            const saved = localStorage.getItem('voiceHomeSettings');
+            if (saved) {
+                Object.assign(settings, JSON.parse(saved));
+                applyAllSettings();
+            }
+        }
+
+        // Save settings
+        function saveSettings() {
+            localStorage.setItem('voiceHomeSettings', JSON.stringify(settings));
+        }
+
+        // Apply all settings
+        function applyAllSettings() {
+            applyInterfaceColor();
+            applyTransparency();
+            applyBlur();
+            applySpacing();
+            applyFont();
+            applyBrightness();
+            applyTextColor();
+            
+            // Update UI controls
+            document.getElementById('transparencySlider').value = settings.transparency;
+            document.getElementById('transparencyValue').textContent = settings.transparency + '%';
+            document.getElementById('blurSlider').value = settings.blur;
+            document.getElementById('blurValue').textContent = settings.blur + 'px';
+            document.getElementById('spacingSlider').value = settings.spacing;
+            document.getElementById('spacingValue').textContent = settings.spacing + 'px';
+            document.getElementById('brightnessSlider').value = settings.brightness;
+            document.getElementById('brightnessValue').textContent = settings.brightness + '%';
+            document.getElementById('textColorPicker').value = settings.textColor;
+        }
+
+        // Toggle settings panel
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            const overlay = document.getElementById('settingsOverlay');
+            panel.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Handle media upload
+        function handleMediaUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const mediaElement = document.getElementById('bgMedia');
+                const isVideo = file.type.startsWith('video/');
+                
+                if (isVideo) {
+                    mediaElement.innerHTML = '';
+                    const video = document.createElement('video');
+                    video.src = e.target.result;
+                    video.autoplay = true;
+                    video.loop = true;
+                    video.muted = true;
+                    video.playsInline = true;
+                    video.style.width = '100%';
+                    video.style.height = '100%';
+                    video.style.objectFit = 'cover';
+                    mediaElement.appendChild(video);
+                    mediaElement.className = 'video';
+                } else {
+                    mediaElement.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    mediaElement.appendChild(img);
+                    mediaElement.className = 'image';
+                }
+                
+                settings.backgroundMedia = e.target.result;
+                saveSettings();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Handle logo upload
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const logoImg = document.getElementById('logoImage');
+                const logoBranding = document.getElementById('logoBranding');
+                
+                logoImg.src = e.target.result;
+                logoBranding.style.display = 'block';
+                
+                settings.logo = e.target.result;
+                saveSettings();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Set interface color
+        function setInterfaceColor(color) {
+            settings.interfaceColor = color;
+            applyInterfaceColor();
+            saveSettings();
+            
+            // Update active state
+            document.querySelectorAll('.color-option').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function applyInterfaceColor() {
+            document.getElementById('bgOverlay').style.background = settings.interfaceColor;
+        }
+
+        // Update transparency
+        function updateTransparency(value) {
+            settings.transparency = value;
+            document.getElementById('transparencyValue').textContent = value + '%';
+            applyTransparency();
+            saveSettings();
+        }
+
+        function applyTransparency() {
+            const alpha = (100 - settings.transparency) / 100;
+            document.querySelectorAll('.card, .voice-button, .action-btn, .settings-btn').forEach(el => {
+                el.style.background = `rgba(255, 255, 255, ${alpha * 0.15})`;
+            });
+        }
+
+        // Update blur
+        function updateBlur(value) {
+            settings.blur = value;
+            document.getElementById('blurValue').textContent = value + 'px';
+            applyBlur();
+            saveSettings();
+        }
+
+        function applyBlur() {
+            document.querySelectorAll('.card, .voice-button, .action-btn, .settings-btn, .settings-panel').forEach(el => {
+                el.style.backdropFilter = `blur(${settings.blur}px)`;
+            });
+        }
+
+        // Update spacing
+        function updateSpacing(value) {
+            settings.spacing = value;
+            document.getElementById('spacingValue').textContent = value + 'px';
+            applySpacing();
+            saveSettings();
+        }
+
+        function applySpacing() {
+            document.querySelectorAll('.card').forEach(el => {
+                el.style.marginBottom = settings.spacing + 'px';
+            });
+        }
+
+        // Update font
+        function updateFont(value) {
+            settings.font = value;
+            applyFont();
+            saveSettings();
+        }
+
+        function applyFont() {
+            document.body.style.fontFamily = settings.font;
+        }
+
+        // Update brightness
+        function updateBrightness(value) {
+            settings.brightness = value;
+            document.getElementById('brightnessValue').textContent = value + '%';
+            applyBrightness();
+            saveSettings();
+        }
+
+        function applyBrightness() {
+            document.body.style.filter = `brightness(${settings.brightness}%)`;
+        }
+
+        // Update text color
+        function updateTextColor(value) {
+            settings.textColor = value;
+            applyTextColor();
+            saveSettings();
+        }
+
+        function applyTextColor() {
+            document.documentElement.style.setProperty('--text-color', settings.textColor);
+            document.body.style.color = settings.textColor;
+        }
+
+        // Sample data
+        const sampleData = {
+            recentCalls: [
+                { name: "John Smith", time: "10 mins ago", type: "Incoming" },
+                { name: "Sarah Wilson", time: "1 hour ago", type: "Outgoing" },
+                { name: "Mike Johnson", time: "3 hours ago", type: "Missed" }
+            ],
+            whatsappMessages: [
+                { name: "Construction Team", message: "Meeting confirmed for 2 PM", time: "5 mins ago", unread: 2 },
+                { name: "David Lee", message: "Materials delivered", time: "1 hour ago", unread: 0 },
+                { name: "Project Group", message: "Budget approved!", time: "2 hours ago", unread: 1 }
+            ],
+            latestAppointment: {
+                title: "Site Inspection - Lot 15",
+                time: "Today, 2:00 PM",
+                location: "Bukit Jalil Site",
+                with: "Engineer Ahmad"
+            },
+            nextAppointment: {
+                title: "Client Meeting - Villa Project",
+                time: "Tomorrow, 10:00 AM",
+                location: "Office Conference Room",
+                with: "Mr. Tan"
+            }
+        };
+
+        // Update time display
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            const dateStr = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('timeDisplay').textContent = timeStr;
+            document.getElementById('dateDisplay').textContent = dateStr;
+        }
+
+        // Update displays
+        function updateDisplays() {
+            // Recent Calls
+            const callsHtml = sampleData.recentCalls.map(call => `
+                <div class="item">
+                    <div class="item-name">${call.name}</div>
+                    <div class="item-detail">${call.type} • ${call.time}</div>
+                </div>
+            `).join('');
+            document.getElementById('recentCalls').innerHTML = callsHtml;
+
+            // WhatsApp Messages
+            const messagesHtml = sampleData.whatsappMessages.map(msg => `
+                <div class="item">
+                    <div class="item-name">
+                        ${msg.name}
+                        ${msg.unread > 0 ? `<span class="badge">${msg.unread}</span>` : ''}
+                    </div>
+                    <div class="item-detail">${msg.message} • ${msg.time}</div>
+                </div>
+            `).join('');
+            document.getElementById('whatsappMessages').innerHTML = messagesHtml;
+
+            // Latest Appointment
+            if (sampleData.latestAppointment) {
+                const apt = sampleData.latestAppointment;
+                document.getElementById('latestAppointment').innerHTML = `
+                    <div class="item">
+                        <div class="item-name">${apt.title}</div>
+                        <div class="item-detail">📅 ${apt.time}</div>
+                        <div class="item-detail">📍 ${apt.location}</div>
+                        <div class="item-detail">👤 ${apt.with}</div>
+                    </div>
+                `;
+            }
+
+            // Next Appointment
+            if (sampleData.nextAppointment) {
+                const apt = sampleData.nextAppointment;
+                document.getElementById('nextAppointment').innerHTML = `
+                    <div class="item">
+                        <div class="item-name">${apt.title}</div>
+                        <div class="item-detail">📅 ${apt.time}</div>
+                        <div class="item-detail">📍 ${apt.location}</div>
+                        <div class="item-detail">👤 ${apt.with}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Voice Recognition
+        let recognition = null;
+        let isListening = false;
+
+        function initVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    isListening = true;
+                    document.getElementById('voiceBtn').classList.add('listening');
+                    document.getElementById('voiceStatus').textContent = 'Listening...';
+                };
+
+                recognition.onend = () => {
+                    isListening = false;
+                    document.getElementById('voiceBtn').classList.remove('listening');
+                    document.getElementById('voiceStatus').textContent = 'Tap microphone or say "Hey Assistant"';
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0].transcript)
+                        .join('');
+                    
+                    handleVoiceCommand(transcript.toLowerCase());
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    document.getElementById('voiceStatus').textContent = 'Error: ' + event.error;
+                };
+            } else {
+                document.getElementById('voiceStatus').textContent = 'Voice recognition not supported';
+            }
+        }
+
+        function toggleVoiceRecognition() {
+            if (!recognition) return;
+
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function handleVoiceCommand(command) {
+            document.getElementById('voiceStatus').textContent = `Command: "${command}"`;
+
+            if (command.includes('settings') || command.includes('setting')) {
+                speak('Opening settings');
+                toggleSettings();
+            } else if (command.includes('call') || command.includes('phone')) {
+                speak('Opening recent calls');
+                setTimeout(() => handleAction('call'), 1000);
+            } else if (command.includes('message') || command.includes('whatsapp')) {
+                speak('Opening messages');
+                setTimeout(() => handleAction('message'), 1000);
+            } else if (command.includes('appointment') || command.includes('calendar') || command.includes('schedule')) {
+                speak('Opening calendar');
+                setTimeout(() => handleAction('calendar'), 1000);
+            } else if (command.includes('next appointment')) {
+                const apt = sampleData.nextAppointment;
+                speak(`Your next appointment is ${apt.title} at ${apt.time}`);
+            } else if (command.includes('latest appointment') || command.includes('last appointment')) {
+                const apt = sampleData.latestAppointment;
+                speak(`Your latest appointment is ${apt.title} at ${apt.time}`);
+            } else if (command.includes('hello') || command.includes('hey')) {
+                speak('Hello! How can I help you?');
+            } else if (command.includes('time')) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+                speak(`The time is ${timeStr}`);
+            }
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function handleAction(action) {
+            switch(action) {
+                case 'call':
+                    speak('Opening phone app');
+                    alert('Opening phone app...\n(In real implementation, this would open your phone dialer)');
+                    break;
+                case 'message':
+                    speak('Opening messages');
+                    alert('Opening messages...\n(In real implementation, this would open WhatsApp)');
+                    break;
+                case 'calendar':
+                    speak('Opening calendar');
+                    alert('Opening calendar...\n(In real implementation, this would open your calendar app)');
+                    break;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('voiceBtn').addEventListener('click', toggleVoiceRecognition);
+
+        // Initialize
+        loadSettings();
+        updateTime();
+        setInterval(updateTime, 1000);
+        updateDisplays();
+        initVoiceRecognition();
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target === document.body) {
+                e.preventDefault();
+                toggleVoiceRecognition();
+            }
+        });
+    </script>
 </body>
 </html>
