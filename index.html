@@ -17,12 +17,13 @@
         :root {
             --outline-width: 3px;
             --shadow-blur: 6px;
+            --shadow-spread: 2;
         }
 
         html, body {
             height: 100%;
             width: 100%;
-            /* COMPLETELY TRANSPARENT */
+            /* COMPLETELY TRANSPARENT - NO BACKGROUND */
             background: transparent !important;
             overflow: hidden;
         }
@@ -33,7 +34,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* iPhone 15 Pro Max safe areas */
             padding-top: max(env(safe-area-inset-top), 54px);
             padding-bottom: max(env(safe-area-inset-bottom), 34px);
             padding-left: env(safe-area-inset-left);
@@ -47,18 +47,36 @@
             justify-content: center;
         }
 
-        /* White text with black outline */
+        /* Adaptive text with outlines */
         .time, .date {
+            font-weight: 600;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Light mode: white text + black outline */
+        body.text-light .time,
+        body.text-light .date {
             color: white;
             text-shadow: 
                 calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #000,
                 var(--outline-width) calc(var(--outline-width) * -1) 0 #000,
                 calc(var(--outline-width) * -1) var(--outline-width) 0 #000,
                 var(--outline-width) var(--outline-width) 0 #000,
-                0 0 var(--shadow-blur) rgba(0, 0, 0, 2.5);
-            pointer-events: none;
-            user-select: none;
-            -webkit-user-select: none;
+                0 0 var(--shadow-blur) rgba(0, 0, 0, var(--shadow-spread));
+        }
+
+        /* Dark mode: black text + white outline */
+        body.text-dark .time,
+        body.text-dark .date {
+            color: black;
+            text-shadow: 
+                calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #fff,
+                var(--outline-width) calc(var(--outline-width) * -1) 0 #fff,
+                calc(var(--outline-width) * -1) var(--outline-width) 0 #fff,
+                var(--outline-width) var(--outline-width) 0 #fff,
+                0 0 var(--shadow-blur) rgba(255, 255, 255, var(--shadow-spread));
         }
 
         .time {
@@ -76,6 +94,266 @@
             line-height: 1.2;
             text-align: center;
             padding: 0 20px;
+        }
+
+        /* Settings Button - NO BACKGROUND */
+        .settings-btn {
+            position: fixed;
+            top: max(env(safe-area-inset-top), 54px);
+            top: calc(max(env(safe-area-inset-top), 54px) + 20px);
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: transparent !important;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .settings-btn:active {
+            transform: scale(0.9);
+        }
+
+        .settings-btn svg {
+            width: 32px;
+            height: 32px;
+            transition: transform 0.3s ease;
+        }
+
+        .settings-btn.rotate svg {
+            transform: rotate(90deg);
+        }
+
+        /* Settings icon color adapts to text mode */
+        body.text-light .settings-btn svg {
+            fill: white;
+            filter: drop-shadow(calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 black)
+                    drop-shadow(var(--outline-width) calc(var(--outline-width) * -1) 0 black)
+                    drop-shadow(calc(var(--outline-width) * -1) var(--outline-width) 0 black)
+                    drop-shadow(var(--outline-width) var(--outline-width) 0 black);
+        }
+
+        body.text-dark .settings-btn svg {
+            fill: black;
+            filter: drop-shadow(calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 white)
+                    drop-shadow(var(--outline-width) calc(var(--outline-width) * -1) 0 white)
+                    drop-shadow(calc(var(--outline-width) * -1) var(--outline-width) 0 white)
+                    drop-shadow(var(--outline-width) var(--outline-width) 0 white);
+        }
+
+        /* Settings Panel - minimal background for readability */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            backdrop-filter: blur(40px);
+            z-index: 2000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            padding: max(env(safe-area-inset-top), 54px) 20px max(env(safe-area-inset-bottom), 34px) 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        body.text-light .settings-panel {
+            background: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        body.text-dark .settings-panel {
+            background: rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid;
+        }
+
+        body.text-light .settings-header {
+            border-bottom-color: rgba(255, 255, 255, 0.4);
+        }
+
+        body.text-dark .settings-header {
+            border-bottom-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .settings-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: transparent !important;
+            transition: transform 0.3s ease;
+        }
+
+        body.text-light .close-btn {
+            border-color: white;
+        }
+
+        body.text-dark .close-btn {
+            border-color: black;
+        }
+
+        .close-btn:active {
+            transform: scale(0.9);
+        }
+
+        .close-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        body.text-light .close-btn svg {
+            fill: white;
+        }
+
+        body.text-dark .close-btn svg {
+            fill: black;
+        }
+
+        .setting-group {
+            margin-bottom: 30px;
+        }
+
+        .setting-label {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        body.text-light .slider {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        body.text-dark .slider {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        body.text-light .slider::-webkit-slider-thumb {
+            background: white;
+        }
+
+        body.text-dark .slider::-webkit-slider-thumb {
+            background: black;
+        }
+
+        .slider-value {
+            min-width: 60px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .mode-option {
+            padding: 18px;
+            border-radius: 16px;
+            border: 3px solid;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            background: transparent !important;
+            transition: all 0.3s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.text-light .mode-option {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        body.text-dark .mode-option {
+            border-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .mode-option.active {
+            background: rgba(76, 175, 80, 0.3) !important;
+            transform: scale(1.05);
+        }
+
+        body.text-light .mode-option.active {
+            border-color: white;
+        }
+
+        body.text-dark .mode-option.active {
+            border-color: black;
+        }
+
+        .mode-option:active {
+            transform: scale(0.95);
+        }
+
+        /* Overlay */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1999;
+            display: none;
+        }
+
+        .settings-overlay.active {
+            display: block;
         }
 
         /* iPhone 15 Pro Max specific */
@@ -98,12 +376,40 @@
             .date {
                 font-size: 30px;
             }
-        }
 
-        /* Portrait orientation */
-        @media (orientation: portrait) {
-            .clock-container {
-                margin-top: 0;
+            .settings-btn {
+                top: 74px;
+                width: 54px;
+                height: 54px;
+            }
+
+            .settings-btn svg {
+                width: 34px;
+                height: 34px;
+            }
+
+            .settings-panel {
+                padding-top: 74px;
+                padding-bottom: 54px;
+            }
+
+            .settings-header h2 {
+                font-size: 30px;
+            }
+
+            .close-btn {
+                width: 54px;
+                height: 54px;
+            }
+
+            .setting-label {
+                font-size: 18px;
+            }
+
+            .mode-option {
+                padding: 20px;
+                font-size: 19px;
+                min-height: 64px;
             }
         }
 
@@ -129,25 +435,95 @@
         }
 
         /* Smooth fade in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (prefers-reduced-motion: no-preference) {
             .time, .date {
                 animation: fadeIn 0.5s ease;
             }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
-<body>
+<body class="text-light">
+    <!-- Settings Button -->
+    <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">
+        <svg viewBox="0 0 24 24">
+            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+    </button>
+
+    <!-- Main Clock -->
     <div class="clock-container">
         <div class="time" id="time">00:00</div>
         <div class="date" id="date">Loading...</div>
     </div>
 
+    <!-- Settings Overlay -->
+    <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2 class="time">⚙️ Settings</h2>
+            <div class="close-btn" onclick="toggleSettings()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Text Mode -->
+        <div class="setting-group">
+            <div class="setting-label time">🎨 Text Style</div>
+            <div class="mode-selector">
+                <div class="mode-option active time" data-mode="light" onclick="changeTextMode('light')">
+                    ☀️ Light
+                </div>
+                <div class="mode-option time" data-mode="dark" onclick="changeTextMode('dark')">
+                    🌙 Dark
+                </div>
+            </div>
+        </div>
+
+        <!-- Outline Width -->
+        <div class="setting-group">
+            <div class="setting-label time">📐 Outline Width</div>
+            <div class="slider-container">
+                <input type="range" min="1" max="6" step="0.5" value="3" class="slider" id="outlineSlider" oninput="updateOutline(this.value)">
+                <span class="slider-value time" id="outlineValue">3px</span>
+            </div>
+        </div>
+
+        <!-- Shadow Blur -->
+        <div class="setting-group">
+            <div class="setting-label time">💫 Shadow Blur</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="20" value="6" class="slider" id="shadowBlurSlider" oninput="updateShadowBlur(this.value)">
+                <span class="slider-value time" id="shadowBlurValue">6px</span>
+            </div>
+        </div>
+
+        <!-- Shadow Intensity -->
+        <div class="setting-group">
+            <div class="setting-label time">🌟 Shadow Intensity</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="5" step="0.1" value="2" class="slider" id="shadowSpreadSlider" oninput="updateShadowSpread(this.value)">
+                <span class="slider-value time" id="shadowSpreadValue">2.0</span>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const state = {
+            textMode: 'light',
+            outlineWidth: 3,
+            shadowBlur: 6,
+            shadowSpread: 2
+        };
+
         function updateTime() {
             const now = new Date();
             
@@ -167,20 +543,93 @@
             document.getElementById('date').textContent = dateStr;
         }
 
-        // Update immediately
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            const overlay = document.getElementById('settingsOverlay');
+            const btn = document.getElementById('settingsBtn');
+            
+            panel.classList.toggle('active');
+            overlay.classList.toggle('active');
+            btn.classList.toggle('rotate');
+        }
+
+        function changeTextMode(mode) {
+            document.body.className = `text-${mode}`;
+            state.textMode = mode;
+            
+            document.querySelectorAll('.mode-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            saveState();
+        }
+
+        function updateOutline(value) {
+            state.outlineWidth = parseFloat(value);
+            document.getElementById('outlineValue').textContent = value + 'px';
+            document.documentElement.style.setProperty('--outline-width', value + 'px');
+            saveState();
+        }
+
+        function updateShadowBlur(value) {
+            state.shadowBlur = parseInt(value);
+            document.getElementById('shadowBlurValue').textContent = value + 'px';
+            document.documentElement.style.setProperty('--shadow-blur', value + 'px');
+            saveState();
+        }
+
+        function updateShadowSpread(value) {
+            state.shadowSpread = parseFloat(value);
+            document.getElementById('shadowSpreadValue').textContent = parseFloat(value).toFixed(1);
+            document.documentElement.style.setProperty('--shadow-spread', value);
+            saveState();
+        }
+
+        function saveState() {
+            localStorage.setItem('clockSettings', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('clockSettings');
+            if (saved) {
+                Object.assign(state, JSON.parse(saved));
+                
+                changeTextMode(state.textMode);
+                
+                document.getElementById('outlineSlider').value = state.outlineWidth;
+                updateOutline(state.outlineWidth);
+                
+                document.getElementById('shadowBlurSlider').value = state.shadowBlur;
+                updateShadowBlur(state.shadowBlur);
+                
+                document.getElementById('shadowSpreadSlider').value = state.shadowSpread;
+                updateShadowSpread(state.shadowSpread);
+            }
+        }
+
+        // Initialize
         updateTime();
-        
-        // Update every second
         setInterval(updateTime, 1000);
+        loadState();
 
         // Prevent accidental zoom
         document.addEventListener('gesturestart', function(e) {
             e.preventDefault();
         });
 
-        // Prevent bounce scrolling
+        // Prevent bounce scrolling on main screen
+        let touchStartY = 0;
+        document.body.addEventListener('touchstart', function(e) {
+            if (!document.getElementById('settingsPanel').classList.contains('active')) {
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
         document.body.addEventListener('touchmove', function(e) {
-            e.preventDefault();
+            if (!document.getElementById('settingsPanel').classList.contains('active')) {
+                e.preventDefault();
+            }
         }, { passive: false });
     </script>
 </body>
