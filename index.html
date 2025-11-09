@@ -20,38 +20,17 @@
             --shadow-spread: 2;
         }
 
-        /* FORCE ALL BACKGROUNDS TO BE TRANSPARENT */
+        /* COMPLETE TRANSPARENCY - ALL LAYERS */
+        html, body, * {
+            background: transparent !important;
+            background-color: transparent !important;
+            background-image: none !important;
+        }
+
         html, body {
             height: 100%;
             width: 100%;
-            background: transparent !important;
-            background-color: transparent !important;
             overflow: hidden;
-        }
-
-        /* Remove platform background */
-        html.no-platform-bg {
-            background: none !important;
-            background-color: transparent !important;
-        }
-
-        /* Remove app background */
-        body.no-app-bg {
-            background: none !important;
-            background-color: transparent !important;
-        }
-
-        /* Remove chrome/browser background */
-        body.no-chrome-bg::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: transparent !important;
-            z-index: -1;
-            pointer-events: none;
         }
 
         body {
@@ -71,7 +50,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: transparent !important;
         }
 
         /* Adaptive text with outlines */
@@ -131,7 +109,6 @@
             right: 20px;
             width: 50px;
             height: 50px;
-            background: transparent !important;
             border: none;
             display: flex;
             align-items: center;
@@ -171,7 +148,7 @@
                     drop-shadow(var(--outline-width) var(--outline-width) 0 white);
         }
 
-        /* Settings Panel */
+        /* Settings Panel - Now with subtle backdrop blur only */
         .settings-panel {
             position: fixed;
             top: 0;
@@ -180,20 +157,13 @@
             max-width: 100%;
             height: 100vh;
             height: 100dvh;
-            backdrop-filter: blur(40px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 2000;
             transition: right 0.3s ease;
             overflow-y: auto;
             padding: max(env(safe-area-inset-top), 54px) 20px max(env(safe-area-inset-bottom), 34px) 20px;
             -webkit-overflow-scrolling: touch;
-        }
-
-        body.text-light .settings-panel {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        body.text-dark .settings-panel {
-            background: rgba(0, 0, 0, 0.2);
         }
 
         .settings-panel.active {
@@ -231,7 +201,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            background: transparent !important;
             transition: transform 0.3s ease;
         }
 
@@ -325,11 +294,11 @@
         }
 
         body.text-light .toggle-switch {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3) !important;
         }
 
         body.text-dark .toggle-switch {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3) !important;
         }
 
         .toggle-switch.active {
@@ -349,11 +318,11 @@
         }
 
         body.text-light .toggle-switch::after {
-            background: white;
+            background: white !important;
         }
 
         body.text-dark .toggle-switch::after {
-            background: black;
+            background: black !important;
         }
 
         .toggle-switch.active::after {
@@ -377,11 +346,11 @@
         }
 
         body.text-light .slider {
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.4) !important;
         }
 
         body.text-dark .slider {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.4) !important;
         }
 
         .slider::-webkit-slider-thumb {
@@ -395,11 +364,11 @@
         }
 
         body.text-light .slider::-webkit-slider-thumb {
-            background: white;
+            background: white !important;
         }
 
         body.text-dark .slider::-webkit-slider-thumb {
-            background: black;
+            background: black !important;
         }
 
         .slider-value {
@@ -423,7 +392,6 @@
             text-align: center;
             font-weight: 700;
             font-size: 18px;
-            background: transparent !important;
             transition: all 0.3s ease;
             min-height: 60px;
             display: flex;
@@ -462,7 +430,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3) !important;
             z-index: 1999;
             display: none;
         }
@@ -548,7 +516,7 @@
         }
     </style>
 </head>
-<body class="text-light no-app-bg no-chrome-bg">
+<body class="text-light">
     <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">
         <svg viewBox="0 0 24 24">
             <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
@@ -569,36 +537,6 @@
                 <svg viewBox="0 0 24 24">
                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                 </svg>
-            </div>
-        </div>
-
-        <!-- Background Removal Section -->
-        <div class="setting-group">
-            <div class="setting-label time">🗑️ Remove Backgrounds</div>
-            <div class="setting-description time">Enable transparency layers</div>
-            
-            <div class="toggle-row">
-                <div class="toggle-info">
-                    <div class="toggle-title time">Remove Platform Background</div>
-                    <div class="toggle-desc time">HTML layer transparency</div>
-                </div>
-                <div class="toggle-switch active" id="platformToggle" onclick="togglePlatformBg()"></div>
-            </div>
-
-            <div class="toggle-row">
-                <div class="toggle-info">
-                    <div class="toggle-title time">Remove App Background</div>
-                    <div class="toggle-desc time">Body layer transparency</div>
-                </div>
-                <div class="toggle-switch active" id="appToggle" onclick="toggleAppBg()"></div>
-            </div>
-
-            <div class="toggle-row">
-                <div class="toggle-info">
-                    <div class="toggle-title time">Remove Chrome Background</div>
-                    <div class="toggle-desc time">Browser layer transparency</div>
-                </div>
-                <div class="toggle-switch active" id="chromeToggle" onclick="toggleChromeBg()"></div>
             </div>
         </div>
 
@@ -648,10 +586,7 @@
             textMode: 'light',
             outlineWidth: 3,
             shadowBlur: 6,
-            shadowSpread: 2,
-            platformBg: true,
-            appBg: true,
-            chromeBg: true
+            shadowSpread: 2
         };
 
         function updateTime() {
@@ -678,45 +613,6 @@
             panel.classList.toggle('active');
             overlay.classList.toggle('active');
             btn.classList.toggle('rotate');
-        }
-
-        function togglePlatformBg() {
-            state.platformBg = !state.platformBg;
-            const toggle = document.getElementById('platformToggle');
-            toggle.classList.toggle('active');
-            
-            if (state.platformBg) {
-                document.documentElement.classList.add('no-platform-bg');
-            } else {
-                document.documentElement.classList.remove('no-platform-bg');
-            }
-            saveState();
-        }
-
-        function toggleAppBg() {
-            state.appBg = !state.appBg;
-            const toggle = document.getElementById('appToggle');
-            toggle.classList.toggle('active');
-            
-            if (state.appBg) {
-                document.body.classList.add('no-app-bg');
-            } else {
-                document.body.classList.remove('no-app-bg');
-            }
-            saveState();
-        }
-
-        function toggleChromeBg() {
-            state.chromeBg = !state.chromeBg;
-            const toggle = document.getElementById('chromeToggle');
-            toggle.classList.toggle('active');
-            
-            if (state.chromeBg) {
-                document.body.classList.add('no-chrome-bg');
-            } else {
-                document.body.classList.remove('no-chrome-bg');
-            }
-            saveState();
         }
 
         function changeTextMode(mode) {
@@ -763,15 +659,6 @@
                 
                 // Apply text mode
                 changeTextMode(state.textMode);
-                
-                // Apply background toggles
-                document.getElementById('platformToggle').classList.toggle('active', state.platformBg);
-                document.getElementById('appToggle').classList.toggle('active', state.appBg);
-                document.getElementById('chromeToggle').classList.toggle('active', state.chromeBg);
-                
-                if (state.platformBg) document.documentElement.classList.add('no-platform-bg');
-                if (state.appBg) document.body.classList.add('no-app-bg');
-                if (state.chromeBg) document.body.classList.add('no-chrome-bg');
                 
                 // Apply sliders
                 document.getElementById('outlineSlider').value = state.outlineWidth;
