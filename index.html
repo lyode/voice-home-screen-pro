@@ -20,7 +20,7 @@
     <meta name="msapplication-TileColor" content="transparent">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="format-detection" content="telephone=no">
-    <title>Voice Home Screen Pro - Transparent</title>
+    <title>Voice Home - Text Only</title>
     <style>
         * {
             margin: 0;
@@ -30,23 +30,19 @@
         }
 
         :root {
-            --font-size-base: 16px;
-            --card-radius: 25px;
-            --animation-speed: 0.3s;
-            --spacing: 15px;
-            --card-padding: 20px;
-            --transparency: 0.1; /* 90% transparent = 0.1 opacity */
+            --text-mode: light; /* light or dark */
+            --outline-width: 2px;
+            --shadow-blur: 4px;
+            --shadow-spread: 2px;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: var(--font-size-base);
             min-height: 100vh;
             min-height: -webkit-fill-available;
             min-height: 100dvh;
             overflow-x: hidden;
             position: relative;
-            transition: all 0.5s ease;
             padding-top: max(env(safe-area-inset-top), 20px);
             padding-bottom: max(env(safe-area-inset-bottom), 20px);
             padding-left: env(safe-area-inset-left);
@@ -55,7 +51,7 @@
             -webkit-overflow-scrolling: touch;
             -webkit-user-select: none;
             user-select: none;
-            /* FULLY TRANSPARENT - Shows phone wallpaper */
+            /* COMPLETELY TRANSPARENT */
             background: transparent !important;
         }
 
@@ -63,11 +59,38 @@
             height: -webkit-fill-available;
             height: 100dvh;
             overscroll-behavior: none;
-            /* FULLY TRANSPARENT */
+            /* COMPLETELY TRANSPARENT */
             background: transparent !important;
         }
 
-        /* iPhone 15 Pro Max Specific Optimizations */
+        /* Text styling with adaptive outlines */
+        .text-adaptive {
+            font-weight: 600;
+        }
+
+        /* Light mode: white text with black outline */
+        body.text-light .text-adaptive {
+            color: white;
+            text-shadow: 
+                calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #000,
+                var(--outline-width) calc(var(--outline-width) * -1) 0 #000,
+                calc(var(--outline-width) * -1) var(--outline-width) 0 #000,
+                var(--outline-width) var(--outline-width) 0 #000,
+                0 0 var(--shadow-blur) rgba(0, 0, 0, var(--shadow-spread));
+        }
+
+        /* Dark mode: black text with white outline */
+        body.text-dark .text-adaptive {
+            color: black;
+            text-shadow: 
+                calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #fff,
+                var(--outline-width) calc(var(--outline-width) * -1) 0 #fff,
+                calc(var(--outline-width) * -1) var(--outline-width) 0 #fff,
+                var(--outline-width) var(--outline-width) 0 #fff,
+                0 0 var(--shadow-blur) rgba(255, 255, 255, var(--shadow-spread));
+        }
+
+        /* iPhone 15 Pro Max Specific */
         @media only screen 
         and (device-width: 430px) 
         and (device-height: 932px) 
@@ -78,92 +101,20 @@
 
             .time {
                 font-size: 72px !important;
-                font-weight: 200;
             }
 
             .date {
                 font-size: 20px !important;
             }
-
-            .card {
-                border-radius: 28px;
-                padding: 24px;
-                margin-bottom: 18px;
-            }
-
-            .card-title {
-                font-size: 19px;
-            }
-
-            .item-name {
-                font-size: 17px;
-            }
-
-            .action-btn {
-                padding: 24px 12px;
-                font-size: 15px;
-            }
-
-            .action-btn svg {
-                width: 32px;
-                height: 32px;
-            }
-
-            .voice-button {
-                width: 90px;
-                height: 90px;
-            }
-
-            .voice-button svg {
-                width: 45px;
-                height: 45px;
-            }
         }
 
-        /* Landscape mode for iPhone 15 Pro Max */
-        @media only screen 
-        and (device-width: 430px) 
-        and (device-height: 932px) 
-        and (orientation: landscape) {
-            .container {
-                max-width: 800px;
-            }
-
-            .quick-actions {
-                grid-template-columns: repeat(6, 1fr);
-            }
-        }
-
-        /* Text color for visibility on any background */
-        .text-white {
-            color: white;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6);
-        }
-
-        /* Particle Canvas for Effects */
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 999;
-            pointer-events: none;
-        }
-
-        /* NO Background Overlay - Fully Transparent */
-        #bgOverlay {
-            display: none !important;
-        }
-
-        /* Main Container */
+        /* Main Container - NO BACKGROUND */
         .container {
             position: relative;
             z-index: 1;
             max-width: 600px;
             margin: 0 auto;
             padding: 0 20px 20px 20px;
-            transition: all var(--animation-speed) ease;
         }
 
         @media (max-width: 430px) {
@@ -173,7 +124,7 @@
             }
         }
 
-        /* Header with Time */
+        /* Header with Time - TEXT ONLY */
         .header {
             text-align: center;
             margin-bottom: 25px;
@@ -200,7 +151,7 @@
             opacity: 0.95;
         }
 
-        /* Top Action Buttons */
+        /* Top Action Buttons - ICON ONLY, NO BACKGROUND */
         .top-actions {
             position: fixed;
             top: max(env(safe-area-inset-top), 20px);
@@ -223,15 +174,14 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            backdrop-filter: blur(20px);
-            background: rgba(255, 255, 255, var(--transparency));
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            /* NO BACKGROUND - TRANSPARENT */
+            background: transparent;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all var(--animation-speed) ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
         }
 
         @media (max-width: 430px) {
@@ -239,39 +189,30 @@
                 width: 54px;
                 height: 54px;
             }
-
-            .action-icon-btn svg {
-                width: 26px;
-                height: 26px;
-            }
         }
 
         .action-icon-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
         }
 
         .action-icon-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+            width: 28px;
+            height: 28px;
         }
 
-        /* Voice Button */
+        /* Voice Button - ICON ONLY, NO BACKGROUND */
         .voice-button {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            backdrop-filter: blur(20px);
-            background: rgba(255, 255, 255, var(--transparency));
-            border: 3px solid rgba(255, 255, 255, 0.4);
+            background: transparent;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 20px auto;
             cursor: pointer;
-            transition: all var(--animation-speed) ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
             position: relative;
         }
 
@@ -284,48 +225,44 @@
         }
 
         .voice-button:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
         }
 
-        .voice-button.listening {
+        .voice-button.listening svg {
             animation: pulse 1.5s infinite;
-            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
         }
 
         @keyframes pulse {
             0%, 100% { 
                 transform: scale(1); 
-                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+                opacity: 1;
             }
             50% { 
-                transform: scale(1.1); 
-                box-shadow: 0 0 0 15px transparent;
+                transform: scale(1.2); 
+                opacity: 0.7;
             }
         }
 
         .voice-button svg {
-            width: 40px;
-            height: 40px;
-            fill: white;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+            width: 50px;
+            height: 50px;
         }
 
         .voice-help-icon {
             position: absolute;
             top: -5px;
             right: -5px;
-            width: 24px;
-            height: 24px;
-            background: rgba(255, 255, 255, 0.9);
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
-            color: #333;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            background: transparent;
+            border: 2px solid;
         }
 
         .voice-status {
@@ -342,81 +279,21 @@
             }
         }
 
-        /* Permission Banner */
-        .permission-banner {
-            backdrop-filter: blur(20px);
-            background: rgba(255, 200, 100, 0.2);
-            border-radius: var(--card-radius);
-            padding: 15px var(--card-padding);
-            margin-bottom: var(--spacing);
-            border: 2px solid rgba(255, 200, 100, 0.5);
-            transition: all var(--animation-speed) ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            display: none;
-        }
-
-        .permission-banner.show {
-            display: block;
-            animation: slideDown 0.5s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .permission-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .permission-text {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .permission-btn {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        /* Floating Info Cards - Fully Transparent Glass */
+        /* Cards - TEXT ONLY, NO BACKGROUND */
         .card {
-            backdrop-filter: blur(20px);
-            background: rgba(255, 255, 255, var(--transparency));
-            border-radius: var(--card-radius);
-            padding: var(--card-padding);
-            margin-bottom: var(--spacing);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all var(--animation-speed) ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            animation: cardFadeIn 0.5s ease;
+            /* COMPLETELY TRANSPARENT - NO BACKGROUND AT ALL */
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
             overflow: hidden;
             max-height: 500px;
         }
 
-        @keyframes cardFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card:active {
-            transform: translateY(-2px);
-        }
-
         .card.minimized {
-            max-height: 60px;
-            padding: 15px var(--card-padding);
+            max-height: 50px;
         }
 
         .card.minimized .card-content {
@@ -437,71 +314,97 @@
         .card-header-left {
             display: flex;
             align-items: center;
+            gap: 12px;
         }
 
+        /* Card Icon - NO BACKGROUND */
         .card-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            background: transparent;
+            border: none;
         }
 
         .card-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+            width: 28px;
+            height: 28px;
         }
 
         .card-title {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
         }
 
-        /* Feature Toggle Switch */
+        /* Feature Toggle Switch - Simplified */
         .feature-toggle {
             position: relative;
             width: 50px;
             height: 26px;
-            background: rgba(0, 0, 0, 0.3);
             border-radius: 13px;
             cursor: pointer;
-            transition: all var(--animation-speed) ease;
+            transition: all 0.3s ease;
+            border: 2px solid;
         }
 
-        .feature-toggle.active {
-            background: rgba(76, 175, 80, 0.8);
+        body.text-light .feature-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+
+        body.text-dark .feature-toggle {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: black;
+        }
+
+        body.text-light .feature-toggle.active {
+            background: rgba(76, 175, 80, 0.6);
+        }
+
+        body.text-dark .feature-toggle.active {
+            background: rgba(76, 175, 80, 0.6);
         }
 
         .feature-toggle::after {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        body.text-light .feature-toggle::after {
             background: white;
-            top: 3px;
-            left: 3px;
-            transition: all var(--animation-speed) ease;
+        }
+
+        body.text-dark .feature-toggle::after {
+            background: black;
         }
 
         .feature-toggle.active::after {
-            left: 27px;
+            left: 26px;
         }
 
         .card-content {
-            color: white;
+            margin-left: 0;
         }
 
         .item {
             padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid transparent;
+        }
+
+        body.text-light .item {
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+        }
+
+        body.text-dark .item {
+            border-bottom-color: rgba(0, 0, 0, 0.3);
         }
 
         .item:last-child {
@@ -509,53 +412,50 @@
         }
 
         .item-name {
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 17px;
+            font-weight: 600;
             margin-bottom: 4px;
         }
 
         .item-detail {
-            font-size: 13px;
+            font-size: 14px;
             opacity: 0.9;
         }
 
         .no-data {
             text-align: center;
-            opacity: 0.6;
-            padding: 20px;
-            font-size: 14px;
+            opacity: 0.7;
+            padding: 20px 0;
+            font-size: 15px;
         }
 
-        /* Quick Actions */
+        /* Quick Actions - TEXT ONLY, NO BACKGROUND */
         .quick-actions {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
             padding-bottom: max(env(safe-area-inset-bottom), 20px);
         }
 
         @media (max-width: 430px) {
             .quick-actions {
-                gap: 14px;
-                margin-top: 24px;
+                gap: 18px;
+                margin-top: 35px;
                 padding-bottom: max(env(safe-area-inset-bottom), 24px);
             }
         }
 
         .action-btn {
-            backdrop-filter: blur(20px);
-            background: rgba(255, 255, 255, var(--transparency));
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 20px 10px;
-            font-size: 14px;
+            /* NO BACKGROUND - COMPLETELY TRANSPARENT */
+            background: transparent;
+            border: none;
+            padding: 15px 10px;
+            font-size: 15px;
             text-align: center;
             cursor: pointer;
-            transition: all var(--animation-speed) ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            color: white;
-            min-height: 100px;
+            transition: transform 0.2s ease;
+            min-height: 90px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -563,30 +463,29 @@
         }
 
         .action-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
         }
 
         .action-btn svg {
-            width: 28px;
-            height: 28px;
-            fill: white;
+            width: 35px;
+            height: 35px;
             margin-bottom: 8px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
         }
 
         /* Badge */
         .badge {
             display: inline-block;
-            background: rgba(255, 59, 48, 0.9);
+            background: #ff3b30;
             color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
+            padding: 3px 8px;
+            border-radius: 12px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             margin-left: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* Settings Panel */
+        /* Settings Panel - Minimal background for readability */
         .settings-panel {
             position: fixed;
             top: 0;
@@ -595,14 +494,22 @@
             max-width: 450px;
             height: 100vh;
             height: 100dvh;
-            backdrop-filter: blur(30px);
-            background: rgba(255, 255, 255, 0.15);
-            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(40px);
             z-index: 2000;
-            transition: right var(--animation-speed) ease;
+            transition: right 0.3s ease;
             overflow-y: auto;
             padding: max(env(safe-area-inset-top), 20px) 20px max(env(safe-area-inset-bottom), 20px) 20px;
             -webkit-overflow-scrolling: touch;
+        }
+
+        body.text-light .settings-panel {
+            background: rgba(255, 255, 255, 0.25);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        body.text-dark .settings-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 1px solid rgba(0, 0, 0, 0.4);
         }
 
         @media (max-width: 430px) {
@@ -622,31 +529,45 @@
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid;
+        }
+
+        body.text-light .settings-header {
+            border-bottom-color: rgba(255, 255, 255, 0.4);
+        }
+
+        body.text-dark .settings-header {
+            border-bottom-color: rgba(0, 0, 0, 0.4);
         }
 
         .settings-header h2 {
             font-size: 24px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .close-btn {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.2);
+            background: transparent;
+        }
+
+        body.text-light .close-btn {
+            border-color: white;
+        }
+
+        body.text-dark .close-btn {
+            border-color: black;
         }
 
         .close-btn svg {
             width: 20px;
             height: 20px;
-            fill: white;
         }
 
         .setting-group {
@@ -654,9 +575,9 @@
         }
 
         .setting-label {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
             opacity: 0.9;
         }
 
@@ -672,8 +593,15 @@
             appearance: none;
             height: 8px;
             border-radius: 5px;
-            background: rgba(255, 255, 255, 0.3);
             outline: none;
+        }
+
+        body.text-light .slider {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        body.text-dark .slider {
+            background: rgba(0, 0, 0, 0.4);
         }
 
         .slider::-webkit-slider-thumb {
@@ -682,42 +610,103 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: white;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        body.text-light .slider::-webkit-slider-thumb {
+            background: white;
+        }
+
+        body.text-dark .slider::-webkit-slider-thumb {
+            background: black;
         }
 
         .slider-value {
             min-width: 50px;
             text-align: right;
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .mode-option {
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 700;
+            background: transparent;
+        }
+
+        body.text-light .mode-option {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        body.text-dark .mode-option {
+            border-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .mode-option.active {
+            background: rgba(76, 175, 80, 0.4);
+        }
+
+        body.text-light .mode-option.active {
+            border-color: white;
+        }
+
+        body.text-dark .mode-option.active {
+            border-color: black;
         }
 
         .btn-primary {
             width: 100%;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border: none;
+            border: 2px solid;
             border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all var(--animation-speed) ease;
+            transition: all 0.3s ease;
+        }
+
+        body.text-light .btn-primary {
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+            border-color: white;
+        }
+
+        body.text-dark .btn-primary {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            border-color: black;
         }
 
         .btn-secondary {
             width: 100%;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            border: 2px solid;
             border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
-            transition: all var(--animation-speed) ease;
+            transition: all 0.3s ease;
+        }
+
+        body.text-light .btn-secondary {
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        body.text-dark .btn-secondary {
+            border-color: rgba(0, 0, 0, 0.6);
         }
 
         /* Settings Overlay */
@@ -727,7 +716,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.3);
             z-index: 1999;
             display: none;
         }
@@ -744,14 +733,25 @@
             transform: translate(-50%, -50%) scale(0);
             width: 90%;
             max-width: 500px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(30px);
+            backdrop-filter: blur(40px);
             border-radius: 24px;
             padding: 30px;
             z-index: 3000;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            transition: transform var(--animation-speed) ease;
-            color: #333;
+            transition: transform 0.3s ease;
+            border: 2px solid;
+        }
+
+        body.text-light .voice-help-modal {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: white;
+            color: black;
+        }
+
+        body.text-dark .voice-help-modal {
+            background: rgba(0, 0, 0, 0.95);
+            border-color: black;
+            color: white;
         }
 
         .voice-help-modal.active {
@@ -762,7 +762,6 @@
             font-size: 24px;
             margin-bottom: 20px;
             text-align: center;
-            color: #333;
         }
 
         .voice-help-modal .command-list {
@@ -773,68 +772,24 @@
         .voice-help-modal .command-list li {
             padding: 12px;
             margin-bottom: 8px;
-            background: rgba(0, 0, 0, 0.05);
             border-radius: 12px;
             font-size: 14px;
+            border: 1px solid;
+        }
+
+        body.text-light .voice-help-modal .command-list li {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.text-dark .voice-help-modal .command-list li {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .voice-help-modal .command-list li strong {
-            color: #333;
             display: block;
             margin-bottom: 4px;
-        }
-
-        /* Install Prompt */
-        .install-prompt {
-            position: fixed;
-            bottom: max(env(safe-area-inset-bottom), 20px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            padding: 15px 30px;
-            border-radius: 50px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            display: none;
-            align-items: center;
-            gap: 10px;
-            z-index: 3000;
-            animation: slideUp 0.3s ease;
-            cursor: pointer;
-            max-width: 90%;
-        }
-
-        @media (max-width: 430px) {
-            .install-prompt {
-                bottom: max(env(safe-area-inset-bottom, 34px), 44px);
-                padding: 16px 32px;
-                font-size: 15px;
-            }
-        }
-
-        .install-prompt.show {
-            display: flex;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-
-        .install-prompt svg {
-            width: 24px;
-            height: 24px;
-            fill: #333;
-            flex-shrink: 0;
-        }
-
-        .install-close {
-            margin-left: 10px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            opacity: 0.8;
-            flex-shrink: 0;
         }
 
         /* Data Status Indicator */
@@ -843,17 +798,23 @@
             top: max(env(safe-area-inset-top), 20px);
             left: 20px;
             padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
+            background: transparent;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 600;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 700;
+            border: 2px solid;
             z-index: 1000;
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+
+        body.text-light .data-status {
+            border-color: white;
+        }
+
+        body.text-dark .data-status {
+            border-color: black;
         }
 
         @media only screen 
@@ -866,8 +827,8 @@
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: #4CAF50;
             animation: blink 2s infinite;
@@ -881,37 +842,30 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+
+        /* SVG color adapts to text mode */
+        body.text-light svg {
+            fill: white;
+            filter: drop-shadow(calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 black)
+                    drop-shadow(var(--outline-width) calc(var(--outline-width) * -1) 0 black)
+                    drop-shadow(calc(var(--outline-width) * -1) var(--outline-width) 0 black)
+                    drop-shadow(var(--outline-width) var(--outline-width) 0 black);
+        }
+
+        body.text-dark svg {
+            fill: black;
+            filter: drop-shadow(calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 white)
+                    drop-shadow(var(--outline-width) calc(var(--outline-width) * -1) 0 white)
+                    drop-shadow(calc(var(--outline-width) * -1) var(--outline-width) 0 white)
+                    drop-shadow(var(--outline-width) var(--outline-width) 0 white);
+        }
     </style>
 </head>
-<body>
-    <!-- Particle Canvas for Effects -->
-    <canvas id="particleCanvas"></canvas>
-    
+<body class="text-light">
     <!-- Data Status Indicator -->
     <div class="data-status" id="dataStatus">
         <div class="status-dot sample" id="statusDot"></div>
-        <span id="statusText">Sample Data</span>
-    </div>
-
-    <!-- Install Prompt -->
-    <div class="install-prompt" id="installPrompt">
-        <svg viewBox="0 0 24 24">
-            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-        </svg>
-        <span>Install App for Full Screen</span>
-        <svg class="install-close" viewBox="0 0 24 24" onclick="closeInstallPrompt(event)">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-        </svg>
-    </div>
-
-    <!-- Permission Banner -->
-    <div class="permission-banner" id="permissionBanner">
-        <div class="permission-content">
-            <div class="permission-text text-white" id="permissionText">
-                📱 Allow access to show real phone data
-            </div>
-            <button class="permission-btn" onclick="requestPermissions()">Allow</button>
-        </div>
+        <span class="text-adaptive" id="statusText">Sample</span>
     </div>
 
     <!-- Top Action Buttons -->
@@ -928,15 +882,13 @@
 
     <!-- Voice Help Modal -->
     <div class="voice-help-modal" id="voiceHelpModal">
-        <h3>🎤 Voice Assistant Commands</h3>
+        <h3>🎤 Voice Commands</h3>
         <ul class="command-list">
-            <li><strong>"Show/Hide [feature]"</strong> - Toggle cards (calls, messages, appointments)</li>
-            <li><strong>"Stars" / "Hearts" / "Snow"</strong> - Activate effects</li>
-            <li><strong>"Stop effects"</strong> - Clear all effects</li>
+            <li><strong>"Light mode" / "Dark mode"</strong> - Switch text style</li>
+            <li><strong>"Show/Hide [feature]"</strong> - Toggle cards</li>
+            <li><strong>"Open settings"</strong> - Access settings</li>
             <li><strong>"What time is it?"</strong> - Get current time</li>
-            <li><strong>"Open settings"</strong> - Access settings panel</li>
-            <li><strong>"Request permissions"</strong> - Allow phone data access</li>
-            <li><strong>"Increase/Decrease transparency"</strong> - Adjust see-through level</li>
+            <li><strong>"Refresh data"</strong> - Reload information</li>
         </ul>
         <button class="btn-primary" onclick="closeVoiceHelp()">Got it!</button>
     </div>
@@ -944,7 +896,7 @@
     <!-- Settings Panel -->
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-header">
-            <h2 class="text-white">⚙️ Settings</h2>
+            <h2 class="text-adaptive">⚙️ Settings</h2>
             <div class="close-btn" onclick="toggleSettings()">
                 <svg viewBox="0 0 24 24">
                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -952,34 +904,56 @@
             </div>
         </div>
 
-        <!-- Transparency Control -->
+        <!-- Text Mode Selection -->
         <div class="setting-group">
-            <div class="setting-label text-white">💎 Transparency Level (See-Through)</div>
-            <div class="slider-container">
-                <input type="range" min="0" max="50" value="10" class="slider" id="transparencySlider" oninput="updateTransparency(this.value)">
-                <span class="slider-value text-white" id="transparencyValue">90%</span>
+            <div class="setting-label text-adaptive">🎨 Text Style</div>
+            <div class="mode-selector">
+                <div class="mode-option active text-adaptive" data-mode="light" onclick="changeTextMode('light')">
+                    ☀️ Light
+                </div>
+                <div class="mode-option text-adaptive" data-mode="dark" onclick="changeTextMode('dark')">
+                    🌙 Dark
+                </div>
             </div>
         </div>
 
-        <!-- Blur Intensity -->
+        <!-- Outline Width -->
         <div class="setting-group">
-            <div class="setting-label text-white">🌫️ Blur Intensity</div>
+            <div class="setting-label text-adaptive">📐 Outline Width</div>
             <div class="slider-container">
-                <input type="range" min="0" max="50" value="20" class="slider" id="blurSlider" oninput="updateBlur(this.value)">
-                <span class="slider-value text-white" id="blurValue">20px</span>
+                <input type="range" min="1" max="5" step="0.5" value="2" class="slider" id="outlineSlider" oninput="updateOutline(this.value)">
+                <span class="slider-value text-adaptive" id="outlineValue">2px</span>
             </div>
         </div>
 
-        <!-- Auto-Detect Data -->
+        <!-- Shadow Blur -->
         <div class="setting-group">
-            <div class="setting-label text-white">📱 Phone Data Integration</div>
-            <button class="btn-primary" onclick="requestPermissions()">🔐 Request Permissions</button>
-            <button class="btn-secondary" onclick="testAutoDetect()">🔍 Test Auto-Detect</button>
+            <div class="setting-label text-adaptive">💫 Shadow Blur</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="20" value="4" class="slider" id="shadowBlurSlider" oninput="updateShadowBlur(this.value)">
+                <span class="slider-value text-adaptive" id="shadowBlurValue">4px</span>
+            </div>
+        </div>
+
+        <!-- Shadow Spread -->
+        <div class="setting-group">
+            <div class="setting-label text-adaptive">🌟 Shadow Intensity</div>
+            <div class="slider-container">
+                <input type="range" min="0" max="5" step="0.1" value="2" class="slider" id="shadowSpreadSlider" oninput="updateShadowSpread(this.value)">
+                <span class="slider-value text-adaptive" id="shadowSpreadValue">2.0</span>
+            </div>
+        </div>
+
+        <!-- Auto-Detect (iOS Compatible) -->
+        <div class="setting-group">
+            <div class="setting-label text-adaptive">📱 Device Integration</div>
+            <button class="btn-primary" onclick="testDeviceAPIs()">🔍 Check Device APIs</button>
+            <button class="btn-secondary text-adaptive" onclick="loadSampleData()">🔄 Reload Sample Data</button>
         </div>
 
         <!-- Reset Settings -->
         <div class="setting-group">
-            <button class="btn-secondary" onclick="resetSettings()">🔄 Reset to Default</button>
+            <button class="btn-secondary text-adaptive" onclick="resetSettings()">↩️ Reset to Default</button>
         </div>
     </div>
 
@@ -987,8 +961,8 @@
     <div class="container">
         <!-- Header with Time -->
         <div class="header">
-            <div class="time text-white" id="timeDisplay">00:00</div>
-            <div class="date text-white" id="dateDisplay">Loading...</div>
+            <div class="time text-adaptive" id="timeDisplay">00:00</div>
+            <div class="date text-adaptive" id="dateDisplay">Loading...</div>
         </div>
 
         <!-- Voice Button -->
@@ -997,9 +971,9 @@
                 <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                 <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
-            <div class="voice-help-icon" onclick="showVoiceHelp(event)">?</div>
+            <div class="voice-help-icon text-adaptive" onclick="showVoiceHelp(event)">?</div>
         </div>
-        <div class="voice-status text-white" id="voiceStatus">Tap microphone for voice commands</div>
+        <div class="voice-status text-adaptive" id="voiceStatus">Tap mic for voice control</div>
 
         <!-- Recent Calls Card -->
         <div class="card" id="callsCard">
@@ -1010,12 +984,12 @@
                             <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                         </svg>
                     </div>
-                    <div class="card-title text-white">Recent Calls</div>
+                    <div class="card-title text-adaptive">Recent Calls</div>
                 </div>
                 <div class="feature-toggle active" data-feature="calls" onclick="toggleFeature(this, 'calls')"></div>
             </div>
             <div class="card-content" id="recentCalls">
-                <div class="no-data text-white">Loading calls...</div>
+                <div class="no-data text-adaptive">Loading...</div>
             </div>
         </div>
 
@@ -1028,12 +1002,12 @@
                             <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
                         </svg>
                     </div>
-                    <div class="card-title text-white">Messages</div>
+                    <div class="card-title text-adaptive">Messages</div>
                 </div>
                 <div class="feature-toggle active" data-feature="messages" onclick="toggleFeature(this, 'messages')"></div>
             </div>
             <div class="card-content" id="messagesContent">
-                <div class="no-data text-white">Loading messages...</div>
+                <div class="no-data text-adaptive">Loading...</div>
             </div>
         </div>
 
@@ -1046,12 +1020,12 @@
                             <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/>
                         </svg>
                     </div>
-                    <div class="card-title text-white">Calendar Events</div>
+                    <div class="card-title text-adaptive">Calendar</div>
                 </div>
                 <div class="feature-toggle active" data-feature="calendar" onclick="toggleFeature(this, 'calendar')"></div>
             </div>
             <div class="card-content" id="calendarContent">
-                <div class="no-data text-white">Loading events...</div>
+                <div class="no-data text-adaptive">Loading...</div>
             </div>
         </div>
 
@@ -1061,19 +1035,19 @@
                 <svg viewBox="0 0 24 24">
                     <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                 </svg>
-                <span class="text-white">Call</span>
+                <span class="text-adaptive">Call</span>
             </div>
             <div class="action-btn" onclick="handleAction('message')">
                 <svg viewBox="0 0 24 24">
                     <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
                 </svg>
-                <span class="text-white">Message</span>
+                <span class="text-adaptive">Message</span>
             </div>
             <div class="action-btn" onclick="handleAction('calendar')">
                 <svg viewBox="0 0 24 24">
                     <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/>
                 </svg>
-                <span class="text-white">Calendar</span>
+                <span class="text-adaptive">Calendar</span>
             </div>
         </div>
     </div>
@@ -1087,178 +1061,75 @@
                 calendar: true
             },
             settings: {
-                transparency: 10, // Lower = more transparent
-                blur: 20
-            },
-            permissions: {
-                contacts: false,
-                calendar: false,
-                notifications: false
-            },
-            realDataAvailable: false
+                textMode: 'light',
+                outlineWidth: 2,
+                shadowBlur: 4,
+                shadowSpread: 2
+            }
         };
 
-        // Particle system
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        class Particle {
-            constructor(emoji, speed = 1) {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height;
-                this.speed = speed + Math.random() * 2;
-                this.emoji = emoji;
-                this.size = 20 + Math.random() * 20;
-                this.rotation = Math.random() * 360;
-                this.rotationSpeed = (Math.random() - 0.5) * 5;
-            }
-
-            update() {
-                this.y += this.speed;
-                this.rotation += this.rotationSpeed;
-                if (this.y > canvas.height) {
-                    this.y = -50;
-                    this.x = Math.random() * canvas.width;
-                }
-            }
-
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation * Math.PI / 180);
-                ctx.font = `${this.size}px Arial`;
-                ctx.fillText(this.emoji, 0, 0);
-                ctx.restore();
-            }
+        // Apply text style settings
+        function applyTextSettings() {
+            document.documentElement.style.setProperty('--outline-width', state.settings.outlineWidth + 'px');
+            document.documentElement.style.setProperty('--shadow-blur', state.settings.shadowBlur + 'px');
+            document.documentElement.style.setProperty('--shadow-spread', state.settings.shadowSpread);
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-
-        // Auto-detect phone features
-        async function autoDetectFeatures() {
-            console.log('🔍 Auto-detecting phone features...');
+        // Change text mode
+        function changeTextMode(mode) {
+            document.body.className = `text-${mode}`;
+            state.settings.textMode = mode;
             
-            // Check for various APIs
-            const hasContacts = 'contacts' in navigator && 'ContactsManager' in window;
-            const hasCalendar = false; // Web Calendar API not widely supported
-            const hasNotifications = 'Notification' in window;
-            const hasBattery = 'getBattery' in navigator;
-            const hasGeolocation = 'geolocation' in navigator;
-            
-            console.log('Available APIs:', {
-                contacts: hasContacts,
-                notifications: hasNotifications,
-                battery: hasBattery,
-                geolocation: hasGeolocation
+            document.querySelectorAll('.mode-option').forEach(opt => {
+                opt.classList.remove('active');
             });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            saveState();
+        }
 
-            // Show permission banner if features available
-            if (hasContacts || hasNotifications) {
-                setTimeout(() => {
-                    document.getElementById('permissionBanner').classList.add('show');
-                }, 2000);
-            }
+        // Update outline width
+        function updateOutline(value) {
+            state.settings.outlineWidth = parseFloat(value);
+            document.getElementById('outlineValue').textContent = value + 'px';
+            applyTextSettings();
+            saveState();
+        }
 
-            return {
-                hasContacts,
-                hasNotifications,
-                hasBattery,
-                hasGeolocation
+        // Update shadow blur
+        function updateShadowBlur(value) {
+            state.settings.shadowBlur = parseInt(value);
+            document.getElementById('shadowBlurValue').textContent = value + 'px';
+            applyTextSettings();
+            saveState();
+        }
+
+        // Update shadow spread
+        function updateShadowSpread(value) {
+            state.settings.shadowSpread = parseFloat(value);
+            document.getElementById('shadowSpreadValue').textContent = parseFloat(value).toFixed(1);
+            applyTextSettings();
+            saveState();
+        }
+
+        // Test device APIs (iOS compatible)
+        function testDeviceAPIs() {
+            const results = {
+                'Device Motion': 'DeviceMotionEvent' in window,
+                'Device Orientation': 'DeviceOrientationEvent' in window,
+                'Geolocation': 'geolocation' in navigator,
+                'Battery': 'getBattery' in navigator,
+                'Notifications': 'Notification' in window,
+                'Vibration': 'vibrate' in navigator,
+                'Speech Recognition': 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window,
+                'Speech Synthesis': 'speechSynthesis' in window
             };
-        }
 
-        // Request permissions for phone data
-        async function requestPermissions() {
-            console.log('📱 Requesting permissions...');
-            
-            try {
-                // Request Notification permission
-                if ('Notification' in window && Notification.permission === 'default') {
-                    const permission = await Notification.requestPermission();
-                    state.permissions.notifications = permission === 'granted';
-                    console.log('Notification permission:', permission);
-                }
+            const message = Object.entries(results)
+                .map(([api, available]) => `${api}: ${available ? '✅' : '❌'}`)
+                .join('\n');
 
-                // Try to access contacts (Chrome on Android)
-                if ('contacts' in navigator && 'ContactsManager' in window) {
-                    try {
-                        const props = ['name', 'tel'];
-                        const opts = { multiple: true };
-                        const contacts = await navigator.contacts.select(props, opts);
-                        state.permissions.contacts = true;
-                        await loadRealContacts(contacts);
-                        console.log('Contacts accessed:', contacts.length);
-                    } catch (err) {
-                        console.log('Contacts permission denied or cancelled:', err);
-                    }
-                }
-
-                document.getElementById('permissionBanner').classList.remove('show');
-                updateDataStatus();
-                
-            } catch (error) {
-                console.error('Permission request error:', error);
-            }
-        }
-
-        // Load real contacts as call history
-        async function loadRealContacts(contacts) {
-            if (!contacts || contacts.length === 0) return;
-
-            const callsHtml = contacts.slice(0, 5).map((contact, i) => {
-                const types = ['Incoming', 'Outgoing', 'Missed'];
-                const type = types[Math.floor(Math.random() * types.length)];
-                const time = `${Math.floor(Math.random() * 60)} mins ago`;
-                
-                return `
-                    <div class="item">
-                        <div class="item-name text-white">${contact.name?.[0] || 'Unknown'}</div>
-                        <div class="item-detail text-white">${type} • ${time}</div>
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('recentCalls').innerHTML = callsHtml;
-            state.realDataAvailable = true;
-        }
-
-        // Update data status indicator
-        function updateDataStatus() {
-            const statusDot = document.getElementById('statusDot');
-            const statusText = document.getElementById('statusText');
-            
-            if (state.realDataAvailable || state.permissions.contacts || state.permissions.notifications) {
-                statusDot.classList.remove('sample');
-                statusText.textContent = 'Live Data';
-            } else {
-                statusDot.classList.add('sample');
-                statusText.textContent = 'Sample Data';
-            }
-        }
-
-        // Test auto-detect
-        function testAutoDetect() {
-            alert('🔍 Checking available phone APIs...\n\n' +
-                  'Contacts API: ' + ('contacts' in navigator ? '✅' : '❌') + '\n' +
-                  'Notifications: ' + ('Notification' in window ? '✅' : '❌') + '\n' +
-                  'Battery: ' + ('getBattery' in navigator ? '✅' : '❌') + '\n' +
-                  'Geolocation: ' + ('geolocation' in navigator ? '✅' : '❌') + '\n' +
-                  'Device Motion: ' + ('DeviceMotionEvent' in window ? '✅' : '❌'));
+            alert('📱 Your Device APIs:\n\n' + message);
         }
 
         // Show Voice Help
@@ -1303,34 +1174,25 @@
             saveState();
         }
 
-        // Update Transparency
-        function updateTransparency(value) {
-            const opacity = parseInt(value);
-            state.settings.transparency = opacity;
-            document.documentElement.style.setProperty('--transparency', (opacity / 100).toFixed(2));
-            document.getElementById('transparencyValue').textContent = (100 - opacity) + '%';
-            saveState();
-        }
-
-        // Update Blur
-        function updateBlur(value) {
-            state.settings.blur = parseInt(value);
-            document.getElementById('blurValue').textContent = value + 'px';
-            saveState();
-        }
-
         // Reset Settings
         function resetSettings() {
-            if (confirm('Reset all settings to default?')) {
+            if (confirm('Reset all settings?')) {
                 state.settings = {
-                    transparency: 10,
-                    blur: 20
+                    textMode: 'light',
+                    outlineWidth: 2,
+                    shadowBlur: 4,
+                    shadowSpread: 2
                 };
-                document.getElementById('transparencySlider').value = 10;
-                updateTransparency(10);
-                document.getElementById('blurSlider').value = 20;
-                updateBlur(20);
-                alert('✅ Settings reset!');
+                
+                changeTextMode('light');
+                document.getElementById('outlineSlider').value = 2;
+                updateOutline(2);
+                document.getElementById('shadowBlurSlider').value = 4;
+                updateShadowBlur(4);
+                document.getElementById('shadowSpreadSlider').value = 2;
+                updateShadowSpread(2);
+                
+                alert('✅ Reset complete!');
             }
         }
 
@@ -1344,11 +1206,18 @@
             const saved = localStorage.getItem('voiceHomeState');
             if (saved) {
                 Object.assign(state, JSON.parse(saved));
-                document.getElementById('transparencySlider').value = state.settings.transparency;
-                updateTransparency(state.settings.transparency);
-                document.getElementById('blurSlider').value = state.settings.blur;
-                updateBlur(state.settings.blur);
+                changeTextMode(state.settings.textMode);
+                
+                document.getElementById('outlineSlider').value = state.settings.outlineWidth;
+                updateOutline(state.settings.outlineWidth);
+                
+                document.getElementById('shadowBlurSlider').value = state.settings.shadowBlur;
+                updateShadowBlur(state.settings.shadowBlur);
+                
+                document.getElementById('shadowSpreadSlider').value = state.settings.shadowSpread;
+                updateShadowSpread(state.settings.shadowSpread);
             }
+            applyTextSettings();
         }
 
         // Load sample data
@@ -1356,16 +1225,16 @@
             // Sample calls
             const callsHtml = `
                 <div class="item">
-                    <div class="item-name text-white">John Smith</div>
-                    <div class="item-detail text-white">Incoming • 10 mins ago</div>
+                    <div class="item-name text-adaptive">John Smith</div>
+                    <div class="item-detail text-adaptive">Incoming • 10 mins ago</div>
                 </div>
                 <div class="item">
-                    <div class="item-name text-white">Sarah Wilson</div>
-                    <div class="item-detail text-white">Outgoing • 1 hour ago</div>
+                    <div class="item-name text-adaptive">Sarah Wilson</div>
+                    <div class="item-detail text-adaptive">Outgoing • 1 hour ago</div>
                 </div>
                 <div class="item">
-                    <div class="item-name text-white">Mike Johnson</div>
-                    <div class="item-detail text-white">Missed • 3 hours ago</div>
+                    <div class="item-name text-adaptive">Mike Johnson</div>
+                    <div class="item-detail text-adaptive">Missed • 3 hours ago</div>
                 </div>
             `;
             document.getElementById('recentCalls').innerHTML = callsHtml;
@@ -1373,15 +1242,19 @@
             // Sample messages
             const messagesHtml = `
                 <div class="item">
-                    <div class="item-name text-white">
+                    <div class="item-name text-adaptive">
                         Construction Team
                         <span class="badge">2</span>
                     </div>
-                    <div class="item-detail text-white">Meeting confirmed for 2 PM • 5 mins ago</div>
+                    <div class="item-detail text-adaptive">Meeting confirmed for 2 PM</div>
                 </div>
                 <div class="item">
-                    <div class="item-name text-white">David Lee</div>
-                    <div class="item-detail text-white">Materials delivered • 1 hour ago</div>
+                    <div class="item-name text-adaptive">David Lee</div>
+                    <div class="item-detail text-adaptive">Materials delivered • 1 hour ago</div>
+                </div>
+                <div class="item">
+                    <div class="item-name text-adaptive">Ahmad</div>
+                    <div class="item-detail text-adaptive">Site ready for inspection</div>
                 </div>
             `;
             document.getElementById('messagesContent').innerHTML = messagesHtml;
@@ -1389,17 +1262,20 @@
             // Sample calendar
             const calendarHtml = `
                 <div class="item">
-                    <div class="item-name text-white">Site Inspection - Lot 15</div>
-                    <div class="item-detail text-white">📅 Today, 2:00 PM</div>
-                    <div class="item-detail text-white">📍 Bukit Jalil Site</div>
+                    <div class="item-name text-adaptive">Site Inspection - Lot 15</div>
+                    <div class="item-detail text-adaptive">📅 Today, 2:00 PM</div>
+                    <div class="item-detail text-adaptive">📍 Bukit Jalil Site</div>
                 </div>
                 <div class="item">
-                    <div class="item-name text-white">Client Meeting - Villa Project</div>
-                    <div class="item-detail text-white">📅 Tomorrow, 10:00 AM</div>
-                    <div class="item-detail text-white">📍 Office Conference Room</div>
+                    <div class="item-name text-adaptive">Client Meeting - Villa</div>
+                    <div class="item-detail text-adaptive">📅 Tomorrow, 10:00 AM</div>
+                    <div class="item-detail text-adaptive">📍 Office</div>
                 </div>
             `;
             document.getElementById('calendarContent').innerHTML = calendarHtml;
+
+            document.getElementById('statusDot').classList.add('sample');
+            document.getElementById('statusText').textContent = 'Sample';
         }
 
         // Update time display
@@ -1412,25 +1288,23 @@
             });
             const dateStr = now.toLocaleDateString('en-US', { 
                 weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+                month: 'short',
+                day: 'numeric'
             });
             
             document.getElementById('timeDisplay').textContent = timeStr;
             document.getElementById('dateDisplay').textContent = dateStr;
         }
 
-        // Voice Recognition
+        // Voice Recognition (iOS compatible)
         let recognition = null;
         let isListening = false;
 
         function initVoiceRecognition() {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = true;
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
                 recognition.lang = 'en-US';
 
                 recognition.onstart = () => {
@@ -1442,54 +1316,67 @@
                 recognition.onend = () => {
                     isListening = false;
                     document.getElementById('voiceBtn').classList.remove('listening');
-                    document.getElementById('voiceStatus').textContent = 'Tap microphone for voice commands';
+                    document.getElementById('voiceStatus').textContent = 'Tap mic for voice control';
                 };
 
                 recognition.onresult = (event) => {
-                    const transcript = Array.from(event.results)
-                        .map(result => result[0].transcript)
-                        .join('');
-                    
-                    handleVoiceCommand(transcript.toLowerCase());
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    handleVoiceCommand(transcript);
                 };
 
                 recognition.onerror = (event) => {
-                    console.error('Speech recognition error:', event.error);
+                    console.error('Voice error:', event.error);
+                    document.getElementById('voiceStatus').textContent = 'Voice error - tap to retry';
                 };
+            } else {
+                document.getElementById('voiceStatus').textContent = 'Voice not available on this device';
             }
         }
 
         function toggleVoiceRecognition() {
-            if (!recognition) return;
+            if (!recognition) {
+                alert('Voice recognition not available on this device');
+                return;
+            }
 
             if (isListening) {
                 recognition.stop();
             } else {
-                recognition.start();
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error('Voice start error:', e);
+                }
             }
         }
 
         function handleVoiceCommand(command) {
             document.getElementById('voiceStatus').textContent = `"${command}"`;
 
-            if (command.includes('request permission')) {
-                requestPermissions();
-                speak('Requesting permissions');
-            } else if (command.includes('increase transparency') || command.includes('more transparent')) {
-                const current = state.settings.transparency;
-                updateTransparency(Math.max(0, current - 10));
-                speak('Increased transparency');
-            } else if (command.includes('decrease transparency') || command.includes('less transparent')) {
-                const current = state.settings.transparency;
-                updateTransparency(Math.min(50, current + 10));
-                speak('Decreased transparency');
-            } else if (command.includes('open settings')) {
+            if (command.includes('light mode') || command.includes('white text')) {
+                changeTextMode('light');
+                speak('Light mode activated');
+            } else if (command.includes('dark mode') || command.includes('black text')) {
+                changeTextMode('dark');
+                speak('Dark mode activated');
+            } else if (command.includes('open settings') || command.includes('show settings')) {
                 toggleSettings();
                 speak('Opening settings');
             } else if (command.includes('time')) {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
                 speak(`The time is ${timeStr}`);
+            } else if (command.includes('refresh') || command.includes('reload')) {
+                loadSampleData();
+                speak('Data refreshed');
+            } else if (command.includes('show calls')) {
+                const toggle = document.querySelector('[data-feature="calls"]');
+                if (!state.features.calls) toggle.click();
+                speak('Showing calls');
+            } else if (command.includes('hide calls')) {
+                const toggle = document.querySelector('[data-feature="calls"]');
+                if (state.features.calls) toggle.click();
+                speak('Hiding calls');
             }
         }
 
@@ -1505,6 +1392,7 @@
 
         function handleAction(action) {
             speak(`Opening ${action}`);
+            // Add actual action handling here
         }
 
         // Initialize
@@ -1513,38 +1401,6 @@
         loadState();
         loadSampleData();
         initVoiceRecognition();
-        autoDetectFeatures();
-        updateDataStatus();
-
-        // PWA Install
-        let deferredPrompt;
-        const installPrompt = document.getElementById('installPrompt');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            setTimeout(() => {
-                if (!window.matchMedia('(display-mode: standalone)').matches) {
-                    installPrompt.classList.add('show');
-                }
-            }, 5000);
-        });
-
-        installPrompt.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('install-close')) return;
-            
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installPrompt.classList.remove('show');
-            }
-        });
-
-        function closeInstallPrompt(e) {
-            e.stopPropagation();
-            installPrompt.classList.remove('show');
-        }
 
         // Prevent pull-to-refresh
         let touchStartY = 0;
