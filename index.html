@@ -20,12 +20,38 @@
             --shadow-spread: 2;
         }
 
+        /* FORCE ALL BACKGROUNDS TO BE TRANSPARENT */
         html, body {
             height: 100%;
             width: 100%;
-            /* COMPLETELY TRANSPARENT - NO BACKGROUND */
             background: transparent !important;
+            background-color: transparent !important;
             overflow: hidden;
+        }
+
+        /* Remove platform background */
+        html.no-platform-bg {
+            background: none !important;
+            background-color: transparent !important;
+        }
+
+        /* Remove app background */
+        body.no-app-bg {
+            background: none !important;
+            background-color: transparent !important;
+        }
+
+        /* Remove chrome/browser background */
+        body.no-chrome-bg::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent !important;
+            z-index: -1;
+            pointer-events: none;
         }
 
         body {
@@ -45,6 +71,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: transparent !important;
         }
 
         /* Adaptive text with outlines */
@@ -96,7 +123,7 @@
             padding: 0 20px;
         }
 
-        /* Settings Button - NO BACKGROUND */
+        /* Settings Button */
         .settings-btn {
             position: fixed;
             top: max(env(safe-area-inset-top), 54px);
@@ -128,7 +155,6 @@
             transform: rotate(90deg);
         }
 
-        /* Settings icon color adapts to text mode */
         body.text-light .settings-btn svg {
             fill: white;
             filter: drop-shadow(calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 black)
@@ -145,7 +171,7 @@
                     drop-shadow(var(--outline-width) var(--outline-width) 0 white);
         }
 
-        /* Settings Panel - minimal background for readability */
+        /* Settings Panel */
         .settings-panel {
             position: fixed;
             top: 0;
@@ -163,11 +189,11 @@
         }
 
         body.text-light .settings-panel {
-            background: rgba(255, 255, 255, 0.2) !important;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         body.text-dark .settings-panel {
-            background: rgba(0, 0, 0, 0.2) !important;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .settings-panel.active {
@@ -243,6 +269,96 @@
             font-weight: 700;
             margin-bottom: 12px;
             opacity: 0.9;
+        }
+
+        .setting-description {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        /* Toggle Switch */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid;
+        }
+
+        body.text-light .toggle-row {
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body.text-dark .toggle-row {
+            border-bottom-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-row:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .toggle-desc {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        body.text-light .toggle-switch {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body.text-dark .toggle-switch {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50 !important;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        body.text-light .toggle-switch::after {
+            background: white;
+        }
+
+        body.text-dark .toggle-switch::after {
+            background: black;
+        }
+
+        .toggle-switch.active::after {
+            left: 31px;
+            background: white !important;
         }
 
         .slider-container {
@@ -340,7 +456,6 @@
             transform: scale(0.95);
         }
 
-        /* Overlay */
         .settings-overlay {
             position: fixed;
             top: 0;
@@ -356,12 +471,11 @@
             display: block;
         }
 
-        /* iPhone 15 Pro Max specific */
+        /* iPhone 15 Pro Max */
         @media only screen 
         and (device-width: 430px) 
         and (device-height: 932px) 
         and (-webkit-device-pixel-ratio: 3) {
-            
             body {
                 padding-top: 54px;
                 padding-bottom: 34px;
@@ -401,19 +515,8 @@
                 width: 54px;
                 height: 54px;
             }
-
-            .setting-label {
-                font-size: 18px;
-            }
-
-            .mode-option {
-                padding: 20px;
-                font-size: 19px;
-                min-height: 64px;
-            }
         }
 
-        /* Landscape mode */
         @media (orientation: landscape) {
             .time {
                 font-size: 72px;
@@ -427,14 +530,12 @@
             }
         }
 
-        /* Prevent text selection */
         * {
             -webkit-user-select: none;
             -webkit-touch-callout: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Smooth fade in */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -447,24 +548,20 @@
         }
     </style>
 </head>
-<body class="text-light">
-    <!-- Settings Button -->
+<body class="text-light no-app-bg no-chrome-bg">
     <button class="settings-btn" id="settingsBtn" onclick="toggleSettings()">
         <svg viewBox="0 0 24 24">
             <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
         </svg>
     </button>
 
-    <!-- Main Clock -->
     <div class="clock-container">
         <div class="time" id="time">00:00</div>
         <div class="date" id="date">Loading...</div>
     </div>
 
-    <!-- Settings Overlay -->
     <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
 
-    <!-- Settings Panel -->
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-header">
             <h2 class="time">⚙️ Settings</h2>
@@ -472,6 +569,36 @@
                 <svg viewBox="0 0 24 24">
                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                 </svg>
+            </div>
+        </div>
+
+        <!-- Background Removal Section -->
+        <div class="setting-group">
+            <div class="setting-label time">🗑️ Remove Backgrounds</div>
+            <div class="setting-description time">Enable transparency layers</div>
+            
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <div class="toggle-title time">Remove Platform Background</div>
+                    <div class="toggle-desc time">HTML layer transparency</div>
+                </div>
+                <div class="toggle-switch active" id="platformToggle" onclick="togglePlatformBg()"></div>
+            </div>
+
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <div class="toggle-title time">Remove App Background</div>
+                    <div class="toggle-desc time">Body layer transparency</div>
+                </div>
+                <div class="toggle-switch active" id="appToggle" onclick="toggleAppBg()"></div>
+            </div>
+
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <div class="toggle-title time">Remove Chrome Background</div>
+                    <div class="toggle-desc time">Browser layer transparency</div>
+                </div>
+                <div class="toggle-switch active" id="chromeToggle" onclick="toggleChromeBg()"></div>
             </div>
         </div>
 
@@ -521,18 +648,18 @@
             textMode: 'light',
             outlineWidth: 3,
             shadowBlur: 6,
-            shadowSpread: 2
+            shadowSpread: 2,
+            platformBg: true,
+            appBg: true,
+            chromeBg: true
         };
 
         function updateTime() {
             const now = new Date();
-            
-            // Time (24-hour format)
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('time').textContent = `${hours}:${minutes}`;
             
-            // Date
             const options = { 
                 weekday: 'long', 
                 year: 'numeric', 
@@ -553,8 +680,47 @@
             btn.classList.toggle('rotate');
         }
 
+        function togglePlatformBg() {
+            state.platformBg = !state.platformBg;
+            const toggle = document.getElementById('platformToggle');
+            toggle.classList.toggle('active');
+            
+            if (state.platformBg) {
+                document.documentElement.classList.add('no-platform-bg');
+            } else {
+                document.documentElement.classList.remove('no-platform-bg');
+            }
+            saveState();
+        }
+
+        function toggleAppBg() {
+            state.appBg = !state.appBg;
+            const toggle = document.getElementById('appToggle');
+            toggle.classList.toggle('active');
+            
+            if (state.appBg) {
+                document.body.classList.add('no-app-bg');
+            } else {
+                document.body.classList.remove('no-app-bg');
+            }
+            saveState();
+        }
+
+        function toggleChromeBg() {
+            state.chromeBg = !state.chromeBg;
+            const toggle = document.getElementById('chromeToggle');
+            toggle.classList.toggle('active');
+            
+            if (state.chromeBg) {
+                document.body.classList.add('no-chrome-bg');
+            } else {
+                document.body.classList.remove('no-chrome-bg');
+            }
+            saveState();
+        }
+
         function changeTextMode(mode) {
-            document.body.className = `text-${mode}`;
+            document.body.className = document.body.className.replace(/text-(light|dark)/, `text-${mode}`);
             state.textMode = mode;
             
             document.querySelectorAll('.mode-option').forEach(opt => {
@@ -595,8 +761,19 @@
             if (saved) {
                 Object.assign(state, JSON.parse(saved));
                 
+                // Apply text mode
                 changeTextMode(state.textMode);
                 
+                // Apply background toggles
+                document.getElementById('platformToggle').classList.toggle('active', state.platformBg);
+                document.getElementById('appToggle').classList.toggle('active', state.appBg);
+                document.getElementById('chromeToggle').classList.toggle('active', state.chromeBg);
+                
+                if (state.platformBg) document.documentElement.classList.add('no-platform-bg');
+                if (state.appBg) document.body.classList.add('no-app-bg');
+                if (state.chromeBg) document.body.classList.add('no-chrome-bg');
+                
+                // Apply sliders
                 document.getElementById('outlineSlider').value = state.outlineWidth;
                 updateOutline(state.outlineWidth);
                 
@@ -613,12 +790,10 @@
         setInterval(updateTime, 1000);
         loadState();
 
-        // Prevent accidental zoom
         document.addEventListener('gesturestart', function(e) {
             e.preventDefault();
         });
 
-        // Prevent bounce scrolling on main screen
         let touchStartY = 0;
         document.body.addEventListener('touchstart', function(e) {
             if (!document.getElementById('settingsPanel').classList.contains('active')) {
