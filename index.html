@@ -7,9 +7,18 @@
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192x192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512x512.png">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#667eea">
+    
+    <!-- PWA & Mobile Full Screen Meta Tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Voice Home">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Voice Home Pro">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-tap-highlight" content="no">
     <title>Voice Home Screen Pro - Enhanced</title>
     <style>
         * {
@@ -22,9 +31,22 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             overflow-x: hidden;
             position: relative;
             transition: all 0.5s ease;
+            /* Safe area for notches (iPhone X, etc.) */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        html {
+            height: -webkit-fill-available;
+            overscroll-behavior: none;
         }
 
         /* Theme Variables */
@@ -696,11 +718,81 @@
             border-color: #4CAF50;
             background: rgba(76, 175, 80, 0.2);
         }
+
+        /* Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 3000;
+            animation: slideUp 0.3s ease;
+            cursor: pointer;
+        }
+
+        .install-prompt.show {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .install-prompt svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .install-close {
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .install-close:hover {
+            opacity: 1;
+        }
+
+        /* Standalone mode adjustments */
+        @media all and (display-mode: standalone) {
+            .install-prompt {
+                display: none !important;
+            }
+        }
+
+        @media all and (display-mode: fullscreen) {
+            .install-prompt {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="theme-dark">
     <!-- Particle Canvas for Effects -->
     <canvas id="particleCanvas"></canvas>
+    
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <svg viewBox="0 0 24 24">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </svg>
+        <span>Install App for Full Screen</span>
+        <svg class="install-close" viewBox="0 0 24 24" onclick="closeInstallPrompt(event)">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+    </div>
     
     <!-- Running Lights (hidden by default) -->
     <div class="running-lights" id="runningLights" style="display: none;"></div>
@@ -1436,6 +1528,145 @@
         setInterval(updateTime, 1000);
         updateDisplays();
         initVoiceRecognition();
+
+        // Register Service Worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        const installPrompt = document.getElementById('installPrompt');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Show the install prompt after 5 seconds
+            setTimeout(() => {
+                if (!window.matchMedia('(display-mode: standalone)').matches) {
+                    installPrompt.classList.add('show');
+                }
+            }, 5000);
+        });
+
+        // Handle install prompt click
+        installPrompt.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('install-close')) return;
+            
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                // Clear the deferredPrompt
+                deferredPrompt = null;
+                // Hide the prompt
+                installPrompt.classList.remove('show');
+            }
+        });
+
+        function closeInstallPrompt(e) {
+            e.stopPropagation();
+            installPrompt.classList.remove('show');
+            // Don't show again for 7 days
+            localStorage.setItem('installPromptDismissed', Date.now());
+        }
+
+        // Check if previously dismissed
+        const dismissed = localStorage.getItem('installPromptDismissed');
+        if (dismissed && Date.now() - dismissed < 7 * 24 * 60 * 60 * 1000) {
+            installPrompt.remove();
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            installPrompt.classList.remove('show');
+        });
+
+        // Request full screen on mobile
+        function requestFullScreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        // Auto-request fullscreen when standalone app is opened
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('Running in standalone mode');
+            // App is installed and running as standalone
+            setTimeout(() => {
+                // Request orientation lock for mobile
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('portrait').catch(err => {
+                        console.log('Orientation lock failed:', err);
+                    });
+                }
+            }, 100);
+        }
+
+        // Handle visibility change to maintain fullscreen
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && window.matchMedia('(display-mode: standalone)').matches) {
+                // Ensure we're still in the right orientation
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('portrait').catch(() => {});
+                }
+            }
+        });
+
+        // Prevent pull-to-refresh on mobile
+        let touchStartY = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            const touchY = e.touches[0].clientY;
+            const touchDiff = touchY - touchStartY;
+            
+            if (touchDiff > 0 && window.scrollY === 0) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Add to home screen instruction for iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        if (isIOS && !isInStandaloneMode && !dismissed) {
+            setTimeout(() => {
+                if (!installPrompt.classList.contains('show')) {
+                    installPrompt.innerHTML = `
+                        <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:white;">
+                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        <span style="font-size:14px;">Tap Share → Add to Home Screen</span>
+                        <svg class="install-close" viewBox="0 0 24 24" onclick="closeInstallPrompt(event)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    `;
+                    installPrompt.classList.add('show');
+                }
+            }, 8000);
+        }
     </script>
 </body>
 </html>
