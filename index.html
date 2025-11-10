@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Launcher">
+    <meta name="apple-mobile-web-app-title" content="Launcher Pro">
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSG9tZSBTY3JlZW4gTGF1bmNoZXIiLCJzaG9ydF9uYW1lIjoiTGF1bmNoZXIiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJ0aGVtZV9jb2xvciI6IiMwMDAwMDAiLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0IiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnPjx0ZXh0IHk9Jy45ZW0nIGZvbnQtc2l6ZT0nOTAnPvCfj7A8L3RleHQ+PC9zdmc+Iiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
-    <title>Photo Launcher</title>
+    <title>Launcher Pro</title>
     <style>
         * {
             margin: 0;
@@ -27,19 +27,104 @@
         :root {
             --clock-size: 96px;
             --clock-vertical: 20%;
+            --icon-size: 60px;
+            --icon-shape: 20px;
+            --icon-padding: 10px;
+            --bg-color: transparent;
+            --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            --theme-color: #667eea;
         }
 
         html, body {
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background: transparent !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: var(--bg-color) !important;
+            font-family: var(--font-family);
         }
 
         body {
             position: relative;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        /* Lock Screen Overlay */
+        .lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .lock-screen.hidden {
+            display: none;
+        }
+
+        .lock-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .unlock-text {
+            font-size: 24px;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Notification Light */
+        .notification-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 9999;
+            display: none;
+        }
+
+        .notification-light.active {
+            display: block;
+        }
+
+        .notification-light.blink {
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        .notification-light.glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .notification-light.running {
+            background: linear-gradient(90deg, transparent, var(--theme-color), transparent);
+            animation: running 2s linear infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 0; }
+            25%, 75% { opacity: 1; }
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes running {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
         }
 
         /* Background */
@@ -50,16 +135,6 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            display: none;
-        }
-
-        #gradientBg {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        #imageBg {
-            background-size: cover;
-            background-position: center;
         }
 
         /* Clock */
@@ -92,32 +167,42 @@
             margin-top: 8px;
         }
 
-        /* Shortcuts */
-        .shortcuts-container {
+        /* Shortcuts Container - Scrollable */
+        .shortcuts-scroll-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
             z-index: 5;
             padding: max(env(safe-area-inset-top), 54px) 20px max(env(safe-area-inset-bottom), 34px) 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .shortcuts-container {
+            position: relative;
+            min-height: calc(100vh - max(env(safe-area-inset-top), 54px) - max(env(safe-area-inset-bottom), 34px));
+            width: 100%;
         }
 
         .app-shortcut {
             position: absolute;
-            width: 80px;
-            height: 80px;
+            width: var(--icon-size);
+            height: var(--icon-size);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border-radius: 20px;
+            border-radius: var(--icon-shape);
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             transition: transform 0.2s;
+            padding: var(--icon-padding);
         }
 
         .app-shortcut:active {
@@ -134,14 +219,14 @@
         }
 
         .shortcut-icon {
-            font-size: 36px;
+            font-size: calc(var(--icon-size) * 0.5);
             margin-bottom: 4px;
         }
 
         .shortcut-icon img {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            width: calc(var(--icon-size) * 0.7);
+            height: calc(var(--icon-size) * 0.7);
+            border-radius: calc(var(--icon-shape) * 0.6);
             object-fit: cover;
         }
 
@@ -180,31 +265,8 @@
             display: flex;
         }
 
-        .add-shortcut-btn {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 3px dashed rgba(255, 255, 255, 0.4);
-            font-size: 48px;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s;
-            left: 20px;
-            bottom: 20px;
-        }
-
-        .add-shortcut-btn:active {
-            transform: scale(0.9);
-        }
-
         /* Control Buttons */
-        .edit-mode-btn, .settings-btn {
+        .edit-mode-btn, .settings-btn, .lock-screen-btn {
             position: fixed;
             top: calc(max(env(safe-area-inset-top), 54px) + 10px);
             padding: 10px 16px;
@@ -229,11 +291,283 @@
             border-color: #ff4444;
         }
 
+        .lock-screen-btn {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .lock-screen-btn.active {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4CAF50;
+        }
+
         .settings-btn {
             right: 10px;
         }
 
-        /* App Gallery Modal */
+        .add-shortcut-btn {
+            position: fixed;
+            bottom: max(env(safe-area-inset-bottom), 34px);
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px dashed rgba(255, 255, 255, 0.4);
+            font-size: 48px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s;
+            z-index: 1000;
+        }
+
+        .add-shortcut-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(30px);
+            z-index: 5000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            padding: max(env(safe-area-inset-top), 54px) 20px max(env(safe-area-inset-bottom), 34px) 20px;
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .settings-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .close-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background: transparent;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .setting-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .setting-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 32px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.3);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: white;
+            top: 3px;
+            left: 3px;
+            transition: left 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 31px;
+        }
+
+        .slider-row {
+            margin: 16px 0;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider-label {
+            color: white;
+            font-size: 14px;
+            min-width: 80px;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            min-width: 60px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .option-btn {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .option-btn.active {
+            background: var(--theme-color);
+            border-color: white;
+            transform: scale(0.95);
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .color-btn {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-btn.active {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            margin-top: 12px;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .action-btn.danger {
+            background: rgba(255, 68, 68, 0.3);
+            border-color: #ff4444;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 4999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* App Gallery */
         .app-gallery {
             position: fixed;
             top: 50%;
@@ -246,7 +580,7 @@
             backdrop-filter: blur(20px);
             border-radius: 24px;
             padding: 30px 20px;
-            z-index: 3000;
+            z-index: 5001;
             transition: transform 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.3);
             overflow-y: auto;
@@ -340,7 +674,6 @@
             font-weight: 600;
         }
 
-        /* Quick Add Section */
         .quick-add-section {
             display: none;
         }
@@ -413,10 +746,6 @@
             gap: 10px;
         }
 
-        .photo-upload-btn:active {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
         .photo-preview {
             width: 100%;
             height: 120px;
@@ -443,186 +772,27 @@
             cursor: pointer;
         }
 
-        .quick-btn:active {
-            transform: scale(0.98);
-        }
-
-        .quick-btn:disabled {
-            background: rgba(76, 175, 80, 0.3);
-            cursor: not-allowed;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2999;
-            display: none;
-        }
-
-        .overlay.active {
-            display: block;
-        }
-
-        /* Settings Panel */
-        .settings-panel {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(30px);
-            z-index: 2500;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-            padding: max(env(safe-area-inset-top), 54px) 20px max(env(safe-area-inset-bottom), 34px) 20px;
-        }
-
-        .settings-panel.active {
-            right: 0;
-        }
-
-        .settings-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .settings-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .close-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 3px solid white;
-            background: transparent;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .setting-group {
-            margin-bottom: 30px;
-        }
-
-        .setting-label {
-            font-size: 17px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 12px;
-        }
-
-        .toggle-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .toggle-title {
-            font-size: 17px;
-            font-weight: 600;
-            color: white;
-        }
-
-        .toggle-switch {
-            width: 60px;
-            height: 32px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.3);
-            position: relative;
-            cursor: pointer;
-        }
-
-        .toggle-switch.active {
-            background: #4CAF50;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: white;
-            top: 3px;
-            left: 3px;
-            transition: left 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            left: 31px;
-        }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .slider {
-            flex: 1;
-            -webkit-appearance: none;
-            height: 10px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.3);
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-        }
-
-        .slider-value {
-            min-width: 60px;
-            text-align: right;
-            font-weight: 700;
-            font-size: 18px;
-            color: white;
-        }
-
-        .preset-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 12px;
-        }
-
         .hidden-input {
             display: none;
         }
     </style>
 </head>
 <body>
+    <!-- Lock Screen -->
+    <div class="lock-screen" id="lockScreen">
+        <div class="lock-icon">🔒</div>
+        <div class="unlock-text">Tap to Unlock</div>
+    </div>
+
+    <!-- Notification Light -->
+    <div class="notification-light" id="notificationLight"></div>
+
     <!-- Background -->
-    <div id="gradientBg" class="bg-layer"></div>
-    <div id="imageBg" class="bg-layer"></div>
+    <div class="bg-layer" id="bgLayer"></div>
 
     <!-- Controls -->
     <button class="edit-mode-btn" id="editModeBtn">✏️ Edit</button>
+    <button class="lock-screen-btn" id="lockScreenBtn">🔒 Lock</button>
     <button class="settings-btn" id="settingsBtn">⚙️</button>
 
     <!-- Clock -->
@@ -632,7 +802,11 @@
     </div>
 
     <!-- Shortcuts -->
-    <div class="shortcuts-container" id="shortcutsContainer"></div>
+    <div class="shortcuts-scroll-wrapper">
+        <div class="shortcuts-container" id="shortcutsContainer"></div>
+    </div>
+
+    <div class="add-shortcut-btn" id="addShortcutBtn" style="display: none;">+</div>
 
     <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
@@ -652,23 +826,20 @@
         <div class="apps-grid" id="appsGrid"></div>
 
         <div class="quick-add-section" id="quickAddSection">
-            <!-- Icon Type Selector -->
             <div class="icon-type-selector">
                 <div class="icon-type-btn active" data-type="emoji">😀 Emoji</div>
                 <div class="icon-type-btn" data-type="photo">📷 Photo</div>
             </div>
 
-            <!-- Emoji Input -->
             <div class="emoji-input-section active" id="emojiInputSection">
                 <input type="text" class="quick-input" id="quickIcon" placeholder="Icon (emoji) 📱" maxlength="2">
             </div>
 
-            <!-- Photo Input -->
             <div class="photo-input-section" id="photoInputSection">
                 <input type="file" id="photoInput" accept="image/*" class="hidden-input">
                 <div class="photo-upload-btn" id="photoUploadBtn">
                     <span>📷</span>
-                    <span>Select Photo from Device</span>
+                    <span>Select Photo</span>
                 </div>
                 <img id="photoPreview" class="photo-preview">
             </div>
@@ -686,38 +857,159 @@
             <button class="close-btn" id="settingsClose">×</button>
         </div>
 
-        <div class="setting-group">
-            <div class="setting-label">🕐 Clock</div>
-            <div class="toggle-row">
-                <div class="toggle-title">Show Clock</div>
+        <!-- Account & Profile -->
+        <div class="setting-section">
+            <div class="section-title">🧍‍♂️ Account & Profile</div>
+            <input type="text" class="input-field" id="userName" placeholder="Your Name">
+            <input type="email" class="input-field" id="userEmail" placeholder="Email">
+        </div>
+
+        <!-- Appearance & Display -->
+        <div class="setting-section">
+            <div class="section-title">🎨 Appearance & Display</div>
+            
+            <div class="setting-row">
+                <div class="setting-label">Dark Mode</div>
+                <div class="toggle-switch active" id="darkModeToggle"></div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-container">
+                    <span class="slider-label">Font Size:</span>
+                    <input type="range" min="12" max="20" value="16" class="slider" id="fontSizeSlider">
+                    <span class="slider-value" id="fontSizeValue">16px</span>
+                </div>
+            </div>
+
+            <div class="setting-label" style="margin: 20px 0 10px 0;">Theme Color:</div>
+            <div class="color-grid" id="themeColorGrid"></div>
+        </div>
+
+        <!-- Icon Customization -->
+        <div class="setting-section">
+            <div class="section-title">📱 Icon Customization</div>
+            
+            <div class="setting-label" style="margin-bottom: 10px;">Icon Size:</div>
+            <div class="options-grid" id="iconSizeGrid"></div>
+
+            <div class="setting-label" style="margin: 20px 0 10px 0;">Icon Shape:</div>
+            <div class="options-grid" id="iconShapeGrid"></div>
+
+            <div class="slider-row">
+                <div class="slider-container">
+                    <span class="slider-label">Padding:</span>
+                    <input type="range" min="4" max="20" value="10" class="slider" id="iconPaddingSlider">
+                    <span class="slider-value" id="iconPaddingValue">10px</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layout Patterns -->
+        <div class="setting-section">
+            <div class="section-title">📐 Layout Patterns</div>
+            <div class="options-grid" id="layoutPatternGrid"></div>
+        </div>
+
+        <!-- Clock Settings -->
+        <div class="setting-section">
+            <div class="section-title">🕐 Clock</div>
+            
+            <div class="setting-row">
+                <div class="setting-label">Show Clock</div>
                 <div class="toggle-switch active" id="showClockToggle"></div>
             </div>
-            <div class="slider-container">
-                <span style="color: white; font-size: 14px;">Position:</span>
-                <input type="range" min="10" max="90" value="20" class="slider" id="clockPosSlider">
-                <span class="slider-value" id="clockPosValue">20%</span>
+
+            <div class="slider-row">
+                <div class="slider-container">
+                    <span class="slider-label">Position:</span>
+                    <input type="range" min="10" max="90" value="20" class="slider" id="clockPosSlider">
+                    <span class="slider-value" id="clockPosValue">20%</span>
+                </div>
             </div>
-            <div class="slider-container">
-                <span style="color: white; font-size: 14px;">Size:</span>
-                <input type="range" min="40" max="140" value="96" class="slider" id="clockSizeSlider">
-                <span class="slider-value" id="clockSizeValue">96px</span>
+
+            <div class="slider-row">
+                <div class="slider-container">
+                    <span class="slider-label">Size:</span>
+                    <input type="range" min="40" max="140" value="96" class="slider" id="clockSizeSlider">
+                    <span class="slider-value" id="clockSizeValue">96px</span>
+                </div>
             </div>
         </div>
 
-        <div class="setting-group">
-            <div class="setting-label">🖼️ Background</div>
-            <button class="preset-btn" data-bg="transparent">🔲 Transparent</button>
-            <button class="preset-btn" data-bg="gradient">🌈 Gradient</button>
+        <!-- Background -->
+        <div class="setting-section">
+            <div class="section-title">🖼️ Background</div>
+            <div class="color-grid" id="bgColorGrid"></div>
         </div>
 
-        <div class="setting-group">
-            <div class="setting-label">📱 Shortcuts</div>
-            <button class="preset-btn" id="clearAllBtn">🗑️ Clear All Shortcuts</button>
+        <!-- Notifications & Light -->
+        <div class="setting-section">
+            <div class="section-title">🔊 Notifications & Light</div>
+            
+            <div class="setting-row">
+                <div class="setting-label">Enable Notifications</div>
+                <div class="toggle-switch" id="notifyToggle"></div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-label">Neon Light Effect</div>
+                <div class="toggle-switch" id="neonToggle"></div>
+            </div>
+
+            <div class="setting-label" style="margin: 20px 0 10px 0;">Light Style:</div>
+            <div class="options-grid">
+                <div class="option-btn active" data-light="blink">Blink</div>
+                <div class="option-btn" data-light="glow">Glow</div>
+                <div class="option-btn" data-light="running">Run</div>
+            </div>
+
+            <div class="setting-label" style="margin: 20px 0 10px 0;">Light Color:</div>
+            <div class="color-grid" id="lightColorGrid"></div>
+        </div>
+
+        <!-- Font Styles -->
+        <div class="setting-section">
+            <div class="section-title">🔤 Font Style</div>
+            <div class="options-grid">
+                <div class="option-btn active" data-font="system" style="font-family: -apple-system;">Aa</div>
+                <div class="option-btn" data-font="serif" style="font-family: serif;">Aa</div>
+                <div class="option-btn" data-font="mono" style="font-family: monospace;">Aa</div>
+                <div class="option-btn" data-font="cursive" style="font-family: cursive;">Aa</div>
+            </div>
+        </div>
+
+        <!-- Language & Region -->
+        <div class="setting-section">
+            <div class="section-title">🌐 Language & Region</div>
+            <select class="input-field" id="languageSelect">
+                <option value="en">English</option>
+                <option value="ms">Bahasa Melayu</option>
+                <option value="zh">中文</option>
+            </select>
+        </div>
+
+        <!-- Privacy & Security -->
+        <div class="setting-section">
+            <div class="section-title">🔒 Privacy & Security</div>
+            
+            <div class="setting-row">
+                <div class="setting-label">Require Lock Screen</div>
+                <div class="toggle-switch" id="requireLockToggle"></div>
+            </div>
+
+            <button class="action-btn">Clear Cache</button>
+        </div>
+
+        <!-- App Preferences -->
+        <div class="setting-section">
+            <div class="section-title">⚙️ App Preferences</div>
+            <button class="action-btn danger" id="clearAllBtn">🗑️ Clear All Shortcuts</button>
+            <button class="action-btn danger" id="resetSettingsBtn">↺ Reset All Settings</button>
         </div>
     </div>
 
     <script>
-        // Popular Apps Database
+        // Popular Apps
         const popularApps = [
             { icon: '📧', name: 'Gmail', url: 'https://mail.google.com' },
             { icon: '🗺️', name: 'Maps', url: 'https://maps.google.com' },
@@ -732,7 +1024,6 @@
             { icon: '💬', name: 'Messenger', url: 'https://messenger.com' },
             { icon: '📸', name: 'TikTok', url: 'https://tiktok.com' },
             { icon: '🎮', name: 'Twitch', url: 'https://twitch.tv' },
-            { icon: '🎬', name: 'Disney+', url: 'https://disneyplus.com' },
             { icon: '☁️', name: 'Drive', url: 'https://drive.google.com' },
             { icon: '📝', name: 'Docs', url: 'https://docs.google.com' },
             { icon: '📊', name: 'Sheets', url: 'https://sheets.google.com' },
@@ -740,31 +1031,79 @@
             { icon: '📰', name: 'Reddit', url: 'https://reddit.com' },
             { icon: '🎨', name: 'Canva', url: 'https://canva.com' },
             { icon: '💻', name: 'GitHub', url: 'https://github.com' },
-            { icon: '📌', name: 'Pinterest', url: 'https://pinterest.com' },
-            { icon: '🏦', name: 'PayPal', url: 'https://paypal.com' },
-            { icon: '🎓', name: 'Udemy', url: 'https://udemy.com' },
+        ];
+
+        // Icon size options (in pixels)
+        const iconSizes = [40, 50, 60, 70, 80, 90, 100, 110];
+        const iconShapes = [8, 12, 16, 20, 24, 28, 32, 50]; // border-radius values
+
+        // Layout patterns
+        const layoutPatterns = [
+            { id: 'grid', name: 'Grid', icon: '⊞' },
+            { id: 'list', name: 'List', icon: '☰' },
+            { id: 'circular', name: 'Circle', icon: '○' },
+            { id: 'wave', name: 'Wave', icon: '～' },
+            { id: 'diagonal', name: 'Diagonal', icon: '⟋' },
+            { id: 'scattered', name: 'Random', icon: '✦' },
+            { id: 'bottom', name: 'Bottom', icon: '⊥' },
+            { id: 'sides', name: 'Sides', icon: '⊣' }
+        ];
+
+        // Theme colors
+        const themeColors = [
+            '#667eea', '#764ba2', '#f093fb', '#4facfe',
+            '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+            '#a8edea', '#ff6b6b'
+        ];
+
+        // Background colors
+        const bgColors = [
+            'transparent', '#1a1a2e', '#16213e', '#0f3460',
+            '#1e3a5f', '#2d4059', '#533483', '#6a3e78',
+            '#1f1f1f', '#2c2c2c'
         ];
 
         // State
         const state = {
             shortcuts: [],
             editMode: false,
+            lockScreenEnabled: false,
             showClock: true,
             clockPosition: 20,
             clockSize: 96,
+            iconSize: 60,
+            iconShape: 20,
+            iconPadding: 10,
+            layoutPattern: 'grid',
             background: 'transparent',
+            themeColor: '#667eea',
+            darkMode: true,
+            fontSize: 16,
+            fontFamily: 'system',
+            notificationsEnabled: false,
+            neonLightEnabled: false,
+            lightStyle: 'blink',
+            lightColor: '#667eea',
+            language: 'en',
+            requireLock: false,
+            userName: '',
+            userEmail: '',
             currentIconType: 'emoji',
             currentPhotoData: null
         };
 
         // Elements
         const elements = {
+            lockScreen: document.getElementById('lockScreen'),
+            notificationLight: document.getElementById('notificationLight'),
             timeDisplay: document.getElementById('timeDisplay'),
             dateDisplay: document.getElementById('dateDisplay'),
             clockContainer: document.getElementById('clockContainer'),
             shortcutsContainer: document.getElementById('shortcutsContainer'),
             editModeBtn: document.getElementById('editModeBtn'),
+            lockScreenBtn: document.getElementById('lockScreenBtn'),
             settingsBtn: document.getElementById('settingsBtn'),
+            addShortcutBtn: document.getElementById('addShortcutBtn'),
             appGallery: document.getElementById('appGallery'),
             appsGrid: document.getElementById('appsGrid'),
             quickAddSection: document.getElementById('quickAddSection'),
@@ -775,8 +1114,7 @@
             photoPreview: document.getElementById('photoPreview'),
             overlay: document.getElementById('overlay'),
             settingsPanel: document.getElementById('settingsPanel'),
-            gradientBg: document.getElementById('gradientBg'),
-            imageBg: document.getElementById('imageBg')
+            bgLayer: document.getElementById('bgLayer')
         };
 
         // Update time
@@ -788,6 +1126,56 @@
             
             const options = { weekday: 'long', month: 'long', day: 'numeric' };
             elements.dateDisplay.textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Apply layout pattern
+        function applyLayoutPattern() {
+            const containerWidth = window.innerWidth - 40;
+            const containerHeight = window.innerHeight - 200;
+            
+            state.shortcuts.forEach((shortcut, index) => {
+                switch(state.layoutPattern) {
+                    case 'grid':
+                        shortcut.x = 20 + (index % 4) * (state.iconSize + 20);
+                        shortcut.y = 150 + Math.floor(index / 4) * (state.iconSize + 20);
+                        break;
+                    case 'list':
+                        shortcut.x = 20;
+                        shortcut.y = 150 + index * (state.iconSize + 20);
+                        break;
+                    case 'circular':
+                        const angle = (index / state.shortcuts.length) * 2 * Math.PI;
+                        const radius = Math.min(containerWidth, containerHeight) / 3;
+                        shortcut.x = containerWidth / 2 + radius * Math.cos(angle);
+                        shortcut.y = containerHeight / 2 + radius * Math.sin(angle);
+                        break;
+                    case 'wave':
+                        shortcut.x = 20 + (index % 4) * (state.iconSize + 20);
+                        shortcut.y = 150 + Math.floor(index / 4) * (state.iconSize + 20) + 
+                                    Math.sin(index * 0.5) * 30;
+                        break;
+                    case 'diagonal':
+                        shortcut.x = 20 + index * 60;
+                        shortcut.y = 150 + index * 60;
+                        break;
+                    case 'scattered':
+                        shortcut.x = Math.random() * (containerWidth - state.iconSize);
+                        shortcut.y = 150 + Math.random() * (containerHeight - 150 - state.iconSize);
+                        break;
+                    case 'bottom':
+                        shortcut.x = 20 + (index % 4) * (state.iconSize + 20);
+                        shortcut.y = containerHeight - state.iconSize - 20;
+                        break;
+                    case 'sides':
+                        if (index % 2 === 0) {
+                            shortcut.x = 20;
+                        } else {
+                            shortcut.x = containerWidth - state.iconSize;
+                        }
+                        shortcut.y = 150 + Math.floor(index / 2) * (state.iconSize + 20);
+                        break;
+                }
+            });
         }
 
         // Render shortcuts
@@ -848,8 +1236,9 @@
                     if (isDragging) {
                         e.preventDefault();
                         const touch = e.touches[0];
-                        shortcut.x = Math.max(0, Math.min(window.innerWidth - 80, initialX + (touch.clientX - startX)));
-                        shortcut.y = Math.max(0, Math.min(window.innerHeight - 80, initialY + (touch.clientY - startY)));
+                        shortcut.x = Math.max(0, Math.min(window.innerWidth - state.iconSize, 
+                                            initialX + (touch.clientX - startX)));
+                        shortcut.y = Math.max(0, initialY + (touch.clientY - startY));
                         div.style.left = shortcut.x + 'px';
                         div.style.top = shortcut.y + 'px';
                     }
@@ -865,17 +1254,45 @@
                 elements.shortcutsContainer.appendChild(div);
             });
 
-            // Add button in edit mode
-            if (state.editMode) {
-                const addBtn = document.createElement('div');
-                addBtn.className = 'add-shortcut-btn';
-                addBtn.textContent = '+';
-                addBtn.addEventListener('click', openAppGallery);
-                elements.shortcutsContainer.appendChild(addBtn);
+            elements.addShortcutBtn.style.display = state.editMode ? 'flex' : 'none';
+        }
+
+        // Lock screen functions
+        function showLockScreen() {
+            if (state.lockScreenEnabled) {
+                elements.lockScreen.classList.remove('hidden');
             }
         }
 
-        // Open app gallery
+        function hideLockScreen() {
+            elements.lockScreen.classList.add('hidden');
+        }
+
+        elements.lockScreen.addEventListener('click', hideLockScreen);
+
+        elements.lockScreenBtn.addEventListener('click', () => {
+            state.lockScreenEnabled = !state.lockScreenEnabled;
+            elements.lockScreenBtn.classList.toggle('active');
+            if (state.lockScreenEnabled) {
+                showLockScreen();
+            } else {
+                hideLockScreen();
+            }
+            saveState();
+        });
+
+        // Notification light
+        function updateNotificationLight() {
+            if (state.neonLightEnabled) {
+                elements.notificationLight.classList.add('active');
+                elements.notificationLight.className = 'notification-light active ' + state.lightStyle;
+                elements.notificationLight.style.background = state.lightColor;
+            } else {
+                elements.notificationLight.classList.remove('active');
+            }
+        }
+
+        // Open/close functions
         function openAppGallery() {
             elements.appGallery.classList.add('active');
             elements.overlay.classList.add('active');
@@ -883,11 +1300,21 @@
             resetCustomForm();
         }
 
-        // Close app gallery
         function closeAppGallery() {
             elements.appGallery.classList.remove('active');
             elements.overlay.classList.remove('active');
             resetCustomForm();
+        }
+
+        function toggleSettings() {
+            elements.settingsPanel.classList.toggle('active');
+            elements.overlay.classList.toggle('active');
+        }
+
+        function toggleEditMode() {
+            state.editMode = !state.editMode;
+            elements.editModeBtn.classList.toggle('active');
+            renderShortcuts();
         }
 
         // Reset custom form
@@ -935,15 +1362,213 @@
             elements.quickAddSection.classList.add('active');
         }
 
-        // Handle icon type change
+        // Add shortcut
+        function addShortcut(app) {
+            const newShortcut = {
+                id: Date.now(),
+                iconType: app.iconType || 'emoji',
+                icon: app.icon || '📱',
+                iconData: app.iconData || null,
+                name: app.name,
+                url: app.url,
+                x: 20,
+                y: 150
+            };
+            
+            state.shortcuts.push(newShortcut);
+            applyLayoutPattern();
+            saveState();
+            renderShortcuts();
+            closeAppGallery();
+        }
+
+        // Update CSS variables
+        function updateStyles() {
+            document.documentElement.style.setProperty('--clock-vertical', state.clockPosition + '%');
+            document.documentElement.style.setProperty('--clock-size', state.clockSize + 'px');
+            document.documentElement.style.setProperty('--icon-size', state.iconSize + 'px');
+            document.documentElement.style.setProperty('--icon-shape', state.iconShape + 'px');
+            document.documentElement.style.setProperty('--icon-padding', state.iconPadding + 'px');
+            document.documentElement.style.setProperty('--bg-color', state.background);
+            document.documentElement.style.setProperty('--theme-color', state.themeColor);
+            
+            elements.clockContainer.style.display = state.showClock ? 'block' : 'none';
+            elements.bgLayer.style.background = state.background;
+            
+            // Font family
+            const fontMap = {
+                system: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
+                serif: 'Georgia, serif',
+                mono: '"Courier New", monospace',
+                cursive: 'cursive'
+            };
+            document.documentElement.style.setProperty('--font-family', fontMap[state.fontFamily]);
+        }
+
+        // Initialize settings UI
+        function initSettingsUI() {
+            // Theme colors
+            const themeColorGrid = document.getElementById('themeColorGrid');
+            themeColorGrid.innerHTML = themeColors.map(color => 
+                `<div class="color-btn ${color === state.themeColor ? 'active' : ''}" 
+                      style="background: ${color}" data-color="${color}"></div>`
+            ).join('');
+
+            themeColorGrid.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.themeColor = btn.dataset.color;
+                    themeColorGrid.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateStyles();
+                    saveState();
+                });
+            });
+
+            // Background colors
+            const bgColorGrid = document.getElementById('bgColorGrid');
+            bgColorGrid.innerHTML = bgColors.map(color => 
+                `<div class="color-btn ${color === state.background ? 'active' : ''}" 
+                      style="background: ${color}; ${color === 'transparent' ? 'border-style: dashed;' : ''}" 
+                      data-color="${color}"></div>`
+            ).join('');
+
+            bgColorGrid.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.background = btn.dataset.color;
+                    bgColorGrid.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateStyles();
+                    saveState();
+                });
+            });
+
+            // Light colors
+            const lightColorGrid = document.getElementById('lightColorGrid');
+            lightColorGrid.innerHTML = themeColors.map(color => 
+                `<div class="color-btn ${color === state.lightColor ? 'active' : ''}" 
+                      style="background: ${color}" data-color="${color}"></div>`
+            ).join('');
+
+            lightColorGrid.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.lightColor = btn.dataset.color;
+                    lightColorGrid.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateNotificationLight();
+                    saveState();
+                });
+            });
+
+            // Icon sizes
+            const iconSizeGrid = document.getElementById('iconSizeGrid');
+            iconSizeGrid.innerHTML = iconSizes.map(size => 
+                `<div class="option-btn ${size === state.iconSize ? 'active' : ''}" 
+                      data-size="${size}">${size}</div>`
+            ).join('');
+
+            iconSizeGrid.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.iconSize = parseInt(btn.dataset.size);
+                    iconSizeGrid.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateStyles();
+                    applyLayoutPattern();
+                    renderShortcuts();
+                    saveState();
+                });
+            });
+
+            // Icon shapes
+            const iconShapeGrid = document.getElementById('iconShapeGrid');
+            iconShapeGrid.innerHTML = iconShapes.map(shape => 
+                `<div class="option-btn ${shape === state.iconShape ? 'active' : ''}" 
+                      style="border-radius: ${shape}px;" data-shape="${shape}">${shape}</div>`
+            ).join('');
+
+            iconShapeGrid.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.iconShape = parseInt(btn.dataset.shape);
+                    iconShapeGrid.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateStyles();
+                    renderShortcuts();
+                    saveState();
+                });
+            });
+
+            // Layout patterns
+            const layoutPatternGrid = document.getElementById('layoutPatternGrid');
+            layoutPatternGrid.innerHTML = layoutPatterns.map(pattern => 
+                `<div class="option-btn ${pattern.id === state.layoutPattern ? 'active' : ''}" 
+                      data-pattern="${pattern.id}" title="${pattern.name}">${pattern.icon}</div>`
+            ).join('');
+
+            layoutPatternGrid.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.layoutPattern = btn.dataset.pattern;
+                    layoutPatternGrid.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    applyLayoutPattern();
+                    renderShortcuts();
+                    saveState();
+                });
+            });
+
+            // Font styles
+            document.querySelectorAll('[data-font]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.fontFamily = btn.dataset.font;
+                    document.querySelectorAll('[data-font]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateStyles();
+                    saveState();
+                });
+            });
+
+            // Light styles
+            document.querySelectorAll('[data-light]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.lightStyle = btn.dataset.light;
+                    document.querySelectorAll('[data-light]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateNotificationLight();
+                    saveState();
+                });
+            });
+        }
+
+        // Event listeners
+        elements.editModeBtn.addEventListener('click', toggleEditMode);
+        elements.settingsBtn.addEventListener('click', toggleSettings);
+        elements.addShortcutBtn.addEventListener('click', openAppGallery);
+        document.getElementById('galleryClose').addEventListener('click', closeAppGallery);
+        document.getElementById('settingsClose').addEventListener('click', toggleSettings);
+        elements.overlay.addEventListener('click', () => {
+            closeAppGallery();
+            if (elements.settingsPanel.classList.contains('active')) {
+                toggleSettings();
+            }
+        });
+
+        document.querySelectorAll('.gallery-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (tab.dataset.tab === 'popular') {
+                    showPopularApps();
+                } else {
+                    showCustomAdd();
+                }
+            });
+        });
+
+        // Icon type selector
         document.querySelectorAll('.icon-type-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const type = btn.dataset.type;
                 state.currentIconType = type;
-                
                 document.querySelectorAll('.icon-type-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
                 if (type === 'emoji') {
                     elements.emojiInputSection.classList.add('active');
                     elements.photoInputSection.classList.remove('active');
@@ -972,25 +1597,6 @@
             }
         });
 
-        // Add shortcut
-        function addShortcut(app) {
-            const newShortcut = {
-                id: Date.now(),
-                iconType: app.iconType || 'emoji',
-                icon: app.icon || '📱',
-                iconData: app.iconData || null,
-                name: app.name,
-                url: app.url,
-                x: 20 + (state.shortcuts.length % 4) * 90,
-                y: window.innerHeight - 200 - Math.floor(state.shortcuts.length / 4) * 90
-            };
-            
-            state.shortcuts.push(newShortcut);
-            saveState();
-            renderShortcuts();
-            closeAppGallery();
-        }
-
         // Quick add button
         document.getElementById('quickAddBtn').addEventListener('click', () => {
             const name = document.getElementById('quickName').value || 'App';
@@ -1014,130 +1620,158 @@
             }
         });
 
-        // Toggle edit mode
-        function toggleEditMode() {
-            state.editMode = !state.editMode;
-            elements.editModeBtn.classList.toggle('active');
-            renderShortcuts();
-        }
-
-        // Toggle settings
-        function toggleSettings() {
-            elements.settingsPanel.classList.toggle('active');
-            elements.overlay.classList.toggle('active');
-        }
-
-        // Update clock position
-        function updateClockPosition(value) {
-            state.clockPosition = parseInt(value);
-            document.getElementById('clockPosValue').textContent = value + '%';
-            document.documentElement.style.setProperty('--clock-vertical', value + '%');
-            saveState();
-        }
-
-        // Update clock size
-        function updateClockSize(value) {
-            state.clockSize = parseInt(value);
-            document.getElementById('clockSizeValue').textContent = value + 'px';
-            document.documentElement.style.setProperty('--clock-size', value + 'px');
-            saveState();
-        }
-
-        // Toggle clock
-        function toggleClock() {
+        // Settings toggles and sliders
+        document.getElementById('showClockToggle').addEventListener('click', () => {
             state.showClock = !state.showClock;
-            elements.clockContainer.style.display = state.showClock ? 'block' : 'none';
             document.getElementById('showClockToggle').classList.toggle('active');
+            updateStyles();
             saveState();
-        }
+        });
 
-        // Change background
-        function changeBackground(bg) {
-            state.background = bg;
-            elements.gradientBg.style.display = bg === 'gradient' ? 'block' : 'none';
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            state.darkMode = !state.darkMode;
+            document.getElementById('darkModeToggle').classList.toggle('active');
             saveState();
-        }
+        });
 
-        // Clear all
-        function clearAll() {
+        document.getElementById('notifyToggle').addEventListener('click', () => {
+            state.notificationsEnabled = !state.notificationsEnabled;
+            document.getElementById('notifyToggle').classList.toggle('active');
+            saveState();
+        });
+
+        document.getElementById('neonToggle').addEventListener('click', () => {
+            state.neonLightEnabled = !state.neonLightEnabled;
+            document.getElementById('neonToggle').classList.toggle('active');
+            updateNotificationLight();
+            saveState();
+        });
+
+        document.getElementById('requireLockToggle').addEventListener('click', () => {
+            state.requireLock = !state.requireLock;
+            document.getElementById('requireLockToggle').classList.toggle('active');
+            saveState();
+        });
+
+        document.getElementById('clockPosSlider').addEventListener('input', (e) => {
+            state.clockPosition = parseInt(e.target.value);
+            document.getElementById('clockPosValue').textContent = e.target.value + '%';
+            updateStyles();
+            saveState();
+        });
+
+        document.getElementById('clockSizeSlider').addEventListener('input', (e) => {
+            state.clockSize = parseInt(e.target.value);
+            document.getElementById('clockSizeValue').textContent = e.target.value + 'px';
+            updateStyles();
+            saveState();
+        });
+
+        document.getElementById('iconPaddingSlider').addEventListener('input', (e) => {
+            state.iconPadding = parseInt(e.target.value);
+            document.getElementById('iconPaddingValue').textContent = e.target.value + 'px';
+            updateStyles();
+            renderShortcuts();
+            saveState();
+        });
+
+        document.getElementById('fontSizeSlider').addEventListener('input', (e) => {
+            state.fontSize = parseInt(e.target.value);
+            document.getElementById('fontSizeValue').textContent = e.target.value + 'px';
+            saveState();
+        });
+
+        document.getElementById('clearAllBtn').addEventListener('click', () => {
             if (confirm('Delete all shortcuts?')) {
                 state.shortcuts = [];
                 saveState();
                 renderShortcuts();
             }
-        }
+        });
 
-        // Save state
+        document.getElementById('resetSettingsBtn').addEventListener('click', () => {
+            if (confirm('Reset all settings to default?')) {
+                localStorage.removeItem('launcherState');
+                location.reload();
+            }
+        });
+
+        document.getElementById('userName').addEventListener('input', (e) => {
+            state.userName = e.target.value;
+            saveState();
+        });
+
+        document.getElementById('userEmail').addEventListener('input', (e) => {
+            state.userEmail = e.target.value;
+            saveState();
+        });
+
+        document.getElementById('languageSelect').addEventListener('change', (e) => {
+            state.language = e.target.value;
+            saveState();
+        });
+
+        // Save & Load
         function saveState() {
             localStorage.setItem('launcherState', JSON.stringify(state));
         }
 
-        // Load state
         function loadState() {
             const saved = localStorage.getItem('launcherState');
             if (saved) {
                 Object.assign(state, JSON.parse(saved));
             }
             
-            document.documentElement.style.setProperty('--clock-vertical', state.clockPosition + '%');
-            document.documentElement.style.setProperty('--clock-size', state.clockSize + 'px');
-            elements.clockContainer.style.display = state.showClock ? 'block' : 'none';
-            elements.gradientBg.style.display = state.background === 'gradient' ? 'block' : 'none';
+            updateStyles();
+            updateNotificationLight();
             
             document.getElementById('clockPosSlider').value = state.clockPosition;
             document.getElementById('clockPosValue').textContent = state.clockPosition + '%';
             document.getElementById('clockSizeSlider').value = state.clockSize;
             document.getElementById('clockSizeValue').textContent = state.clockSize + 'px';
+            document.getElementById('iconPaddingSlider').value = state.iconPadding;
+            document.getElementById('iconPaddingValue').textContent = state.iconPadding + 'px';
+            document.getElementById('fontSizeSlider').value = state.fontSize;
+            document.getElementById('fontSizeValue').textContent = state.fontSize + 'px';
+            
             document.getElementById('showClockToggle').classList.toggle('active', state.showClock);
+            document.getElementById('darkModeToggle').classList.toggle('active', state.darkMode);
+            document.getElementById('notifyToggle').classList.toggle('active', state.notificationsEnabled);
+            document.getElementById('neonToggle').classList.toggle('active', state.neonLightEnabled);
+            document.getElementById('requireLockToggle').classList.toggle('active', state.requireLock);
+            elements.lockScreenBtn.classList.toggle('active', state.lockScreenEnabled);
+            
+            document.getElementById('userName').value = state.userName;
+            document.getElementById('userEmail').value = state.userEmail;
+            document.getElementById('languageSelect').value = state.language;
+            
+            if (state.lockScreenEnabled) {
+                showLockScreen();
+            }
             
             renderShortcuts();
             updateTime();
         }
 
-        // Event Listeners
-        elements.editModeBtn.addEventListener('click', toggleEditMode);
-        elements.settingsBtn.addEventListener('click', toggleSettings);
-        document.getElementById('galleryClose').addEventListener('click', closeAppGallery);
-        document.getElementById('settingsClose').addEventListener('click', toggleSettings);
-        elements.overlay.addEventListener('click', () => {
-            closeAppGallery();
-            if (elements.settingsPanel.classList.contains('active')) {
-                toggleSettings();
-            }
-        });
-
-        document.querySelectorAll('.gallery-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                if (tab.dataset.tab === 'popular') {
-                    showPopularApps();
-                } else {
-                    showCustomAdd();
-                }
-            });
-        });
-
-        document.getElementById('showClockToggle').addEventListener('click', toggleClock);
-        document.getElementById('clockPosSlider').addEventListener('input', (e) => updateClockPosition(e.target.value));
-        document.getElementById('clockSizeSlider').addEventListener('input', (e) => updateClockSize(e.target.value));
-        document.getElementById('clearAllBtn').addEventListener('click', clearAll);
-
-        document.querySelectorAll('[data-bg]').forEach(btn => {
-            btn.addEventListener('click', () => changeBackground(btn.dataset.bg));
-        });
-
         // Initialize
+        initSettingsUI();
         loadState();
         setInterval(updateTime, 1000);
 
         document.addEventListener('gesturestart', (e) => e.preventDefault());
         document.body.addEventListener('touchmove', (e) => {
-            if (!elements.appGallery.classList.contains('active') && !elements.settingsPanel.classList.contains('active')) {
+            if (!elements.appGallery.classList.contains('active') && 
+                !elements.settingsPanel.classList.contains('active')) {
                 e.preventDefault();
             }
         }, { passive: false });
+
+        // Show lock screen on page visibility change (simulating lock)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && state.requireLock) {
+                showLockScreen();
+            }
+        });
     </script>
 </body>
 </html>
