@@ -33,6 +33,9 @@
             --bg-color: transparent;
             --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             --theme-color: #667eea;
+            --text-outline: 3px;
+            --text-shadow: 6px;
+            --text-density: 1;
         }
 
         html, body {
@@ -114,13 +117,15 @@
 
         .time-display {
             font-size: var(--clock-size);
-            font-weight: 200;
+            font-weight: calc(200 * var(--text-density));
             letter-spacing: -4px;
             color: white;
             text-shadow: 
-                -3px -3px 0 #000, 3px -3px 0 #000,
-                -3px 3px 0 #000, 3px 3px 0 #000,
-                0 0 6px rgba(0, 0, 0, 2);
+                calc(-1 * var(--text-outline)) calc(-1 * var(--text-outline)) 0 #000,
+                var(--text-outline) calc(-1 * var(--text-outline)) 0 #000,
+                calc(-1 * var(--text-outline)) var(--text-outline) 0 #000,
+                var(--text-outline) var(--text-outline) 0 #000,
+                0 0 var(--text-shadow) rgba(0, 0, 0, 2);
         }
 
         .date-display {
@@ -828,8 +833,29 @@
                 </div>
             </div>
 
-            <div class="setting-label" style="margin: 20px 0 10px 0;">Theme Color:</div>
-            <div class="color-grid" id="themeColorGrid"></div>
+            <div class="slider-row">
+                <div class="slider-container">
+                    <span class="slider-label">Text Outline:</span>
+                    <input type="range" min="0" max="8" value="3" class="slider" id="textOutlineSlider">
+                    <span class="slider-value" id="textOutlineValue">3px</span>
+                </div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-container">
+                    <span class="slider-label">Text Shadow:</span>
+                    <input type="range" min="0" max="20" value="6" class="slider" id="textShadowSlider">
+                    <span class="slider-value" id="textShadowValue">6px</span>
+                </div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-container">
+                    <span class="slider-label">Text Density:</span>
+                    <input type="range" min="0.5" max="2" step="0.1" value="1" class="slider" id="textDensitySlider">
+                    <span class="slider-value" id="textDensityValue">1.0</span>
+                </div>
+            </div>
         </div>
 
         <!-- Icon Customization -->
@@ -917,11 +943,15 @@
         <!-- Font Styles -->
         <div class="setting-section">
             <div class="section-title">🔤 Font Style</div>
-            <div class="options-grid">
+            <div class="options-grid" style="grid-template-columns: repeat(4, 1fr);">
                 <div class="option-btn active" data-font="system" style="font-family: -apple-system;">Aa</div>
-                <div class="option-btn" data-font="serif" style="font-family: serif;">Aa</div>
-                <div class="option-btn" data-font="mono" style="font-family: monospace;">Aa</div>
+                <div class="option-btn" data-font="serif" style="font-family: Georgia, serif;">Aa</div>
+                <div class="option-btn" data-font="mono" style="font-family: 'Courier New', monospace;">Aa</div>
                 <div class="option-btn" data-font="cursive" style="font-family: cursive;">Aa</div>
+                <div class="option-btn" data-font="fantasy" style="font-family: fantasy;">Aa</div>
+                <div class="option-btn" data-font="times" style="font-family: 'Times New Roman', serif;">Aa</div>
+                <div class="option-btn" data-font="arial" style="font-family: Arial, sans-serif;">Aa</div>
+                <div class="option-btn" data-font="verdana" style="font-family: Verdana, sans-serif;">Aa</div>
             </div>
         </div>
 
@@ -1016,10 +1046,12 @@
             iconPadding: 10,
             layoutPattern: 'grid',
             background: 'transparent',
-            themeColor: '#667eea',
             darkMode: true,
             fontSize: 16,
             fontFamily: 'system',
+            textOutline: 3,
+            textShadow: 6,
+            textDensity: 1,
             notificationsEnabled: false,
             neonLightEnabled: false,
             lightStyle: 'blink',
@@ -1303,7 +1335,9 @@
             document.documentElement.style.setProperty('--icon-shape', state.iconShape + 'px');
             document.documentElement.style.setProperty('--icon-padding', state.iconPadding + 'px');
             document.documentElement.style.setProperty('--bg-color', state.background);
-            document.documentElement.style.setProperty('--theme-color', state.themeColor);
+            document.documentElement.style.setProperty('--text-outline', state.textOutline + 'px');
+            document.documentElement.style.setProperty('--text-shadow', state.textShadow + 'px');
+            document.documentElement.style.setProperty('--text-density', state.textDensity);
             
             elements.clockContainer.style.display = state.showClock ? 'block' : 'none';
             elements.bgLayer.style.background = state.background;
@@ -1313,30 +1347,17 @@
                 system: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
                 serif: 'Georgia, serif',
                 mono: '"Courier New", monospace',
-                cursive: 'cursive'
+                cursive: 'cursive',
+                fantasy: 'fantasy',
+                times: '"Times New Roman", serif',
+                arial: 'Arial, sans-serif',
+                verdana: 'Verdana, sans-serif'
             };
             document.documentElement.style.setProperty('--font-family', fontMap[state.fontFamily]);
         }
 
         // Initialize settings UI
         function initSettingsUI() {
-            // Theme colors
-            const themeColorGrid = document.getElementById('themeColorGrid');
-            themeColorGrid.innerHTML = themeColors.map(color => 
-                `<div class="color-btn ${color === state.themeColor ? 'active' : ''}" 
-                      style="background: ${color}" data-color="${color}"></div>`
-            ).join('');
-
-            themeColorGrid.querySelectorAll('.color-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    state.themeColor = btn.dataset.color;
-                    themeColorGrid.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    updateStyles();
-                    saveState();
-                });
-            });
-
             // Background colors
             const bgColorGrid = document.getElementById('bgColorGrid');
             bgColorGrid.innerHTML = bgColors.map(color => 
@@ -1588,6 +1609,27 @@
             saveState();
         });
 
+        document.getElementById('textOutlineSlider').addEventListener('input', (e) => {
+            state.textOutline = parseInt(e.target.value);
+            document.getElementById('textOutlineValue').textContent = e.target.value + 'px';
+            updateStyles();
+            saveState();
+        });
+
+        document.getElementById('textShadowSlider').addEventListener('input', (e) => {
+            state.textShadow = parseInt(e.target.value);
+            document.getElementById('textShadowValue').textContent = e.target.value + 'px';
+            updateStyles();
+            saveState();
+        });
+
+        document.getElementById('textDensitySlider').addEventListener('input', (e) => {
+            state.textDensity = parseFloat(e.target.value);
+            document.getElementById('textDensityValue').textContent = parseFloat(e.target.value).toFixed(1);
+            updateStyles();
+            saveState();
+        });
+
         document.getElementById('clearAllBtn').addEventListener('click', () => {
             if (confirm('Delete all shortcuts?')) {
                 state.shortcuts = [];
@@ -1640,6 +1682,12 @@
             document.getElementById('iconPaddingValue').textContent = state.iconPadding + 'px';
             document.getElementById('fontSizeSlider').value = state.fontSize;
             document.getElementById('fontSizeValue').textContent = state.fontSize + 'px';
+            document.getElementById('textOutlineSlider').value = state.textOutline;
+            document.getElementById('textOutlineValue').textContent = state.textOutline + 'px';
+            document.getElementById('textShadowSlider').value = state.textShadow;
+            document.getElementById('textShadowValue').textContent = state.textShadow + 'px';
+            document.getElementById('textDensitySlider').value = state.textDensity;
+            document.getElementById('textDensityValue').textContent = state.textDensity.toFixed(1);
             
             document.getElementById('showClockToggle').classList.toggle('active', state.showClock);
             document.getElementById('darkModeToggle').classList.toggle('active', state.darkMode);
