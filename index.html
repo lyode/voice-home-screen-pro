@@ -3,46 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- PWA Configuration -->
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Launcher">
-    <meta name="application-name" content="Launcher">
-    <meta name="mobile-web-app-capable" content="yes">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
-    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
-    
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
-    <link rel="apple-touch-icon" sizes="512x512" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSG9tZSBTY3JlZW4gTGF1bmNoZXIiLCJzaG9ydF9uYW1lIjoiTGF1bmNoZXIiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJ0aGVtZV9jb2xvciI6IiMwMDAwMDAiLCJkZXNjcmlwdGlvbiI6IkN1c3RvbSBIb21lIFNjcmVlbiBMYXVuY2hlciIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCc+8J+PsDwvdGV4dD48L3N2Zz4iLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9LHsic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCc+8J+PsDwvdGV4dD48L3N2Zz4iLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
-    
-    <title>Home Screen Launcher</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;700&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@300;400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSG9tZSBTY3JlZW4gTGF1bmNoZXIiLCJzaG9ydF9uYW1lIjoiTGF1bmNoZXIiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJ0aGVtZV9jb2xvciI6IiMwMDAwMDAiLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0IiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnPjx0ZXh0IHk9Jy45ZW0nIGZvbnQtc2l6ZT0nOTAnPvCfj7A8L3RleHQ+PC9zdmc+Iiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+    <title>Photo Launcher</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        input, textarea {
+            -webkit-user-select: text;
+            -webkit-touch-callout: default;
         }
 
         :root {
-            --outline-width: 3px;
-            --shadow-blur: 6px;
-            --shadow-spread: 2;
-            --font-size: 96px;
-            --text-color: white;
-            --text-opacity: 1;
-            --letter-spacing: -4px;
-            --line-height: 1;
-            --vertical-position: 20%;
-            --horizontal-position: 50%;
+            --clock-size: 96px;
+            --clock-vertical: 20%;
         }
 
         html, body {
@@ -50,15 +34,15 @@
             width: 100%;
             overflow: hidden;
             background: transparent !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             position: relative;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
-        /* Background Layers */
+        /* Background */
         .bg-layer {
             position: fixed;
             top: 0;
@@ -66,89 +50,49 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-        }
-
-        #cameraBg {
             display: none;
-        }
-
-        #cameraBg video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        #imageBg {
-            display: none;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
         }
 
         #gradientBg {
-            display: none;
-            transition: background 0.5s ease;
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
 
-        /* Clock Container */
+        #imageBg {
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Clock */
         .clock-container {
             position: fixed;
-            left: var(--horizontal-position);
-            top: var(--vertical-position);
+            left: 50%;
+            top: var(--clock-vertical);
             transform: translate(-50%, -50%);
             z-index: 10;
             pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .time-display, .date-display {
-            font-weight: 600;
-            user-select: none;
-            -webkit-user-select: none;
-            opacity: var(--text-opacity);
-        }
-
-        body.text-light .time-display,
-        body.text-light .date-display {
-            color: var(--text-color);
-            text-shadow: 
-                calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #000,
-                var(--outline-width) calc(var(--outline-width) * -1) 0 #000,
-                calc(var(--outline-width) * -1) var(--outline-width) 0 #000,
-                var(--outline-width) var(--outline-width) 0 #000,
-                0 0 var(--shadow-blur) rgba(0, 0, 0, var(--shadow-spread));
-        }
-
-        body.text-dark .time-display,
-        body.text-dark .date-display {
-            color: var(--text-color);
-            text-shadow: 
-                calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #fff,
-                var(--outline-width) calc(var(--outline-width) * -1) 0 #fff,
-                calc(var(--outline-width) * -1) var(--outline-width) 0 #fff,
-                var(--outline-width) var(--outline-width) 0 #fff,
-                0 0 var(--shadow-blur) rgba(255, 255, 255, var(--shadow-spread));
+            text-align: center;
         }
 
         .time-display {
-            font-size: var(--font-size);
+            font-size: var(--clock-size);
             font-weight: 200;
-            letter-spacing: var(--letter-spacing);
-            margin-bottom: 12px;
-            line-height: var(--line-height);
-            text-align: center;
+            letter-spacing: -4px;
+            color: white;
+            text-shadow: 
+                -3px -3px 0 #000, 3px -3px 0 #000,
+                -3px 3px 0 #000, 3px 3px 0 #000,
+                0 0 6px rgba(0, 0, 0, 2);
         }
 
         .date-display {
             font-size: 28px;
             font-weight: 500;
-            opacity: 0.95;
-            line-height: 1.2;
-            text-align: center;
-            padding: 0 20px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            margin-top: 8px;
         }
 
-        /* App Shortcuts Container */
+        /* Shortcuts */
         .shortcuts-container {
             position: fixed;
             top: 0;
@@ -168,12 +112,12 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.2s;
         }
 
         .app-shortcut:active {
@@ -194,13 +138,19 @@
             margin-bottom: 4px;
         }
 
+        .shortcut-icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
         .shortcut-label {
             font-size: 11px;
             font-weight: 600;
-            text-align: center;
             color: white;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-            line-height: 1.2;
+            text-align: center;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -223,7 +173,6 @@
             font-size: 16px;
             font-weight: bold;
             border: 2px solid white;
-            cursor: pointer;
             z-index: 1;
         }
 
@@ -241,66 +190,25 @@
             cursor: pointer;
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 3px dashed rgba(255, 255, 255, 0.4);
             font-size: 48px;
             color: white;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
+            transition: transform 0.2s;
+            left: 20px;
+            bottom: 20px;
         }
 
         .add-shortcut-btn:active {
             transform: scale(0.9);
         }
 
-        /* Settings Button */
-        .settings-btn {
+        /* Control Buttons */
+        .edit-mode-btn, .settings-btn {
             position: fixed;
             top: calc(max(env(safe-area-inset-top), 54px) + 10px);
-            right: 10px;
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.15) !important;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-
-        .settings-btn:hover {
-            opacity: 1;
-        }
-
-        .settings-btn:active {
-            transform: scale(0.9);
-        }
-
-        .settings-btn svg {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s ease;
-            fill: white;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
-        }
-
-        .settings-btn.rotate svg {
-            transform: rotate(90deg);
-        }
-
-        /* Edit Mode Button */
-        .edit-mode-btn {
-            position: fixed;
-            top: calc(max(env(safe-area-inset-top), 54px) + 10px);
-            left: 10px;
             padding: 10px 16px;
-            background: rgba(255, 255, 255, 0.15) !important;
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
@@ -309,17 +217,254 @@
             font-size: 14px;
             cursor: pointer;
             z-index: 1000;
-            transition: all 0.3s ease;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
-        .edit-mode-btn:active {
-            transform: scale(0.95);
+        .edit-mode-btn {
+            left: 10px;
         }
 
         .edit-mode-btn.active {
-            background: rgba(255, 68, 68, 0.3) !important;
+            background: rgba(255, 68, 68, 0.3);
             border-color: #ff4444;
+        }
+
+        .settings-btn {
+            right: 10px;
+        }
+
+        /* App Gallery Modal */
+        .app-gallery {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px 20px;
+            z-index: 3000;
+            transition: transform 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            overflow-y: auto;
+        }
+
+        .app-gallery.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .gallery-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .gallery-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-tab {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .gallery-tab.active {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: white;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+
+        .app-item:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .app-item-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .app-item-name {
+            font-size: 11px;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Quick Add Section */
+        .quick-add-section {
+            display: none;
+        }
+
+        .quick-add-section.active {
+            display: block;
+        }
+
+        .icon-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .icon-type-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .icon-type-btn.active {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: white;
+        }
+
+        .emoji-input-section, .photo-input-section {
+            display: none;
+        }
+
+        .emoji-input-section.active, .photo-input-section.active {
+            display: block;
+        }
+
+        .quick-input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .quick-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .photo-upload-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .photo-upload-btn:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            display: none;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .photo-preview.active {
+            display: block;
+        }
+
+        .quick-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .quick-btn:active {
+            transform: scale(0.98);
+        }
+
+        .quick-btn:disabled {
+            background: rgba(76, 175, 80, 0.3);
+            cursor: not-allowed;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
         }
 
         /* Settings Panel */
@@ -328,17 +473,13 @@
             top: 0;
             right: -100%;
             width: 100%;
-            max-width: 100%;
             height: 100vh;
-            height: 100dvh;
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 2000;
+            z-index: 2500;
             transition: right 0.3s ease;
             overflow-y: auto;
             padding: max(env(safe-area-inset-top), 54px) 20px max(env(safe-area-inset-bottom), 34px) 20px;
-            -webkit-overflow-scrolling: touch;
         }
 
         .settings-panel.active {
@@ -354,11 +495,10 @@
             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .settings-header h2 {
+        .settings-title {
             font-size: 28px;
             font-weight: 700;
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .close-btn {
@@ -366,22 +506,10 @@
             height: 50px;
             border-radius: 50%;
             border: 3px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: transparent;
+            color: white;
+            font-size: 24px;
             cursor: pointer;
-            background: transparent !important;
-            transition: transform 0.3s ease;
-        }
-
-        .close-btn:active {
-            transform: scale(0.9);
-        }
-
-        .close-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
         }
 
         .setting-group {
@@ -391,93 +519,35 @@
         .setting-label {
             font-size: 17px;
             font-weight: 700;
+            color: white;
             margin-bottom: 12px;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        .mode-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .mode-option {
-            padding: 18px 12px;
-            border-radius: 16px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            text-align: center;
-            font-weight: 700;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.1) !important;
-            transition: all 0.3s ease;
-            min-height: 60px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        .mode-option.active {
-            background: rgba(76, 175, 80, 0.3) !important;
-            border-color: white;
-            transform: scale(1.02);
-        }
-
-        .mode-option:active {
-            transform: scale(0.95);
-        }
-
-        .mode-option .icon {
-            font-size: 24px;
-        }
-
-        .mode-option .label {
-            font-size: 13px;
-            line-height: 1.2;
         }
 
         .toggle-row {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             padding: 16px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .toggle-row:last-child {
-            border-bottom: none;
-        }
-
-        .toggle-info {
-            flex: 1;
         }
 
         .toggle-title {
             font-size: 17px;
             font-weight: 600;
-            margin-bottom: 4px;
             color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .toggle-switch {
-            position: relative;
             width: 60px;
             height: 32px;
             border-radius: 16px;
+            background: rgba(255, 255, 255, 0.3);
+            position: relative;
             cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.3) !important;
         }
 
         .toggle-switch.active {
-            background: #4CAF50 !important;
+            background: #4CAF50;
         }
 
         .toggle-switch::after {
@@ -486,164 +556,14 @@
             width: 26px;
             height: 26px;
             border-radius: 50%;
+            background: white;
             top: 3px;
             left: 3px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            background: white !important;
+            transition: left 0.3s;
         }
 
         .toggle-switch.active::after {
             left: 31px;
-        }
-
-        .settings-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5) !important;
-            z-index: 1999;
-            display: none;
-        }
-
-        .settings-overlay.active {
-            display: block;
-        }
-
-        /* Shortcut Editor Modal */
-        .shortcut-editor {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 90%;
-            max-width: 400px;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 30px;
-            z-index: 3000;
-            transition: transform 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .shortcut-editor.active {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .editor-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-
-        .editor-field {
-            margin-bottom: 20px;
-        }
-
-        .editor-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .editor-input {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 16px;
-            font-family: inherit;
-        }
-
-        .editor-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .emoji-picker {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-        }
-
-        .emoji-option {
-            font-size: 32px;
-            padding: 8px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .emoji-option:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        .editor-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .editor-btn {
-            padding: 16px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .editor-btn.primary {
-            background: #4CAF50;
-            border-color: #4CAF50;
-        }
-
-        .editor-btn:active {
-            transform: scale(0.95);
-        }
-
-        .preset-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .preset-btn {
-            padding: 12px;
-            border-radius: 12px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            text-align: center;
-            font-weight: 600;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.1) !important;
-            transition: all 0.3s ease;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        .preset-btn:active {
-            transform: scale(0.95);
         }
 
         .slider-container {
@@ -656,22 +576,19 @@
         .slider {
             flex: 1;
             -webkit-appearance: none;
-            appearance: none;
             height: 10px;
             border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
             outline: none;
-            background: rgba(255, 255, 255, 0.3) !important;
         }
 
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
             width: 28px;
             height: 28px;
             border-radius: 50%;
+            background: white;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            background: white !important;
         }
 
         .slider-value {
@@ -680,76 +597,33 @@
             font-weight: 700;
             font-size: 18px;
             color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
-        .upload-btn {
+        .preset-btn {
+            width: 100%;
             padding: 16px;
             border-radius: 12px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            text-align: center;
-            font-weight: 700;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.1) !important;
-            transition: all 0.3s ease;
-            display: block;
-            width: 100%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            cursor: pointer;
             margin-top: 12px;
-        }
-
-        .upload-btn:active {
-            transform: scale(0.98);
         }
 
         .hidden-input {
             display: none;
         }
-
-        @media only screen 
-        and (device-width: 430px) 
-        and (device-height: 932px) 
-        and (-webkit-device-pixel-ratio: 3) {
-            .settings-btn {
-                top: 64px;
-            }
-            .edit-mode-btn {
-                top: 64px;
-            }
-        }
-
-        * {
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        input, textarea {
-            -webkit-user-select: text;
-            -webkit-touch-callout: default;
-        }
     </style>
 </head>
-<body class="text-light">
-    <!-- Background Layers -->
-    <div id="cameraBg" class="bg-layer">
-        <video id="cameraVideo" autoplay playsinline muted></video>
-    </div>
-    <div id="imageBg" class="bg-layer"></div>
+<body>
+    <!-- Background -->
     <div id="gradientBg" class="bg-layer"></div>
+    <div id="imageBg" class="bg-layer"></div>
 
-    <!-- Control Buttons -->
+    <!-- Controls -->
     <button class="edit-mode-btn" id="editModeBtn">✏️ Edit</button>
-    <button class="settings-btn" id="settingsBtn">
-        <svg viewBox="0 0 24 24">
-            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-        </svg>
-    </button>
-
-    <!-- App Shortcuts Container -->
-    <div class="shortcuts-container" id="shortcutsContainer"></div>
+    <button class="settings-btn" id="settingsBtn">⚙️</button>
 
     <!-- Clock -->
     <div class="clock-container" id="clockContainer">
@@ -757,153 +631,118 @@
         <div class="date-display" id="dateDisplay">Loading...</div>
     </div>
 
-    <!-- Settings Overlay -->
-    <div class="settings-overlay" id="settingsOverlay"></div>
+    <!-- Shortcuts -->
+    <div class="shortcuts-container" id="shortcutsContainer"></div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- App Gallery -->
+    <div class="app-gallery" id="appGallery">
+        <div class="gallery-header">
+            <div class="gallery-title">📱 Add App</div>
+            <button class="gallery-close" id="galleryClose">×</button>
+        </div>
+
+        <div class="gallery-tabs">
+            <div class="gallery-tab active" data-tab="popular">Popular</div>
+            <div class="gallery-tab" data-tab="custom">Custom</div>
+        </div>
+
+        <div class="apps-grid" id="appsGrid"></div>
+
+        <div class="quick-add-section" id="quickAddSection">
+            <!-- Icon Type Selector -->
+            <div class="icon-type-selector">
+                <div class="icon-type-btn active" data-type="emoji">😀 Emoji</div>
+                <div class="icon-type-btn" data-type="photo">📷 Photo</div>
+            </div>
+
+            <!-- Emoji Input -->
+            <div class="emoji-input-section active" id="emojiInputSection">
+                <input type="text" class="quick-input" id="quickIcon" placeholder="Icon (emoji) 📱" maxlength="2">
+            </div>
+
+            <!-- Photo Input -->
+            <div class="photo-input-section" id="photoInputSection">
+                <input type="file" id="photoInput" accept="image/*" class="hidden-input">
+                <div class="photo-upload-btn" id="photoUploadBtn">
+                    <span>📷</span>
+                    <span>Select Photo from Device</span>
+                </div>
+                <img id="photoPreview" class="photo-preview">
+            </div>
+
+            <input type="text" class="quick-input" id="quickName" placeholder="App Name">
+            <input type="text" class="quick-input" id="quickUrl" placeholder="URL (https://...)">
+            <button class="quick-btn" id="quickAddBtn">✅ Add Shortcut</button>
+        </div>
+    </div>
 
     <!-- Settings Panel -->
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-header">
-            <h2>⚙️ Settings</h2>
-            <div class="close-btn">
-                <svg viewBox="0 0 24 24">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-            </div>
+            <div class="settings-title">⚙️ Settings</div>
+            <button class="close-btn" id="settingsClose">×</button>
         </div>
 
-        <!-- Clock Visibility -->
         <div class="setting-group">
-            <div class="setting-label">🕐 Clock Display</div>
+            <div class="setting-label">🕐 Clock</div>
             <div class="toggle-row">
-                <div class="toggle-info">
-                    <div class="toggle-title">Show Clock</div>
-                </div>
+                <div class="toggle-title">Show Clock</div>
                 <div class="toggle-switch active" id="showClockToggle"></div>
             </div>
-            <div class="toggle-row">
-                <div class="toggle-info">
-                    <div class="toggle-title">Show Date</div>
-                </div>
-                <div class="toggle-switch active" id="showDateToggle"></div>
+            <div class="slider-container">
+                <span style="color: white; font-size: 14px;">Position:</span>
+                <input type="range" min="10" max="90" value="20" class="slider" id="clockPosSlider">
+                <span class="slider-value" id="clockPosValue">20%</span>
+            </div>
+            <div class="slider-container">
+                <span style="color: white; font-size: 14px;">Size:</span>
+                <input type="range" min="40" max="140" value="96" class="slider" id="clockSizeSlider">
+                <span class="slider-value" id="clockSizeValue">96px</span>
             </div>
         </div>
 
-        <!-- Background Mode -->
         <div class="setting-group">
             <div class="setting-label">🖼️ Background</div>
-            <div class="mode-selector">
-                <div class="mode-option active" data-bg="transparent">
-                    <span class="icon">🔲</span>
-                    <span class="label">Transparent</span>
-                </div>
-                <div class="mode-option" data-bg="gradient">
-                    <span class="icon">🌈</span>
-                    <span class="label">Gradient</span>
-                </div>
-                <div class="mode-option" data-bg="image">
-                    <span class="icon">🖼️</span>
-                    <span class="label">Image</span>
-                </div>
-                <div class="mode-option" data-bg="camera">
-                    <span class="icon">📷</span>
-                    <span class="label">Camera</span>
-                </div>
-            </div>
+            <button class="preset-btn" data-bg="transparent">🔲 Transparent</button>
+            <button class="preset-btn" data-bg="gradient">🌈 Gradient</button>
         </div>
 
-        <!-- Image Upload -->
-        <div class="setting-group" id="imageUploadGroup" style="display: none;">
-            <input type="file" id="imageUpload" accept="image/*" class="hidden-input">
-            <button class="upload-btn" id="uploadImageBtn">📤 Upload Background Image</button>
-        </div>
-
-        <!-- Quick Presets -->
         <div class="setting-group">
-            <div class="setting-label">🎭 Quick Styles</div>
-            <div class="preset-grid">
-                <button class="preset-btn" data-preset="default">🏠 Default</button>
-                <button class="preset-btn" data-preset="minimal">⬜ Minimal</button>
-                <button class="preset-btn" data-preset="neon">⚡ Neon</button>
-            </div>
-        </div>
-
-        <!-- Clock Position -->
-        <div class="setting-group">
-            <div class="setting-label">📍 Clock Position</div>
-            <div class="slider-container">
-                <span style="color: white; font-size: 14px;">Vertical:</span>
-                <input type="range" min="10" max="90" value="20" class="slider" id="verticalPosSlider">
-                <span class="slider-value" id="verticalPosValue">20%</span>
-            </div>
-        </div>
-
-        <!-- Clock Size -->
-        <div class="setting-group">
-            <div class="setting-label">📏 Clock Size</div>
-            <div class="slider-container">
-                <input type="range" min="40" max="140" value="96" class="slider" id="fontSizeSlider">
-                <span class="slider-value" id="fontSizeValue">96px</span>
-            </div>
-        </div>
-
-        <!-- Shortcuts Management -->
-        <div class="setting-group">
-            <div class="setting-label">📱 Shortcuts Management</div>
-            <button class="preset-btn" id="clearShortcutsBtn" style="width: 100%; margin-top: 12px;">🗑️ Clear All Shortcuts</button>
-            <button class="preset-btn" id="exportShortcutsBtn" style="width: 100%; margin-top: 12px;">📤 Export Shortcuts</button>
+            <div class="setting-label">📱 Shortcuts</div>
+            <button class="preset-btn" id="clearAllBtn">🗑️ Clear All Shortcuts</button>
         </div>
     </div>
 
-    <!-- Shortcut Editor Modal -->
-    <div class="shortcut-editor" id="shortcutEditor">
-        <div class="editor-title">Add Shortcut</div>
-        
-        <div class="editor-field">
-            <label class="editor-label">Icon (Emoji)</label>
-            <input type="text" class="editor-input" id="iconInput" placeholder="📱" maxlength="2">
-        </div>
-
-        <div class="emoji-picker" id="emojiPicker"></div>
-
-        <div class="editor-field">
-            <label class="editor-label">App Name</label>
-            <input type="text" class="editor-input" id="nameInput" placeholder="My App">
-        </div>
-
-        <div class="editor-field">
-            <label class="editor-label">URL (Optional)</label>
-            <input type="text" class="editor-input" id="urlInput" placeholder="https://example.com">
-        </div>
-
-        <div class="editor-buttons">
-            <button class="editor-btn" id="cancelBtn">Cancel</button>
-            <button class="editor-btn primary" id="saveBtn">Save</button>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script>
-        // Register Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
-                self.addEventListener('install', event => {
-                    self.skipWaiting();
-                });
-                self.addEventListener('activate', event => {
-                    event.waitUntil(clients.claim());
-                });
-            `)).catch(err => console.log('SW registration failed'));
-        }
-
-        // Comprehensive emoji list
-        const emojis = [
-            '📱', '💻', '🎮', '📧', '📷', '🎵', '🎬', '📺', '📚', '📝',
-            '🗓️', '⏰', '🌐', '🔍', '💬', '📞', '💰', '🏦', '🛒', '🍕',
-            '☕', '🎨', '🏃', '⚽', '🏋️', '🎯', '🎲', '🎪', '🎭', '🎤',
-            '🎸', '🎹', '🎺', '🎻', '🥁', '📻', '🎧', '🎮', '🕹️', '🎰',
-            '🚗', '✈️', '🚀', '🏠', '🏢', '🏥', '🏪', '🏫', '🏛️', '⛪',
-            '🌟', '⭐', '✨', '💫', '🔥', '💧', '⚡', '☀️', '🌙', '🌈',
-            '❤️', '💚', '💙', '💜', '🖤', '🤍', '💛', '🧡', '💗', '💖'
+        // Popular Apps Database
+        const popularApps = [
+            { icon: '📧', name: 'Gmail', url: 'https://mail.google.com' },
+            { icon: '🗺️', name: 'Maps', url: 'https://maps.google.com' },
+            { icon: '▶️', name: 'YouTube', url: 'https://youtube.com' },
+            { icon: '📱', name: 'WhatsApp', url: 'https://web.whatsapp.com' },
+            { icon: '📷', name: 'Instagram', url: 'https://instagram.com' },
+            { icon: '🐦', name: 'Twitter', url: 'https://twitter.com' },
+            { icon: '💼', name: 'LinkedIn', url: 'https://linkedin.com' },
+            { icon: '🎵', name: 'Spotify', url: 'https://open.spotify.com' },
+            { icon: '📺', name: 'Netflix', url: 'https://netflix.com' },
+            { icon: '🛒', name: 'Amazon', url: 'https://amazon.com' },
+            { icon: '💬', name: 'Messenger', url: 'https://messenger.com' },
+            { icon: '📸', name: 'TikTok', url: 'https://tiktok.com' },
+            { icon: '🎮', name: 'Twitch', url: 'https://twitch.tv' },
+            { icon: '🎬', name: 'Disney+', url: 'https://disneyplus.com' },
+            { icon: '☁️', name: 'Drive', url: 'https://drive.google.com' },
+            { icon: '📝', name: 'Docs', url: 'https://docs.google.com' },
+            { icon: '📊', name: 'Sheets', url: 'https://sheets.google.com' },
+            { icon: '🗓️', name: 'Calendar', url: 'https://calendar.google.com' },
+            { icon: '📰', name: 'Reddit', url: 'https://reddit.com' },
+            { icon: '🎨', name: 'Canva', url: 'https://canva.com' },
+            { icon: '💻', name: 'GitHub', url: 'https://github.com' },
+            { icon: '📌', name: 'Pinterest', url: 'https://pinterest.com' },
+            { icon: '🏦', name: 'PayPal', url: 'https://paypal.com' },
+            { icon: '🎓', name: 'Udemy', url: 'https://udemy.com' },
         ];
 
         // State
@@ -911,17 +750,14 @@
             shortcuts: [],
             editMode: false,
             showClock: true,
-            showDate: true,
-            backgroundMode: 'transparent',
-            verticalPosition: 20,
-            fontSize: 96,
-            textColor: '#ffffff',
-            gradientColors: ['#667eea', '#764ba2'],
-            uploadedImage: null,
-            currentEditId: null
+            clockPosition: 20,
+            clockSize: 96,
+            background: 'transparent',
+            currentIconType: 'emoji',
+            currentPhotoData: null
         };
 
-        // DOM Elements
+        // Elements
         const elements = {
             timeDisplay: document.getElementById('timeDisplay'),
             dateDisplay: document.getElementById('dateDisplay'),
@@ -929,44 +765,19 @@
             shortcutsContainer: document.getElementById('shortcutsContainer'),
             editModeBtn: document.getElementById('editModeBtn'),
             settingsBtn: document.getElementById('settingsBtn'),
+            appGallery: document.getElementById('appGallery'),
+            appsGrid: document.getElementById('appsGrid'),
+            quickAddSection: document.getElementById('quickAddSection'),
+            emojiInputSection: document.getElementById('emojiInputSection'),
+            photoInputSection: document.getElementById('photoInputSection'),
+            photoInput: document.getElementById('photoInput'),
+            photoUploadBtn: document.getElementById('photoUploadBtn'),
+            photoPreview: document.getElementById('photoPreview'),
+            overlay: document.getElementById('overlay'),
             settingsPanel: document.getElementById('settingsPanel'),
-            settingsOverlay: document.getElementById('settingsOverlay'),
-            closeBtn: document.querySelector('.close-btn'),
-            shortcutEditor: document.getElementById('shortcutEditor'),
-            iconInput: document.getElementById('iconInput'),
-            nameInput: document.getElementById('nameInput'),
-            urlInput: document.getElementById('urlInput'),
-            emojiPicker: document.getElementById('emojiPicker'),
-            saveBtn: document.getElementById('saveBtn'),
-            cancelBtn: document.getElementById('cancelBtn'),
-            showClockToggle: document.getElementById('showClockToggle'),
-            showDateToggle: document.getElementById('showDateToggle'),
-            verticalPosSlider: document.getElementById('verticalPosSlider'),
-            verticalPosValue: document.getElementById('verticalPosValue'),
-            fontSizeSlider: document.getElementById('fontSizeSlider'),
-            fontSizeValue: document.getElementById('fontSizeValue'),
-            clearShortcutsBtn: document.getElementById('clearShortcutsBtn'),
-            exportShortcutsBtn: document.getElementById('exportShortcutsBtn'),
             gradientBg: document.getElementById('gradientBg'),
-            imageBg: document.getElementById('imageBg'),
-            cameraBg: document.getElementById('cameraBg'),
-            imageUpload: document.getElementById('imageUpload'),
-            uploadImageBtn: document.getElementById('uploadImageBtn'),
-            imageUploadGroup: document.getElementById('imageUploadGroup')
+            imageBg: document.getElementById('imageBg')
         };
-
-        // Initialize emoji picker
-        function initEmojiPicker() {
-            elements.emojiPicker.innerHTML = emojis.map(emoji => 
-                `<div class="emoji-option" data-emoji="${emoji}">${emoji}</div>`
-            ).join('');
-
-            document.querySelectorAll('.emoji-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    elements.iconInput.value = option.dataset.emoji;
-                });
-            });
-        }
 
         // Update time
         function updateTime() {
@@ -975,26 +786,8 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             elements.timeDisplay.textContent = `${hours}:${minutes}`;
             
-            if (state.showDate) {
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                const dateStr = now.toLocaleDateString('en-US', options);
-                elements.dateDisplay.textContent = dateStr;
-                elements.dateDisplay.style.display = 'block';
-            } else {
-                elements.dateDisplay.style.display = 'none';
-            }
-        }
-
-        // Toggle edit mode
-        function toggleEditMode() {
-            state.editMode = !state.editMode;
-            elements.editModeBtn.classList.toggle('active');
-            
-            document.querySelectorAll('.app-shortcut').forEach(shortcut => {
-                shortcut.classList.toggle('edit-mode');
-            });
-
-            renderShortcuts();
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            elements.dateDisplay.textContent = now.toLocaleDateString('en-US', options);
         }
 
         // Render shortcuts
@@ -1006,24 +799,34 @@
                 div.className = 'app-shortcut' + (state.editMode ? ' edit-mode' : '');
                 div.style.left = shortcut.x + 'px';
                 div.style.top = shortcut.y + 'px';
+                
+                let iconHtml = '';
+                if (shortcut.iconType === 'photo' && shortcut.iconData) {
+                    iconHtml = `<img src="${shortcut.iconData}" alt="${shortcut.name}">`;
+                } else {
+                    iconHtml = shortcut.icon;
+                }
+                
                 div.innerHTML = `
                     <div class="delete-badge">×</div>
-                    <div class="shortcut-icon">${shortcut.icon}</div>
+                    <div class="shortcut-icon">${iconHtml}</div>
                     <div class="shortcut-label">${shortcut.name}</div>
                 `;
                 
-                // Click to open
                 div.addEventListener('click', (e) => {
-                    if (!state.editMode) {
-                        openShortcut(shortcut);
+                    if (!state.editMode && shortcut.url) {
+                        window.open(shortcut.url, '_blank');
                     }
                 });
 
-                // Delete button
                 const deleteBadge = div.querySelector('.delete-badge');
                 deleteBadge.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    deleteShortcut(shortcut.id);
+                    if (confirm(`Delete ${shortcut.name}?`)) {
+                        state.shortcuts = state.shortcuts.filter(s => s.id !== shortcut.id);
+                        saveState();
+                        renderShortcuts();
+                    }
                 });
 
                 // Drag functionality
@@ -1042,15 +845,11 @@
                 });
 
                 div.addEventListener('touchmove', (e) => {
-                    if (isDragging && state.editMode) {
+                    if (isDragging) {
                         e.preventDefault();
                         const touch = e.touches[0];
-                        const deltaX = touch.clientX - startX;
-                        const deltaY = touch.clientY - startY;
-                        
-                        shortcut.x = Math.max(0, Math.min(window.innerWidth - 80, initialX + deltaX));
-                        shortcut.y = Math.max(0, Math.min(window.innerHeight - 80, initialY + deltaY));
-                        
+                        shortcut.x = Math.max(0, Math.min(window.innerWidth - 80, initialX + (touch.clientX - startX)));
+                        shortcut.y = Math.max(0, Math.min(window.innerHeight - 80, initialY + (touch.clientY - startY)));
                         div.style.left = shortcut.x + 'px';
                         div.style.top = shortcut.y + 'px';
                     }
@@ -1066,236 +865,205 @@
                 elements.shortcutsContainer.appendChild(div);
             });
 
-            // Add "Add shortcut" button in edit mode
+            // Add button in edit mode
             if (state.editMode) {
                 const addBtn = document.createElement('div');
                 addBtn.className = 'add-shortcut-btn';
-                addBtn.style.left = '20px';
-                addBtn.style.bottom = '20px';
                 addBtn.textContent = '+';
-                addBtn.addEventListener('click', openShortcutEditor);
+                addBtn.addEventListener('click', openAppGallery);
                 elements.shortcutsContainer.appendChild(addBtn);
             }
         }
 
-        // Open shortcut editor
-        function openShortcutEditor(editShortcut = null) {
-            state.currentEditId = editShortcut ? editShortcut.id : null;
-            
-            if (editShortcut) {
-                elements.iconInput.value = editShortcut.icon;
-                elements.nameInput.value = editShortcut.name;
-                elements.urlInput.value = editShortcut.url || '';
-            } else {
-                elements.iconInput.value = '';
-                elements.nameInput.value = '';
-                elements.urlInput.value = '';
-            }
-            
-            elements.shortcutEditor.classList.add('active');
-            elements.settingsOverlay.classList.add('active');
+        // Open app gallery
+        function openAppGallery() {
+            elements.appGallery.classList.add('active');
+            elements.overlay.classList.add('active');
+            showPopularApps();
+            resetCustomForm();
         }
 
-        // Close shortcut editor
-        function closeShortcutEditor() {
-            elements.shortcutEditor.classList.remove('active');
-            if (!elements.settingsPanel.classList.contains('active')) {
-                elements.settingsOverlay.classList.remove('active');
-            }
+        // Close app gallery
+        function closeAppGallery() {
+            elements.appGallery.classList.remove('active');
+            elements.overlay.classList.remove('active');
+            resetCustomForm();
         }
 
-        // Save shortcut
-        function saveShortcut() {
-            const icon = elements.iconInput.value || '📱';
-            const name = elements.nameInput.value || 'App';
-            const url = elements.urlInput.value;
+        // Reset custom form
+        function resetCustomForm() {
+            document.getElementById('quickIcon').value = '';
+            document.getElementById('quickName').value = '';
+            document.getElementById('quickUrl').value = '';
+            elements.photoInput.value = '';
+            elements.photoPreview.classList.remove('active');
+            state.currentPhotoData = null;
+            state.currentIconType = 'emoji';
+            document.querySelectorAll('.icon-type-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-type="emoji"]').classList.add('active');
+            elements.emojiInputSection.classList.add('active');
+            elements.photoInputSection.classList.remove('active');
+        }
 
-            if (state.currentEditId) {
-                const shortcut = state.shortcuts.find(s => s.id === state.currentEditId);
-                if (shortcut) {
-                    shortcut.icon = icon;
-                    shortcut.name = name;
-                    shortcut.url = url;
+        // Show popular apps
+        function showPopularApps() {
+            elements.appsGrid.style.display = 'grid';
+            elements.quickAddSection.classList.remove('active');
+            
+            elements.appsGrid.innerHTML = popularApps.map(app => `
+                <div class="app-item" data-icon="${app.icon}" data-name="${app.name}" data-url="${app.url}">
+                    <div class="app-item-icon">${app.icon}</div>
+                    <div class="app-item-name">${app.name}</div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.app-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    addShortcut({
+                        iconType: 'emoji',
+                        icon: item.dataset.icon,
+                        name: item.dataset.name,
+                        url: item.dataset.url
+                    });
+                });
+            });
+        }
+
+        // Show custom add
+        function showCustomAdd() {
+            elements.appsGrid.style.display = 'none';
+            elements.quickAddSection.classList.add('active');
+        }
+
+        // Handle icon type change
+        document.querySelectorAll('.icon-type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.type;
+                state.currentIconType = type;
+                
+                document.querySelectorAll('.icon-type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                if (type === 'emoji') {
+                    elements.emojiInputSection.classList.add('active');
+                    elements.photoInputSection.classList.remove('active');
+                } else {
+                    elements.emojiInputSection.classList.remove('active');
+                    elements.photoInputSection.classList.add('active');
                 }
-            } else {
-                const newShortcut = {
-                    id: Date.now(),
-                    icon: icon,
-                    name: name,
-                    url: url,
-                    x: 20,
-                    y: window.innerHeight - 120
-                };
-                state.shortcuts.push(newShortcut);
-            }
+            });
+        });
 
+        // Photo upload
+        elements.photoUploadBtn.addEventListener('click', () => {
+            elements.photoInput.click();
+        });
+
+        elements.photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    state.currentPhotoData = event.target.result;
+                    elements.photoPreview.src = event.target.result;
+                    elements.photoPreview.classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Add shortcut
+        function addShortcut(app) {
+            const newShortcut = {
+                id: Date.now(),
+                iconType: app.iconType || 'emoji',
+                icon: app.icon || '📱',
+                iconData: app.iconData || null,
+                name: app.name,
+                url: app.url,
+                x: 20 + (state.shortcuts.length % 4) * 90,
+                y: window.innerHeight - 200 - Math.floor(state.shortcuts.length / 4) * 90
+            };
+            
+            state.shortcuts.push(newShortcut);
             saveState();
             renderShortcuts();
-            closeShortcutEditor();
+            closeAppGallery();
         }
 
-        // Delete shortcut
-        function deleteShortcut(id) {
-            if (confirm('Delete this shortcut?')) {
-                state.shortcuts = state.shortcuts.filter(s => s.id !== id);
-                saveState();
-                renderShortcuts();
-            }
-        }
-
-        // Open shortcut
-        function openShortcut(shortcut) {
-            if (shortcut.url) {
-                window.open(shortcut.url, '_blank');
+        // Quick add button
+        document.getElementById('quickAddBtn').addEventListener('click', () => {
+            const name = document.getElementById('quickName').value || 'App';
+            const url = document.getElementById('quickUrl').value;
+            
+            if (state.currentIconType === 'emoji') {
+                const icon = document.getElementById('quickIcon').value || '📱';
+                addShortcut({ iconType: 'emoji', icon, name, url });
             } else {
-                alert(`Opening: ${shortcut.name}\n\nAdd a URL in edit mode to make this functional!`);
+                if (state.currentPhotoData) {
+                    addShortcut({ 
+                        iconType: 'photo', 
+                        iconData: state.currentPhotoData,
+                        icon: '📷',
+                        name, 
+                        url 
+                    });
+                } else {
+                    alert('Please select a photo first!');
+                }
             }
-        }
+        });
 
-        // Clear all shortcuts
-        function clearAllShortcuts() {
-            if (confirm('Delete all shortcuts?')) {
-                state.shortcuts = [];
-                saveState();
-                renderShortcuts();
-            }
-        }
-
-        // Export shortcuts
-        function exportShortcuts() {
-            const dataStr = JSON.stringify(state.shortcuts, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            saveAs(dataBlob, 'shortcuts.json');
+        // Toggle edit mode
+        function toggleEditMode() {
+            state.editMode = !state.editMode;
+            elements.editModeBtn.classList.toggle('active');
+            renderShortcuts();
         }
 
         // Toggle settings
         function toggleSettings() {
             elements.settingsPanel.classList.toggle('active');
-            elements.settingsOverlay.classList.toggle('active');
-            elements.settingsBtn.classList.toggle('rotate');
-        }
-
-        // Toggle clock visibility
-        function toggleClock() {
-            state.showClock = !state.showClock;
-            elements.showClockToggle.classList.toggle('active');
-            elements.clockContainer.style.display = state.showClock ? 'flex' : 'none';
-            saveState();
-        }
-
-        // Toggle date visibility
-        function toggleDate() {
-            state.showDate = !state.showDate;
-            elements.showDateToggle.classList.toggle('active');
-            updateTime();
-            saveState();
-        }
-
-        // Change background mode
-        function changeBackgroundMode(mode) {
-            state.backgroundMode = mode;
-            
-            elements.cameraBg.style.display = 'none';
-            elements.imageBg.style.display = 'none';
-            elements.gradientBg.style.display = 'none';
-            elements.imageUploadGroup.style.display = 'none';
-            
-            document.querySelectorAll('[data-bg]').forEach(opt => opt.classList.remove('active'));
-            document.querySelector(`[data-bg="${mode}"]`).classList.add('active');
-            
-            if (mode === 'gradient') {
-                elements.gradientBg.style.display = 'block';
-                const gradient = `linear-gradient(135deg, ${state.gradientColors[0]}, ${state.gradientColors[1]})`;
-                elements.gradientBg.style.background = gradient;
-            } else if (mode === 'image') {
-                elements.imageUploadGroup.style.display = 'block';
-                if (state.uploadedImage) {
-                    elements.imageBg.style.display = 'block';
-                }
-            }
-            
-            saveState();
-        }
-
-        // Handle image upload
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.uploadedImage = e.target.result;
-                    elements.imageBg.style.backgroundImage = `url(${e.target.result})`;
-                    elements.imageBg.style.display = 'block';
-                    saveState();
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Apply preset
-        function applyPreset(preset) {
-            switch(preset) {
-                case 'default':
-                    state.verticalPosition = 20;
-                    state.fontSize = 96;
-                    state.gradientColors = ['#667eea', '#764ba2'];
-                    break;
-                case 'minimal':
-                    state.verticalPosition = 50;
-                    state.fontSize = 120;
-                    state.gradientColors = ['#ffffff', '#f0f0f0'];
-                    break;
-                case 'neon':
-                    state.verticalPosition = 20;
-                    state.fontSize = 96;
-                    state.gradientColors = ['#0f0c29', '#302b63'];
-                    break;
-            }
-            
-            updateAllControls();
-            applyAllSettings();
-            saveState();
+            elements.overlay.classList.toggle('active');
         }
 
         // Update clock position
-        function updateVerticalPosition(value) {
-            state.verticalPosition = parseInt(value);
-            elements.verticalPosValue.textContent = value + '%';
-            document.documentElement.style.setProperty('--vertical-position', value + '%');
+        function updateClockPosition(value) {
+            state.clockPosition = parseInt(value);
+            document.getElementById('clockPosValue').textContent = value + '%';
+            document.documentElement.style.setProperty('--clock-vertical', value + '%');
             saveState();
         }
 
-        // Update font size
-        function updateFontSize(value) {
-            state.fontSize = parseInt(value);
-            elements.fontSizeValue.textContent = value + 'px';
-            document.documentElement.style.setProperty('--font-size', value + 'px');
+        // Update clock size
+        function updateClockSize(value) {
+            state.clockSize = parseInt(value);
+            document.getElementById('clockSizeValue').textContent = value + 'px';
+            document.documentElement.style.setProperty('--clock-size', value + 'px');
             saveState();
         }
 
-        // Update all controls
-        function updateAllControls() {
-            elements.verticalPosSlider.value = state.verticalPosition;
-            elements.verticalPosValue.textContent = state.verticalPosition + '%';
-            
-            elements.fontSizeSlider.value = state.fontSize;
-            elements.fontSizeValue.textContent = state.fontSize + 'px';
-            
-            elements.showClockToggle.classList.toggle('active', state.showClock);
-            elements.showDateToggle.classList.toggle('active', state.showDate);
+        // Toggle clock
+        function toggleClock() {
+            state.showClock = !state.showClock;
+            elements.clockContainer.style.display = state.showClock ? 'block' : 'none';
+            document.getElementById('showClockToggle').classList.toggle('active');
+            saveState();
         }
 
-        // Apply all settings
-        function applyAllSettings() {
-            document.documentElement.style.setProperty('--vertical-position', state.verticalPosition + '%');
-            document.documentElement.style.setProperty('--font-size', state.fontSize + 'px');
-            
-            elements.clockContainer.style.display = state.showClock ? 'flex' : 'none';
-            
-            changeBackgroundMode(state.backgroundMode);
-            
-            if (state.uploadedImage) {
-                elements.imageBg.style.backgroundImage = `url(${state.uploadedImage})`;
+        // Change background
+        function changeBackground(bg) {
+            state.background = bg;
+            elements.gradientBg.style.display = bg === 'gradient' ? 'block' : 'none';
+            saveState();
+        }
+
+        // Clear all
+        function clearAll() {
+            if (confirm('Delete all shortcuts?')) {
+                state.shortcuts = [];
+                saveState();
+                renderShortcuts();
             }
         }
 
@@ -1311,8 +1079,17 @@
                 Object.assign(state, JSON.parse(saved));
             }
             
-            updateAllControls();
-            applyAllSettings();
+            document.documentElement.style.setProperty('--clock-vertical', state.clockPosition + '%');
+            document.documentElement.style.setProperty('--clock-size', state.clockSize + 'px');
+            elements.clockContainer.style.display = state.showClock ? 'block' : 'none';
+            elements.gradientBg.style.display = state.background === 'gradient' ? 'block' : 'none';
+            
+            document.getElementById('clockPosSlider').value = state.clockPosition;
+            document.getElementById('clockPosValue').textContent = state.clockPosition + '%';
+            document.getElementById('clockSizeSlider').value = state.clockSize;
+            document.getElementById('clockSizeValue').textContent = state.clockSize + 'px';
+            document.getElementById('showClockToggle').classList.toggle('active', state.showClock);
+            
             renderShortcuts();
             updateTime();
         }
@@ -1320,46 +1097,44 @@
         // Event Listeners
         elements.editModeBtn.addEventListener('click', toggleEditMode);
         elements.settingsBtn.addEventListener('click', toggleSettings);
-        elements.closeBtn.addEventListener('click', toggleSettings);
-        elements.settingsOverlay.addEventListener('click', () => {
-            toggleSettings();
-            closeShortcutEditor();
+        document.getElementById('galleryClose').addEventListener('click', closeAppGallery);
+        document.getElementById('settingsClose').addEventListener('click', toggleSettings);
+        elements.overlay.addEventListener('click', () => {
+            closeAppGallery();
+            if (elements.settingsPanel.classList.contains('active')) {
+                toggleSettings();
+            }
         });
 
-        elements.saveBtn.addEventListener('click', saveShortcut);
-        elements.cancelBtn.addEventListener('click', closeShortcutEditor);
+        document.querySelectorAll('.gallery-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (tab.dataset.tab === 'popular') {
+                    showPopularApps();
+                } else {
+                    showCustomAdd();
+                }
+            });
+        });
 
-        elements.showClockToggle.addEventListener('click', toggleClock);
-        elements.showDateToggle.addEventListener('click', toggleDate);
-
-        elements.verticalPosSlider.addEventListener('input', (e) => updateVerticalPosition(e.target.value));
-        elements.fontSizeSlider.addEventListener('input', (e) => updateFontSize(e.target.value));
-
-        elements.clearShortcutsBtn.addEventListener('click', clearAllShortcuts);
-        elements.exportShortcutsBtn.addEventListener('click', exportShortcuts);
-
-        elements.uploadImageBtn.addEventListener('click', () => elements.imageUpload.click());
-        elements.imageUpload.addEventListener('change', handleImageUpload);
+        document.getElementById('showClockToggle').addEventListener('click', toggleClock);
+        document.getElementById('clockPosSlider').addEventListener('input', (e) => updateClockPosition(e.target.value));
+        document.getElementById('clockSizeSlider').addEventListener('input', (e) => updateClockSize(e.target.value));
+        document.getElementById('clearAllBtn').addEventListener('click', clearAll);
 
         document.querySelectorAll('[data-bg]').forEach(btn => {
-            btn.addEventListener('click', () => changeBackgroundMode(btn.dataset.bg));
-        });
-
-        document.querySelectorAll('[data-preset]').forEach(btn => {
-            btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+            btn.addEventListener('click', () => changeBackground(btn.dataset.bg));
         });
 
         // Initialize
-        initEmojiPicker();
         loadState();
         setInterval(updateTime, 1000);
 
-        // Prevent gestures
         document.addEventListener('gesturestart', (e) => e.preventDefault());
-
-        // Prevent scrolling
-        document.body.addEventListener('touchmove', function(e) {
-            if (!elements.settingsPanel.classList.contains('active') && !elements.shortcutEditor.classList.contains('active')) {
+        document.body.addEventListener('touchmove', (e) => {
+            if (!elements.appGallery.classList.contains('active') && !elements.settingsPanel.classList.contains('active')) {
                 e.preventDefault();
             }
         }, { passive: false });
