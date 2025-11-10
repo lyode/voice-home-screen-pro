@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <!-- Favicon -->
-<link rel="icon" type="image/png" sizes="16x16" href="icon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="icon-32x32.png">
-
-<!-- Apple Touch Icons -->
-<link rel="apple-touch-icon" sizes="192x192" href="icon-192x192.png">
-<link rel="apple-touch-icon" sizes="512x512" href="icon-512x512.png">
-
-<!-- PWA Manifest -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#667eea">
-    <meta charset="UTF-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="transparent">
+    
+    <!-- PWA Configuration -->
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Launcher">
+    <meta name="application-name" content="Launcher">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+    <link rel="apple-touch-icon" sizes="512x512" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSG9tZSBTY3JlZW4gTGF1bmNoZXIiLCJzaG9ydF9uYW1lIjoiTGF1bmNoZXIiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJ0aGVtZV9jb2xvciI6IiMwMDAwMDAiLCJkZXNjcmlwdGlvbiI6IkN1c3RvbSBIb21lIFNjcmVlbiBMYXVuY2hlciIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCc+8J+PsDwvdGV4dD48L3N2Zz4iLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9LHsic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCc+8J+PsDwvdGV4dD48L3N2Zz4iLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+    
     <title>Home Screen Launcher</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;700&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@300;400;700&family=Playfair+Display:wght@400;700;900&family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;700&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@300;400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -34,13 +39,10 @@
             --font-size: 96px;
             --text-color: white;
             --text-opacity: 1;
-            --text-blur: 0px;
-            --text-glow: 0px;
             --letter-spacing: -4px;
             --line-height: 1;
-            --vertical-position: 50%;
+            --vertical-position: 20%;
             --horizontal-position: 50%;
-            --rotation: 0deg;
         }
 
         html, body {
@@ -93,7 +95,7 @@
             position: fixed;
             left: var(--horizontal-position);
             top: var(--vertical-position);
-            transform: translate(-50%, -50%) rotate(var(--rotation));
+            transform: translate(-50%, -50%);
             z-index: 10;
             pointer-events: none;
             transition: all 0.3s ease;
@@ -107,29 +109,25 @@
         }
 
         body.text-light .time-display,
-        body.text-light .date-display,
-        body.text-light .styled-text {
+        body.text-light .date-display {
             color: var(--text-color);
             text-shadow: 
                 calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #000,
                 var(--outline-width) calc(var(--outline-width) * -1) 0 #000,
                 calc(var(--outline-width) * -1) var(--outline-width) 0 #000,
                 var(--outline-width) var(--outline-width) 0 #000,
-                0 0 var(--shadow-blur) rgba(0, 0, 0, var(--shadow-spread)),
-                0 0 var(--text-glow) var(--text-color);
+                0 0 var(--shadow-blur) rgba(0, 0, 0, var(--shadow-spread));
         }
 
         body.text-dark .time-display,
-        body.text-dark .date-display,
-        body.text-dark .styled-text {
+        body.text-dark .date-display {
             color: var(--text-color);
             text-shadow: 
                 calc(var(--outline-width) * -1) calc(var(--outline-width) * -1) 0 #fff,
                 var(--outline-width) calc(var(--outline-width) * -1) 0 #fff,
                 calc(var(--outline-width) * -1) var(--outline-width) 0 #fff,
                 var(--outline-width) var(--outline-width) 0 #fff,
-                0 0 var(--shadow-blur) rgba(255, 255, 255, var(--shadow-spread)),
-                0 0 var(--text-glow) var(--text-color);
+                0 0 var(--shadow-blur) rgba(255, 255, 255, var(--shadow-spread));
         }
 
         .time-display {
@@ -623,7 +621,6 @@
             transform: scale(0.95);
         }
 
-        /* Preset icons grid */
         .preset-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -684,6 +681,27 @@
             font-size: 18px;
             color: white;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .upload-btn {
+            padding: 16px;
+            border-radius: 12px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1) !important;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            margin-top: 12px;
+        }
+
+        .upload-btn:active {
+            transform: scale(0.98);
         }
 
         .hidden-input {
@@ -793,6 +811,12 @@
             </div>
         </div>
 
+        <!-- Image Upload -->
+        <div class="setting-group" id="imageUploadGroup" style="display: none;">
+            <input type="file" id="imageUpload" accept="image/*" class="hidden-input">
+            <button class="upload-btn" id="uploadImageBtn">📤 Upload Background Image</button>
+        </div>
+
         <!-- Quick Presets -->
         <div class="setting-group">
             <div class="setting-label">🎭 Quick Styles</div>
@@ -808,7 +832,7 @@
             <div class="setting-label">📍 Clock Position</div>
             <div class="slider-container">
                 <span style="color: white; font-size: 14px;">Vertical:</span>
-                <input type="range" min="20" max="80" value="20" class="slider" id="verticalPosSlider">
+                <input type="range" min="10" max="90" value="20" class="slider" id="verticalPosSlider">
                 <span class="slider-value" id="verticalPosValue">20%</span>
             </div>
         </div>
@@ -859,7 +883,19 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script>
-        // Comprehensive emoji list for quick selection
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                self.addEventListener('install', event => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('activate', event => {
+                    event.waitUntil(clients.claim());
+                });
+            `)).catch(err => console.log('SW registration failed'));
+        }
+
+        // Comprehensive emoji list
         const emojis = [
             '📱', '💻', '🎮', '📧', '📷', '🎵', '🎬', '📺', '📚', '📝',
             '🗓️', '⏰', '🌐', '🔍', '💬', '📞', '💰', '🏦', '🛒', '🍕',
@@ -881,6 +917,7 @@
             fontSize: 96,
             textColor: '#ffffff',
             gradientColors: ['#667eea', '#764ba2'],
+            uploadedImage: null,
             currentEditId: null
         };
 
@@ -912,7 +949,10 @@
             exportShortcutsBtn: document.getElementById('exportShortcutsBtn'),
             gradientBg: document.getElementById('gradientBg'),
             imageBg: document.getElementById('imageBg'),
-            cameraBg: document.getElementById('cameraBg')
+            cameraBg: document.getElementById('cameraBg'),
+            imageUpload: document.getElementById('imageUpload'),
+            uploadImageBtn: document.getElementById('uploadImageBtn'),
+            imageUploadGroup: document.getElementById('imageUploadGroup')
         };
 
         // Initialize emoji picker
@@ -1071,7 +1111,6 @@
             const url = elements.urlInput.value;
 
             if (state.currentEditId) {
-                // Edit existing
                 const shortcut = state.shortcuts.find(s => s.id === state.currentEditId);
                 if (shortcut) {
                     shortcut.icon = icon;
@@ -1079,7 +1118,6 @@
                     shortcut.url = url;
                 }
             } else {
-                // Add new
                 const newShortcut = {
                     id: Date.now(),
                     icon: icon,
@@ -1160,6 +1198,7 @@
             elements.cameraBg.style.display = 'none';
             elements.imageBg.style.display = 'none';
             elements.gradientBg.style.display = 'none';
+            elements.imageUploadGroup.style.display = 'none';
             
             document.querySelectorAll('[data-bg]').forEach(opt => opt.classList.remove('active'));
             document.querySelector(`[data-bg="${mode}"]`).classList.add('active');
@@ -1168,9 +1207,29 @@
                 elements.gradientBg.style.display = 'block';
                 const gradient = `linear-gradient(135deg, ${state.gradientColors[0]}, ${state.gradientColors[1]})`;
                 elements.gradientBg.style.background = gradient;
+            } else if (mode === 'image') {
+                elements.imageUploadGroup.style.display = 'block';
+                if (state.uploadedImage) {
+                    elements.imageBg.style.display = 'block';
+                }
             }
             
             saveState();
+        }
+
+        // Handle image upload
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.uploadedImage = e.target.result;
+                    elements.imageBg.style.backgroundImage = `url(${e.target.result})`;
+                    elements.imageBg.style.display = 'block';
+                    saveState();
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         // Apply preset
@@ -1234,6 +1293,10 @@
             elements.clockContainer.style.display = state.showClock ? 'flex' : 'none';
             
             changeBackgroundMode(state.backgroundMode);
+            
+            if (state.uploadedImage) {
+                elements.imageBg.style.backgroundImage = `url(${state.uploadedImage})`;
+            }
         }
 
         // Save state
@@ -1274,6 +1337,9 @@
 
         elements.clearShortcutsBtn.addEventListener('click', clearAllShortcuts);
         elements.exportShortcutsBtn.addEventListener('click', exportShortcuts);
+
+        elements.uploadImageBtn.addEventListener('click', () => elements.imageUpload.click());
+        elements.imageUpload.addEventListener('change', handleImageUpload);
 
         document.querySelectorAll('[data-bg]').forEach(btn => {
             btn.addEventListener('click', () => changeBackgroundMode(btn.dataset.bg));
