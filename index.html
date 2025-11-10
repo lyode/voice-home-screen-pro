@@ -1,29 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Builder Pro">
-    <meta name="apple-mobile-web-app-title" content="Builder Pro">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#E0E5EC">
-    
-    <!-- Favicon & Icons -->
-    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="favicon-96x96.png">
-    <link rel="shortcut icon" href="favicon-96x96.png">
-    
-    <title>Builder Pro - Project Management System</title>
-    
-    <style>
-        /* ... rest of your CSS ... */
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
@@ -69,42 +46,6 @@
         body {
             position: relative;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-        }
-
-        /* Lock Screen Overlay */
-        .lock-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        .lock-screen.hidden {
-            display: none;
-        }
-
-        .lock-icon {
-            font-size: 80px;
-            margin-bottom: 30px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-
-        .unlock-text {
-            font-size: 24px;
-            color: white;
-            font-weight: 600;
         }
 
         /* Notification Light */
@@ -289,7 +230,7 @@
         }
 
         /* Control Buttons */
-        .edit-mode-btn, .settings-btn, .lock-screen-btn {
+        .edit-mode-btn, .settings-btn {
             position: fixed;
             top: calc(max(env(safe-area-inset-top), 54px) + 10px);
             padding: 10px 16px;
@@ -312,16 +253,6 @@
         .edit-mode-btn.active {
             background: rgba(255, 68, 68, 0.3);
             border-color: #ff4444;
-        }
-
-        .lock-screen-btn {
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .lock-screen-btn.active {
-            background: rgba(76, 175, 80, 0.3);
-            border-color: #4CAF50;
         }
 
         .settings-btn {
@@ -801,12 +732,6 @@
     </style>
 </head>
 <body>
-    <!-- Lock Screen -->
-    <div class="lock-screen" id="lockScreen">
-        <div class="lock-icon">🔒</div>
-        <div class="unlock-text">Tap to Unlock</div>
-    </div>
-
     <!-- Notification Light -->
     <div class="notification-light" id="notificationLight"></div>
 
@@ -815,7 +740,6 @@
 
     <!-- Controls -->
     <button class="edit-mode-btn" id="editModeBtn">✏️ Edit</button>
-    <button class="lock-screen-btn" id="lockScreenBtn">🔒 Lock</button>
     <button class="settings-btn" id="settingsBtn">⚙️</button>
 
     <!-- Clock -->
@@ -1014,12 +938,6 @@
         <!-- Privacy & Security -->
         <div class="setting-section">
             <div class="section-title">🔒 Privacy & Security</div>
-            
-            <div class="setting-row">
-                <div class="setting-label">Require Lock Screen</div>
-                <div class="toggle-switch" id="requireLockToggle"></div>
-            </div>
-
             <button class="action-btn">Clear Cache</button>
         </div>
 
@@ -1090,7 +1008,6 @@
         const state = {
             shortcuts: [],
             editMode: false,
-            lockScreenEnabled: false,
             showClock: true,
             clockPosition: 20,
             clockSize: 96,
@@ -1108,7 +1025,6 @@
             lightStyle: 'blink',
             lightColor: '#667eea',
             language: 'en',
-            requireLock: false,
             userName: '',
             userEmail: '',
             currentIconType: 'emoji',
@@ -1117,14 +1033,12 @@
 
         // Elements
         const elements = {
-            lockScreen: document.getElementById('lockScreen'),
             notificationLight: document.getElementById('notificationLight'),
             timeDisplay: document.getElementById('timeDisplay'),
             dateDisplay: document.getElementById('dateDisplay'),
             clockContainer: document.getElementById('clockContainer'),
             shortcutsContainer: document.getElementById('shortcutsContainer'),
             editModeBtn: document.getElementById('editModeBtn'),
-            lockScreenBtn: document.getElementById('lockScreenBtn'),
             settingsBtn: document.getElementById('settingsBtn'),
             addShortcutBtn: document.getElementById('addShortcutBtn'),
             appGallery: document.getElementById('appGallery'),
@@ -1279,30 +1193,6 @@
 
             elements.addShortcutBtn.style.display = state.editMode ? 'flex' : 'none';
         }
-
-        // Lock screen functions
-        function showLockScreen() {
-            if (state.lockScreenEnabled) {
-                elements.lockScreen.classList.remove('hidden');
-            }
-        }
-
-        function hideLockScreen() {
-            elements.lockScreen.classList.add('hidden');
-        }
-
-        elements.lockScreen.addEventListener('click', hideLockScreen);
-
-        elements.lockScreenBtn.addEventListener('click', () => {
-            state.lockScreenEnabled = !state.lockScreenEnabled;
-            elements.lockScreenBtn.classList.toggle('active');
-            if (state.lockScreenEnabled) {
-                showLockScreen();
-            } else {
-                hideLockScreen();
-            }
-            saveState();
-        });
 
         // Notification light
         function updateNotificationLight() {
@@ -1670,12 +1560,6 @@
             saveState();
         });
 
-        document.getElementById('requireLockToggle').addEventListener('click', () => {
-            state.requireLock = !state.requireLock;
-            document.getElementById('requireLockToggle').classList.toggle('active');
-            saveState();
-        });
-
         document.getElementById('clockPosSlider').addEventListener('input', (e) => {
             state.clockPosition = parseInt(e.target.value);
             document.getElementById('clockPosValue').textContent = e.target.value + '%';
@@ -1761,16 +1645,10 @@
             document.getElementById('darkModeToggle').classList.toggle('active', state.darkMode);
             document.getElementById('notifyToggle').classList.toggle('active', state.notificationsEnabled);
             document.getElementById('neonToggle').classList.toggle('active', state.neonLightEnabled);
-            document.getElementById('requireLockToggle').classList.toggle('active', state.requireLock);
-            elements.lockScreenBtn.classList.toggle('active', state.lockScreenEnabled);
             
             document.getElementById('userName').value = state.userName;
             document.getElementById('userEmail').value = state.userEmail;
             document.getElementById('languageSelect').value = state.language;
-            
-            if (state.lockScreenEnabled) {
-                showLockScreen();
-            }
             
             renderShortcuts();
             updateTime();
@@ -1788,13 +1666,6 @@
                 e.preventDefault();
             }
         }, { passive: false });
-
-        // Show lock screen on page visibility change (simulating lock)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && state.requireLock) {
-                showLockScreen();
-            }
-        });
     </script>
 </body>
 </html>
